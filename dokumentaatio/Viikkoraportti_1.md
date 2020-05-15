@@ -16,3 +16,6 @@ ja siihen esteiden piirtäminen lienevät ainakin aluksi toissijaisia ominaisuuk
 * Ovatko ruudukosta koostuvat käyttäjän sovelluksessa piirtämät kartat (esim. 50x50 ruutua) liian pieniä/yksinkertaisia ongelmia ratkaistaviksi vai onko parempi käyttää esim. valmiita [Moving Ai Lab -pelikarttoja](https://www.movingai.com/benchmarks/grids.html)? Muuttuukko tilanne jos melko suurten ruutujen sijaan kartat piirretäisiinkin pikselin tarkkuudella?
 
 * Jos syötteet sovellukselle olisivat käyttäjän piirtämiä karttoja tai valmiita kuvia kartoista, kannattaako ne muuntaa ascii-merkeiksi ennen reitinhakua vai luetaanko niitä suoraan kuvadatasta?
+
+
+Ensimmäisellä viikolla käytetty aika: n. 3 tuntia
