@@ -8,7 +8,7 @@ ohjelmakoodia en vielä kirjoittanut. Mieleen täytyi palauttaa joitakin tiran t
 Hain myös netistä hieman tietoa sovelluksessa tarvitsemistani algoritmeista (Dijkstra, A*, JPS) ja tutustuin reitinhakuongelmiin yleisesti.
 
 Seuraavaksi lähden koodaamaan itse sovellusta. Yritän aluksi varmaan toteuttaa javan valmiilla tietorakenteilla Dijkstran algoritmin, joka
-osaisi hakea lyhimmän reitin kahden solmun välillä sille syötetystä ascii-merkkisestä kartasta/labyrintista. Ruudukosta koostuvan visuaalisen kartan luominen
+osaisi hakea lyhimmän reitin kahden solmun välillä sille syötetystä ascii-merkkisestä kartasta. Ruudukosta koostuvan visuaalisen kartan luominen
 ja siihen esteiden piirtäminen lienevät ainakin aluksi toissijaisia ominaisuuksia, joten palaan niiden toteutukseen vasta myöhemmässä vaiheessa.
 
 ## Kysymyksiä
