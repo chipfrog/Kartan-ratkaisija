@@ -41,6 +41,10 @@ public class MapReader {
         this.array = new char[rows][columns];
     }
 
+    public char[][] getMapArray() {
+        return this.array;
+    }
+
     public void printMap() {
     for (int i = 0; i < rows; i ++) {
         for (int j = 0; j < columns; j ++) {
