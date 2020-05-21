@@ -50,7 +50,7 @@ public class MapReader {
         for (int j = 0; j < columns; j ++) {
             io.printChar(array[i][j]);
         }
-        System.out.println();
+        io.printString("");
     }
     io.printString("rows: " + rows);
     io.printString("columns: " + columns);

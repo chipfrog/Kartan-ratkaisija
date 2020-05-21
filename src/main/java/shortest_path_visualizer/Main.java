@@ -12,7 +12,7 @@ public class Main {
 
         MapReader reader = new MapReader( new MapReaderIO());
         reader.createMatrix(new File ("src/main/resources/testikartta.txt"));
-        reader.printMap();
+        //reader.printMap();
 
         /*Dijkstra d = new Dijkstra(reader.getMapArray());
         d.initVerkko();*/
