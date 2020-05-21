@@ -28,6 +28,11 @@ run {
     standardOutput = System.out
 }
 
+checkstyle {
+    configFile = file("${rootProject.projectDir}/config/checkstyle/google_checks.xml")
+    toolVersion = "8.32"
+}
+
 jacocoTestReport {
     reports {
         xml.enabled = true
