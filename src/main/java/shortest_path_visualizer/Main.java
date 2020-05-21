@@ -6,16 +6,16 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 public class Main {
-    public static void main(String[] args) throws FileNotFoundException {
-        //Application.launch(MapCreator.class, args);
+  public static void main(String[] args) throws FileNotFoundException {
+    //Application.launch(MapCreator.class, args);
 
 
-        MapReader reader = new MapReader( new MapReaderIO());
-        reader.createMatrix(new File ("src/main/resources/testikartta.txt"));
-        //reader.printMap();
+    MapReader reader = new MapReader(new MapReaderIO());
+    reader.createMatrix(new File("src/main/resources/testikartta.txt"));
+    //reader.printMap();
 
         /*Dijkstra d = new Dijkstra(reader.getMapArray());
         d.initVerkko();*/
 
-    }
+  }
 }

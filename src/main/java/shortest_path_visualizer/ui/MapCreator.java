@@ -12,48 +12,47 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 
-
 public class MapCreator extends Application {
-    private char[][] cellArray;
-    private GridPane grid;
-    private int rows;
-    private int cols;
+  private char[][] cellArray;
+  private GridPane grid;
+  private int rows;
+  private int cols;
 
-    public MapCreator() {
-        this.cols = 30;
-        this.rows = 30;
+  public MapCreator() {
+    this.cols = 30;
+    this.rows = 30;
+  }
+
+  public void createGrid() {
+    this.cellArray = new char[rows][cols];
+    this.grid = new GridPane();
+    grid.setHgap(2);
+    grid.setVgap(2);
+    grid.setStyle("-fx-background-color: gray;");
+
+    for (int y = 0; y < rows; y++) {
+      for (int x = 0; x < cols; x++) {
+        Rectangle rectangle = new Rectangle(20, 20, Color.WHITE);
+        grid.add(rectangle, x, y);
+      }
     }
+  }
 
-    public void createGrid() {
-        this.cellArray = new char[rows][cols];
-        this.grid = new GridPane();
-        grid.setHgap(2);
-        grid.setVgap(2);
-        grid.setStyle("-fx-background-color: gray;");
+  @Override
+  public void start(Stage primaryStage) throws Exception {
+    createGrid();
+    HBox hBox = new HBox(15);
+    hBox.setPadding(new Insets(10));
+    Button btn = new Button("Push!");
+    Button btn2 = new Button("Don't push!");
+    hBox.getChildren().addAll(btn, btn2);
 
-        for (int y = 0; y < rows; y ++) {
-            for (int x = 0; x < cols; x ++) {
-                Rectangle rectangle = new Rectangle(20, 20, Color.WHITE);
-                grid.add(rectangle, x, y);
-            }
-        }
-    }
+    VBox vBox = new VBox(20);
+    vBox.getChildren().addAll(hBox, grid);
+    vBox.setPadding(new Insets(20));
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        createGrid();
-        HBox hBox = new HBox(15);
-        hBox.setPadding(new Insets(10));
-        Button btn = new Button("Push!");
-        Button btn2 = new Button("Don't push!");
-        hBox.getChildren().addAll(btn, btn2);
-
-        VBox vBox = new VBox(20);
-        vBox.getChildren().addAll(hBox, grid);
-        vBox.setPadding(new Insets(20));
-
-        Scene scene = new Scene(vBox);
-        primaryStage.setScene(scene);
-        primaryStage.show();
-    }
+    Scene scene = new Scene(vBox);
+    primaryStage.setScene(scene);
+    primaryStage.show();
+  }
 }
