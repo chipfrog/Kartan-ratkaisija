@@ -8,6 +8,8 @@ public interface IO {
 
   void printString(String s);
 
+  void printStringWithoutNewLine(String s);
+
   void setFile(File file) throws FileNotFoundException;
 
   boolean hasNextLine();

@@ -23,6 +23,11 @@ public class MapReaderIO implements IO {
   }
 
   @Override
+  public void printStringWithoutNewLine(String s) {
+    System.out.print(s);
+  }
+
+  @Override
   public void setFile(File file) throws FileNotFoundException {
     this.scanner = new Scanner(file);
   }

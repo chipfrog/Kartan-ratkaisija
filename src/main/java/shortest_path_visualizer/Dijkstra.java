@@ -3,17 +3,15 @@ package shortest_path_visualizer;
 import java.util.ArrayList;
 
 public class Dijkstra {
+  private final IO io;
   private final char[][] karttamatriisi;
   private final int[][] solmuMatriisi;
   private ArrayList<Integer>[] verkko;
 
-  public Dijkstra(char[][] karttamatriisi) {
+  public Dijkstra(IO io, char[][] karttamatriisi) {
+    this.io = io;
     this.karttamatriisi = karttamatriisi;
     this.solmuMatriisi = new int[karttamatriisi.length][karttamatriisi[0].length];
-  }
-
-  public void haeLyhinReitti() {
-
   }
 
   public void initVerkko() {
@@ -34,27 +32,30 @@ public class Dijkstra {
     }
   }
 
-  public void printSolmumatriisi() {
+  public int[][] getSolmumatriisi() {
+    return this.solmuMatriisi;
+  }
+
+  /*public void printSolmumatriisi() {
     for (int i = 0; i < solmuMatriisi.length; i++) {
       for (int j = 0; j < solmuMatriisi[0].length; j++) {
-        System.out.print(solmuMatriisi[i][j] + " ");
+        io.printStringWithoutNewLine(solmuMatriisi[i][j] + " ");
       }
-      System.out.println();
+      io.printString("");
     }
   }
 
   public void printKaaret() {
     for (int i = 1; i < verkko.length; i++) {
-      System.out.println("Solmu: " + i);
+      io.printString("Solmu: " + i);
       for (int j = 0; j < verkko[i].size(); j++) {
-        System.out.print(verkko[i].get(j) + " ");
+        io.printString(verkko[i].get(j) + " ");
       }
-      System.out.println();
+      io.printString("");
     }
+  }*/
 
-  }
-
-  private ArrayList<Integer> haeNaapurisolmut(int currentX, int currentY) {
+  public ArrayList<Integer> haeNaapurisolmut(int currentX, int currentY) {
     ArrayList<Integer> naapurit = new ArrayList<>();
 
     if (karttamatriisi[currentY][currentX] != 'T') {
