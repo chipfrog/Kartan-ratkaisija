@@ -10,12 +10,12 @@ public class Main {
         //Application.launch(MapCreator.class, args);
 
 
-        MapReader reader = new MapReader();
+        MapReader reader = new MapReader( new MapReaderIO());
         reader.createMatrix(new File ("src/main/resources/testikartta.txt"));
-        // reader.printMap();
+        reader.printMap();
 
-        Dijkstra d = new Dijkstra(reader.getMapArray());
-        d.initVerkko();
+        /*Dijkstra d = new Dijkstra(reader.getMapArray());
+        d.initVerkko();*/
 
     }
 }

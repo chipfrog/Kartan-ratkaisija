@@ -12,12 +12,13 @@ public class Dijkstra {
         this.solmuMatriisi = new int[karttamatriisi.length][karttamatriisi[0].length];
     }
 
+    public void haeLyhinReitti() {
+        
+    }
+
     public void initVerkko() {
         int solmut = karttamatriisi.length * karttamatriisi[0].length;
         this.verkko = new ArrayList[solmut + 1];
-        /*for (int n = 1; n <= solmut; n ++) {
-            verkko[n] = new ArrayList<>();
-        }*/
 
         int solmunumero = 1;
         for (int i = 0; i < karttamatriisi.length; i ++) {

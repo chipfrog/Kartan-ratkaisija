@@ -5,22 +5,22 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class MapReader {
+    private IO io;
     private char [][] array;
-    private Scanner scanner;
     private int rows;
     private int columns;
 
-    public MapReader() {
-
+    public MapReader(IO io) {
+        this.io = io;
     }
 
     public void createMatrix(File file) throws FileNotFoundException {
         initArray(file);
-        this.scanner = new Scanner(file);
+        io.setFile(file);
         int currentRow = 0;
 
-        while (scanner.hasNextLine()) {
-            String line = scanner.nextLine();
+        while (io.hasNextLine()) {
+            String line = io.getNextLine();
             for (int i = 0; i < line.length(); i ++) {
                 array[currentRow][i] = line.charAt(i);
 
@@ -29,13 +29,13 @@ public class MapReader {
         }
     }
 
-    public void initArray(File file) throws FileNotFoundException {
-        this.scanner = new Scanner(file);
+    private void initArray(File file) throws FileNotFoundException {
+        io.setFile(file);
         this.rows = 0;
         this.columns = 0;
 
-        while (scanner.hasNextLine()) {
-            columns = scanner.nextLine().length();
+        while (io.hasNextLine()) {
+            columns = io.getNextLine().length();
             rows ++;
         }
         this.array = new char[rows][columns];
@@ -48,11 +48,11 @@ public class MapReader {
     public void printMap() {
     for (int i = 0; i < rows; i ++) {
         for (int j = 0; j < columns; j ++) {
-            System.out.print(array[i][j]);
+            io.printChar(array[i][j]);
         }
         System.out.println();
     }
-    System.out.println("rows: " + rows);
-    System.out.println("columns: " + columns);
+    io.printString("rows: " + rows);
+    io.printString("columns: " + columns);
     }
 }
