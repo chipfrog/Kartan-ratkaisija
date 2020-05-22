@@ -2,7 +2,10 @@ package shortest_path_visualizer;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Scanner;
+
+/**
+ * Luokka .txt -muodossa olevien karttojen muuntamiseen matriiseiksi.
+ */
 
 public class MapReader {
   private final IO io;
@@ -14,6 +17,12 @@ public class MapReader {
     this.io = io;
   }
 
+  /**
+   * Metodi saa konstruktorissa karttatiedoston ja muuntaa sen matriisiksi.
+   *
+   * @param file matriisiksi muunnettava kartta
+   * @throws FileNotFoundException
+   */
   public void createMatrix(File file) throws FileNotFoundException {
     initArray(file);
     io.setFile(file);
@@ -29,6 +38,14 @@ public class MapReader {
     }
   }
 
+  /**
+   * Metodi matriisin alustamiseen oikean kokoiseksi. Metodi laskee .txt-tiedoston
+   * rivit ja sarakkeet ja alustaa näiden avulla matriisin.
+   *
+   * @param file .txt -muotoinen karttatiedosto
+   * @throws FileNotFoundException
+   */
+
   private void initArray(File file) throws FileNotFoundException {
     io.setFile(file);
     this.rows = 0;
@@ -41,10 +58,17 @@ public class MapReader {
     this.array = new char[rows][columns];
   }
 
+  /**
+   * Metodi palauttaa mariisimuotoisen kartan.
+   * @return kartta matriisimuodossa
+   */
   public char[][] getMapArray() {
     return this.array;
   }
 
+  /**
+   * Metodi tulostaa kartan konsoliin.
+   */
   public void printMap() {
     for (int i = 0; i < rows; i++) {
       for (int j = 0; j < columns; j++) {

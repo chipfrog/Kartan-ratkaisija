@@ -4,6 +4,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+/**
+ * IO-rajapinnan toteuttava luokka, joka vastaa tulostamisesta ja Scanner-olioiden luomisesta
+ * ja käsittelystä.
+ */
+
 public class MapReaderIO implements IO {
   private Scanner scanner;
   private File file;
@@ -32,10 +37,20 @@ public class MapReaderIO implements IO {
     this.scanner = new Scanner(file);
   }
 
+  /**
+   * Tarkistaa onko Scannerille annetussa tiedostossa tarkastelemattomia rivejä jäljellä.
+   * @return boolean, onko rivejä jäljellä
+   */
+
   @Override
   public boolean hasNextLine() {
     return this.scanner.hasNextLine();
   }
+
+  /**
+   * Hakee Scanner-oliolle annetusta tiedostosta seuraavan rivin
+   * @return .txt-tiedoston seuraava rivi
+   */
 
   @Override
   public String getNextLine() {

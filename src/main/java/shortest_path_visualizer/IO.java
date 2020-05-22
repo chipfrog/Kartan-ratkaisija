@@ -3,6 +3,10 @@ package shortest_path_visualizer;
 import java.io.File;
 import java.io.FileNotFoundException;
 
+/**
+ * Rajapinta, jonka kautta tiedostojen käsittely ja konsoliin tulostaminen hoidetaan.
+ */
+
 public interface IO {
   void printChar(char s);
 

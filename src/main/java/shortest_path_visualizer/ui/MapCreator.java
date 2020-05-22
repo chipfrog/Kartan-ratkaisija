@@ -11,6 +11,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
+/**
+ * JavaFX-toteutus karttojen luomiseen. Toteutetaan myöhemmin...
+ */
 
 public class MapCreator extends Application {
   private char[][] cellArray;

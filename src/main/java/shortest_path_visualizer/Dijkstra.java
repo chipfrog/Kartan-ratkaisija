@@ -2,6 +2,10 @@ package shortest_path_visualizer;
 
 import java.util.ArrayList;
 
+/**
+ * Luokka, jossa toteutetaan Dijkstran algoritmi.
+ */
+
 public class Dijkstra {
   private final IO io;
   private final char[][] karttamatriisi;
@@ -13,6 +17,10 @@ public class Dijkstra {
     this.karttamatriisi = karttamatriisi;
     this.solmuMatriisi = new int[karttamatriisi.length][karttamatriisi[0].length];
   }
+
+  /**
+   * Muodostaa solmuista vieruslistan, eli hakee matriisin jokaiselle solmulle naapurisolmut.
+   */
 
   public void initVerkko() {
     int solmut = karttamatriisi.length * karttamatriisi[0].length;
@@ -54,6 +62,14 @@ public class Dijkstra {
       io.printString("");
     }
   }*/
+
+  /**
+   * Metodi hakee matriisikartan solmulle kaikki naapurisolmut, eli solmut jotka eivät ole esteitä.
+   * Tarkasteltavan solmun x- ja y-koordinaatit annettu parametreina.
+   * @param currentX solmun sarake matriisissa
+   * @param currentY solmun rivi matriisissa
+   * @return lista naapurisolmuista
+   */
 
   public ArrayList<Integer> haeNaapurisolmut(int currentX, int currentY) {
     ArrayList<Integer> naapurit = new ArrayList<>();
@@ -115,23 +131,48 @@ public class Dijkstra {
     return naapurit;
   }
 
+  /**
+   * Tarkistaa onko naapurisolmuja etelässä.
+   * @param currentX solmun sarake matriisissa
+   * @param currentY solmun rivi matriisissa
+   * @param naapurit lista, johon naapurisolmut lisätään
+   */
+
   private void checkSouth(int currentX, int currentY, ArrayList<Integer> naapurit) {
     if (karttamatriisi[currentY + 1][currentX] != 'T') {
       naapurit.add(solmuMatriisi[currentY + 1][currentX]);
     }
   }
+  /**
+   * Tarkistaa onko naapurisolmuja pohjoisessa.
+   * @param currentX solmun sarake matriisissa
+   * @param currentY solmun rivi matriisissa
+   * @param naapurit lista, johon naapurisolmut lisätään
+   */
 
   private void checkNorth(int currentX, int currentY, ArrayList<Integer> naapurit) {
     if (karttamatriisi[currentY - 1][currentX] != 'T') {
       naapurit.add(solmuMatriisi[currentY - 1][currentX]);
     }
   }
+  /**
+   * Tarkistaa onko naapurisolmuja idässä.
+   * @param currentX solmun sarake matriisissa
+   * @param currentY solmun rivi matriisissa
+   * @param naapurit lista, johon naapurisolmut lisätään
+   */
 
   private void checkEast(int currentX, int currentY, ArrayList<Integer> naapurit) {
     if (karttamatriisi[currentY][currentX + 1] != 'T') {
       naapurit.add(solmuMatriisi[currentY][currentX + 1]);
     }
   }
+  /**
+   * Tarkistaa onko naapurisolmuja lännessä.
+   * @param currentX solmun sarake matriisissa
+   * @param currentY solmun rivi matriisissa
+   * @param naapurit lista, johon naapurisolmut lisätään
+   */
 
   private void checkWest(int currentX, int currentY, ArrayList<Integer> naapurit) {
     if (karttamatriisi[currentY][currentX - 1] != 'T') {
