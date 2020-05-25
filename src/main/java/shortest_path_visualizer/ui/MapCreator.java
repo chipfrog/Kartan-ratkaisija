@@ -11,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.DragEvent;
+import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -36,8 +37,8 @@ public class MapCreator extends Application {
   private boolean goalDrawn;
 
   public MapCreator() {
-    this.cols = 30;
-    this.rows = 30;
+    this.cols = 50;
+    this.rows = 50;
     this.mapArray = new char[rows][cols];
     this.type = DrawType.START;
     this.startDrawn = false;
@@ -54,26 +55,52 @@ public class MapCreator extends Application {
     for (int y = 0; y < rows; y++) {
       for (int x = 0; x < cols; x++) {
         Rectangle rectangle = new Rectangle(20,20, Color.WHITE);
+
         rectangle.setOnMouseClicked(new EventHandler<MouseEvent>() {
           @Override
           public void handle(MouseEvent event) {
-            if (type == DrawType.START && startDrawn == false) {
+            if (type == DrawType.OBSTACLE) {
+              rectangle.setFill(Color.BLACK);
+            }
+            else if (type == DrawType.EMPTY) {
+              rectangle.setFill(Color.WHITE);
+            }
+
+            else if (type == DrawType.START && startDrawn == false) {
               rectangle.setFill(Color.GREEN);
               startDrawn = true;
 
             }
-            if (type == DrawType.GOAL && goalDrawn == false) {
+            else if (type == DrawType.GOAL && goalDrawn == false) {
               rectangle.setFill(Color.RED);
               goalDrawn = true;
             }
           }
         });
 
-        rectangle.setOnDragDetected(mouseEvent -> rectangle.startFullDrag());
-        rectangle.setOnMouseDragEntered(mouseEvent -> rectangle.setFill(Color.BLACK));
+        rectangle.setOnDragDetected(new EventHandler<MouseEvent>() {
+          @Override
+          public void handle(MouseEvent event) {
+            if (type == DrawType.OBSTACLE || type == DrawType.EMPTY) {
+              rectangle.startFullDrag();
+            }
 
+          }
+        });
+        rectangle.setOnMouseDragEntered(new EventHandler<MouseDragEvent>() {
+          @Override
+          public void handle(MouseDragEvent event) {
+            if (type == DrawType.OBSTACLE) {
+              rectangle.setFill(Color.BLACK);
+            }
+            else if (type == DrawType.EMPTY) {
+              rectangle.setFill(Color.WHITE);
+            }
+          }
+        });
+
+        //rectangle.setOnMouseDragEntered(mouseEvent -> rectangle.setFill(Color.BLACK));
         grid.add(rectangle, x, y);
-
       }
     }
   }
@@ -130,6 +157,10 @@ public class MapCreator extends Application {
     obstacle.setToggleGroup(group);
     obstacle.setOnAction(e -> this.type = DrawType.OBSTACLE);
 
+    RadioButton erase = new RadioButton("Erase");
+    erase.setToggleGroup(group);
+    erase.setOnAction(e -> this.type = DrawType.EMPTY);
+
     RadioButton goal = new RadioButton("Goal");
     goal.setToggleGroup(group);
     goal.setOnAction(e -> this.type = DrawType.GOAL);
@@ -139,7 +170,7 @@ public class MapCreator extends Application {
     genArray.setOnAction(e -> generateCharArray(grid));
 
     radioButtons.setSpacing(15);
-    radioButtons.getChildren().addAll(startPoint, obstacle, goal, genArray);
+    radioButtons.getChildren().addAll(startPoint, obstacle, goal, erase, genArray);
 
     HBox hB = new HBox(20);
     hB.getChildren().addAll(radioButtons, grid);
