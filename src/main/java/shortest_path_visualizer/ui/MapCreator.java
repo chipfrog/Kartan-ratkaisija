@@ -7,6 +7,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.DragEvent;
@@ -25,14 +26,11 @@ import javafx.stage.Stage;
 public class MapCreator extends Application {
 
   private GridPane grid;
+  private char[][] mapArray;
+
   private int rows;
   private int cols;
   private DrawType type;
-  private int currentX;
-  private int currentY;
-
-  private int startX;
-  private int startY;
 
   private boolean startDrawn;
   private boolean goalDrawn;
@@ -40,16 +38,10 @@ public class MapCreator extends Application {
   public MapCreator() {
     this.cols = 30;
     this.rows = 30;
+    this.mapArray = new char[rows][cols];
     this.type = DrawType.START;
-    this.currentX = 0;
-    this.currentY = 0;
-
-    this.startX = 0;
-    this.startY = 0;
-
     this.startDrawn = false;
     this.goalDrawn = false;
-
   }
 
   public void createGrid() {
@@ -61,18 +53,18 @@ public class MapCreator extends Application {
 
     for (int y = 0; y < rows; y++) {
       for (int x = 0; x < cols; x++) {
-        int xCoor = x;
-        int yCoor = y;
         Rectangle rectangle = new Rectangle(20,20, Color.WHITE);
         rectangle.setOnMouseClicked(new EventHandler<MouseEvent>() {
           @Override
           public void handle(MouseEvent event) {
-            if (type == DrawType.START) {
+            if (type == DrawType.START && startDrawn == false) {
               rectangle.setFill(Color.GREEN);
+              startDrawn = true;
 
             }
-            if (type == DrawType.GOAL) {
+            if (type == DrawType.GOAL && goalDrawn == false) {
               rectangle.setFill(Color.RED);
+              goalDrawn = true;
             }
           }
         });
@@ -88,15 +80,39 @@ public class MapCreator extends Application {
 
   public Node getNode (int row, int column, GridPane gridPane) {
     ObservableList<Node> nodes = gridPane.getChildren();
-    Node rectToReturn = null;
+    Node nodeToReturn = null;
 
     for (Node node : nodes) {
       if (GridPane.getRowIndex(node) == row && GridPane.getColumnIndex(node) == column) {
-        rectToReturn = node;
+        nodeToReturn = node;
         break;
       }
     }
-    return rectToReturn;
+    return nodeToReturn;
+  }
+
+  public char[][] generateCharArray(GridPane gridPane) {
+    for (Node node : gridPane.getChildren()) {
+      int row = GridPane.getRowIndex(node);
+      int column = GridPane.getColumnIndex(node);
+      Rectangle rect = (Rectangle)node;
+      if (rect.getFill() == Color.WHITE) {
+        mapArray[row][column] = '.';
+      } else if (rect.getFill() == Color.BLACK) {
+        mapArray[row][column] = 'T';
+      } else if (rect.getFill() == Color.GREEN) {
+        mapArray[row][column] = 'S';
+      } else {
+        mapArray[row][column] = 'G';
+      }
+    }
+    for (int i = 0; i < mapArray.length; i ++) {
+      for (int j = 0; j < mapArray[0].length; j ++) {
+        System.out.print(mapArray[i][j]);
+      }
+      System.out.println();
+    }
+    return mapArray;
   }
 
 
@@ -119,8 +135,11 @@ public class MapCreator extends Application {
     goal.setOnAction(e -> this.type = DrawType.GOAL);
 
     VBox radioButtons = new VBox();
+    Button genArray = new Button("Generate");
+    genArray.setOnAction(e -> generateCharArray(grid));
+
     radioButtons.setSpacing(15);
-    radioButtons.getChildren().addAll(startPoint, obstacle, goal);
+    radioButtons.getChildren().addAll(startPoint, obstacle, goal, genArray);
 
     HBox hB = new HBox(20);
     hB.getChildren().addAll(radioButtons, grid);
