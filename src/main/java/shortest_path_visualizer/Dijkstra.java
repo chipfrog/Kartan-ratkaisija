@@ -1,6 +1,7 @@
 package shortest_path_visualizer;
 
 import java.util.ArrayList;
+import java.util.PriorityQueue;
 
 /**
  * Luokka, jossa toteutetaan Dijkstran algoritmi.
@@ -9,13 +10,47 @@ import java.util.ArrayList;
 public class Dijkstra {
   private final IO io;
   private final char[][] karttamatriisi;
-  private final int[][] solmuMatriisi;
-  private ArrayList<Integer>[] verkko;
+  private final Node[][] solmuMatriisi;
+
+  private PriorityQueue<Node> keko;
+  private int[] etaisyys;
+  private ArrayList<Node>[] verkko;
+
+  private Node startingNode;
 
   public Dijkstra(IO io, char[][] karttamatriisi) {
     this.io = io;
     this.karttamatriisi = karttamatriisi;
-    this.solmuMatriisi = new int[karttamatriisi.length][karttamatriisi[0].length];
+    this.solmuMatriisi = new Node[karttamatriisi.length][karttamatriisi[0].length];
+    this.etaisyys = new int[karttamatriisi.length * karttamatriisi[0].length];
+    this.keko = new PriorityQueue<>();
+  }
+
+  public void runDijkstra() {
+    initEtaisyydet(startingNode);
+    keko.add(startingNode);
+
+    while (!keko.isEmpty()) {
+      Node node = keko.poll();
+      if (node.onVierailtu()) {
+        continue;
+      }
+      node.vieraile();
+      if (node.getGoal()) {
+        System.out.println("Etaisyys maaliin: " + node.getEtaisyys());
+      }
+
+      for (Node naapuri : verkko[node.getTunnus()]) {
+        int nykyinenEtaisyys = etaisyys[naapuri.getTunnus()];
+        int uusiEtaisyys = etaisyys[node.getTunnus()] + 1;
+
+        if (uusiEtaisyys < nykyinenEtaisyys) {
+          etaisyys[naapuri.getTunnus()] = uusiEtaisyys;
+          naapuri.setEtaisyys(uusiEtaisyys);
+          keko.add(naapuri);
+        }
+      }
+    }
   }
 
   /**
@@ -29,20 +64,34 @@ public class Dijkstra {
     int solmunumero = 1;
     for (int i = 0; i < karttamatriisi.length; i++) {
       for (int j = 0; j < karttamatriisi[0].length; j++) {
-        solmuMatriisi[i][j] = solmunumero;
+        Node node = new Node(solmunumero);
+        if (karttamatriisi[i][j] == 'G') {
+          node.setAsGoalNode();
+        }
+        else if (karttamatriisi[i][j] == 'S') {
+          this.startingNode = new Node(solmunumero);
+        }
+        solmuMatriisi[i][j] = node;
         solmunumero++;
       }
     }
     for (int i = 0; i < karttamatriisi.length; i++) {
       for (int j = 0; j < karttamatriisi[0].length; j++) {
-        verkko[solmuMatriisi[i][j]] = haeNaapurisolmut(j, i);
+        verkko[solmuMatriisi[i][j].getTunnus()] = haeNaapurisolmut(j, i);
       }
     }
   }
 
-  public int[][] getSolmumatriisi() {
-    return this.solmuMatriisi;
+  public void initEtaisyydet(Node startingNode) {
+    for(int i = 0; i < etaisyys.length; i ++) {
+      etaisyys[i] = Integer.MAX_VALUE;
+    }
+    etaisyys[startingNode.getTunnus()] = 0;
   }
+
+  /*public int[][] getSolmumatriisi() {
+    return this.solmuMatriisi;
+  }*/
 
   /*public void printSolmumatriisi() {
     for (int i = 0; i < solmuMatriisi.length; i++) {
@@ -55,7 +104,7 @@ public class Dijkstra {
 
   public void printKaaret() {
     for (int i = 1; i < verkko.length; i++) {
-      io.printString("Solmu: " + i);
+      io.printString("Node: " + i);
       for (int j = 0; j < verkko[i].size(); j++) {
         io.printString(verkko[i].get(j) + " ");
       }
@@ -71,8 +120,8 @@ public class Dijkstra {
    * @return lista naapurisolmuista
    */
 
-  public ArrayList<Integer> haeNaapurisolmut(int currentX, int currentY) {
-    ArrayList<Integer> naapurit = new ArrayList<>();
+  public ArrayList<Node> haeNaapurisolmut(int currentX, int currentY) {
+    ArrayList<Node> naapurit = new ArrayList<>();
 
     if (karttamatriisi[currentY][currentX] != 'T') {
       // Vasen yläkulma
@@ -138,7 +187,7 @@ public class Dijkstra {
    * @param naapurit lista, johon naapurisolmut lisätään
    */
 
-  private void checkSouth(int currentX, int currentY, ArrayList<Integer> naapurit) {
+  private void checkSouth(int currentX, int currentY, ArrayList<Node> naapurit) {
     if (karttamatriisi[currentY + 1][currentX] != 'T') {
       naapurit.add(solmuMatriisi[currentY + 1][currentX]);
     }
@@ -150,7 +199,7 @@ public class Dijkstra {
    * @param naapurit lista, johon naapurisolmut lisätään
    */
 
-  private void checkNorth(int currentX, int currentY, ArrayList<Integer> naapurit) {
+  private void checkNorth(int currentX, int currentY, ArrayList<Node> naapurit) {
     if (karttamatriisi[currentY - 1][currentX] != 'T') {
       naapurit.add(solmuMatriisi[currentY - 1][currentX]);
     }
@@ -162,7 +211,7 @@ public class Dijkstra {
    * @param naapurit lista, johon naapurisolmut lisätään
    */
 
-  private void checkEast(int currentX, int currentY, ArrayList<Integer> naapurit) {
+  private void checkEast(int currentX, int currentY, ArrayList<Node> naapurit) {
     if (karttamatriisi[currentY][currentX + 1] != 'T') {
       naapurit.add(solmuMatriisi[currentY][currentX + 1]);
     }
@@ -174,7 +223,7 @@ public class Dijkstra {
    * @param naapurit lista, johon naapurisolmut lisätään
    */
 
-  private void checkWest(int currentX, int currentY, ArrayList<Integer> naapurit) {
+  private void checkWest(int currentX, int currentY, ArrayList<Node> naapurit) {
     if (karttamatriisi[currentY][currentX - 1] != 'T') {
       naapurit.add(solmuMatriisi[currentY][currentX - 1]);
     }

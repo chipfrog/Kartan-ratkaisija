@@ -1,7 +1,6 @@
 package shortest_path_visualizer.ui;
 
 import javafx.application.Application;
-import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Node;

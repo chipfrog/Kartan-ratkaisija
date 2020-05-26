@@ -8,14 +8,16 @@ import java.io.FileNotFoundException;
 public class Main {
   public static void main(String[] args) throws FileNotFoundException {
 
-    Application.launch(MapCreator.class );
-    /*MapReader reader = new MapReader(new MapReaderIO());
+    //Application.launch(MapCreator.class );
+    MapReader reader = new MapReader(new MapReaderIO());
     reader.createMatrix(new File("src/main/resources/testikartta.txt"));
-    reader.printMap();*/
+    //reader.printMap();
 
-    /*Dijkstra d = new Dijkstra(new MapReaderIO(), reader.getMapArray());
+    Dijkstra d = new Dijkstra(new MapReaderIO(), reader.getMapArray());
     d.initVerkko();
-    d.printSolmumatriisi();
+    d.runDijkstra();
+
+    /*d.printSolmumatriisi();
     d.printKaaret();*/
 
   }
