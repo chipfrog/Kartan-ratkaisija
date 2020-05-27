@@ -1,6 +1,7 @@
 package shortest_path_visualizer;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.PriorityQueue;
 
 /**
@@ -17,6 +18,7 @@ public class Dijkstra {
   private ArrayList<Node>[] verkko;
   private Node startingNode;
   private Node goalNode;
+  private ArrayList<Node> visitedOrder;
 
   public Dijkstra(char[][] karttamatriisi) {
     //this.io = io;
@@ -24,6 +26,7 @@ public class Dijkstra {
     this.solmuMatriisi = new Node[karttamatriisi.length][karttamatriisi[0].length];
     this.etaisyys = new int[karttamatriisi.length * karttamatriisi[0].length];
     this.keko = new PriorityQueue<>();
+    this.visitedOrder = new ArrayList<>();
   }
 
   public void runDijkstra() {
@@ -36,6 +39,7 @@ public class Dijkstra {
         continue;
       }
       node.vieraile();
+      visitedOrder.add(node);
       if (node.getGoal()) {
         this.goalNode = node;
         System.out.println("Etaisyys maaliin: " + node.getEtaisyys());
@@ -58,6 +62,10 @@ public class Dijkstra {
       }
     }
   }
+  public ArrayList<Node> getVisitedOrder() {
+    return this.visitedOrder;
+  }
+
   public void haeReitti() {
     Node currentNode = goalNode;
     while (!currentNode.getStart()) {
@@ -110,7 +118,7 @@ public class Dijkstra {
     int solmut = karttamatriisi.length * karttamatriisi[0].length;
     this.verkko = new ArrayList[solmut + 1];
 
-    int solmunumero = 1;
+    int solmunumero = 0;
     for (int i = 0; i < karttamatriisi.length; i++) {
       for (int j = 0; j < karttamatriisi[0].length; j++) {
         Node node = new Node(solmunumero, j, i);
