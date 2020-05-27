@@ -6,15 +6,26 @@ public class Node implements Comparable<Node> {
   private boolean vierailtu;
   private boolean start;
   private boolean goal;
+  private int xCoor;
+  private int yCoor;
 
-  public Node(int tunnus) {
+  public Node(int tunnus, int xCoor, int yCoor) {
     this.tunnus = tunnus;
     this.etaisyys = etaisyys;
     this.vierailtu = false;
     this.start = false;
     this.goal = false;
+    this.xCoor = xCoor;
+    this.yCoor = yCoor;
 
   }
+  public int getX() {
+    return this.xCoor;
+  }
+  public int getY() {
+    return this.yCoor;
+  }
+
   public void setAsStartNode() {
     this.start = true;
   }

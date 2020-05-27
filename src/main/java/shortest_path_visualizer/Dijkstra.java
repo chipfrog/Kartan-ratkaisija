@@ -8,18 +8,18 @@ import java.util.PriorityQueue;
  */
 
 public class Dijkstra {
-  private final IO io;
+  //private final IO io;
   private final char[][] karttamatriisi;
   private final Node[][] solmuMatriisi;
 
   private PriorityQueue<Node> keko;
   private int[] etaisyys;
   private ArrayList<Node>[] verkko;
-
   private Node startingNode;
+  private Node goalNode;
 
-  public Dijkstra(IO io, char[][] karttamatriisi) {
-    this.io = io;
+  public Dijkstra(char[][] karttamatriisi) {
+    //this.io = io;
     this.karttamatriisi = karttamatriisi;
     this.solmuMatriisi = new Node[karttamatriisi.length][karttamatriisi[0].length];
     this.etaisyys = new int[karttamatriisi.length * karttamatriisi[0].length];
@@ -37,7 +37,12 @@ public class Dijkstra {
       }
       node.vieraile();
       if (node.getGoal()) {
+        this.goalNode = node;
         System.out.println("Etaisyys maaliin: " + node.getEtaisyys());
+        break;
+      }
+      if (!node.getStart()) {
+        karttamatriisi[node.getY()][node.getX()] = 'O';
       }
 
       for (Node naapuri : verkko[node.getTunnus()]) {
@@ -46,10 +51,54 @@ public class Dijkstra {
 
         if (uusiEtaisyys < nykyinenEtaisyys) {
           etaisyys[naapuri.getTunnus()] = uusiEtaisyys;
+          solmuMatriisi[naapuri.getY()][naapuri.getX()].setEtaisyys(uusiEtaisyys);
           naapuri.setEtaisyys(uusiEtaisyys);
           keko.add(naapuri);
         }
       }
+    }
+  }
+  public void haeReitti() {
+    Node currentNode = goalNode;
+    while (!currentNode.getStart()) {
+      Node naapuri = pieninNaapuri(currentNode);
+      currentNode = naapuri;
+      if (!naapuri.getStart()) {
+        karttamatriisi[currentNode.getY()][currentNode.getX()] = 'X';
+      }
+    }
+  }
+
+  public Node pieninNaapuri(Node node) {
+    int minDist = Integer.MAX_VALUE;
+    Node smallestDistNode = null;
+    ArrayList<Node> naapurit = verkko[node.getTunnus()];
+
+    for (int i = 0; i < naapurit.size(); i ++) {
+      if (naapurit.get(i).getStart()) {
+        smallestDistNode = naapurit.get(i);
+      }
+      else if (naapurit.get(i).getEtaisyys() < minDist) {
+        minDist = naapurit.get(i).getEtaisyys();
+        smallestDistNode = naapurit.get(i);
+      }
+
+    }
+    return smallestDistNode;
+  }
+
+  public char[][] getSolvedMap() {
+    haeReitti();
+    return this.karttamatriisi;
+  }
+
+
+  public void printMap() {
+    for (int i = 0; i < karttamatriisi.length; i ++) {
+      for (int j = 0; j < karttamatriisi[0].length; j ++) {
+        System.out.print(karttamatriisi[i][j]);
+      }
+      System.out.println();
     }
   }
 
@@ -64,12 +113,14 @@ public class Dijkstra {
     int solmunumero = 1;
     for (int i = 0; i < karttamatriisi.length; i++) {
       for (int j = 0; j < karttamatriisi[0].length; j++) {
-        Node node = new Node(solmunumero);
+        Node node = new Node(solmunumero, j, i);
+        node.setEtaisyys(Integer.MAX_VALUE);
         if (karttamatriisi[i][j] == 'G') {
           node.setAsGoalNode();
         }
         else if (karttamatriisi[i][j] == 'S') {
-          this.startingNode = new Node(solmunumero);
+          node.setAsStartNode();
+          this.startingNode = node;
         }
         solmuMatriisi[i][j] = node;
         solmunumero++;
@@ -88,29 +139,6 @@ public class Dijkstra {
     }
     etaisyys[startingNode.getTunnus()] = 0;
   }
-
-  /*public int[][] getSolmumatriisi() {
-    return this.solmuMatriisi;
-  }*/
-
-  /*public void printSolmumatriisi() {
-    for (int i = 0; i < solmuMatriisi.length; i++) {
-      for (int j = 0; j < solmuMatriisi[0].length; j++) {
-        io.printStringWithoutNewLine(solmuMatriisi[i][j] + " ");
-      }
-      io.printString("");
-    }
-  }
-
-  public void printKaaret() {
-    for (int i = 1; i < verkko.length; i++) {
-      io.printString("Node: " + i);
-      for (int j = 0; j < verkko[i].size(); j++) {
-        io.printString(verkko[i].get(j) + " ");
-      }
-      io.printString("");
-    }
-  }*/
 
   /**
    * Metodi hakee matriisikartan solmulle kaikki naapurisolmut, eli solmut jotka eivät ole esteitä.
@@ -137,7 +165,7 @@ public class Dijkstra {
       // Vasen alakulma
       else if (currentX == 0 && currentY == karttamatriisi.length - 1) {
         checkNorth(currentX, currentY, naapurit);
-        checkWest(currentX, currentY, naapurit);
+        checkEast(currentX, currentY, naapurit);
       }
       // Oikea alakulma
       else if (currentX == karttamatriisi[0].length - 1 &&
