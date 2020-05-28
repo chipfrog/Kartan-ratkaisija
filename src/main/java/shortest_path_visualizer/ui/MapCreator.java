@@ -57,13 +57,16 @@ public class MapCreator extends Application {
     this.distToGoal = new Label("Dist: ");
   }
 
+  /**
+   * Luo ruudukon, jonka ruudut voi värittää. Musta = este, vihreä = aloitussolmu, punainen = maalisolmu, valkoinen = tavallinen solmu.
+   */
   public void createGrid() {
     double xPikselit = 0;
     double yPikselit = 0;
 
     for (int y = 0; y < rows; y++) {
       for (int x = 0; x < cols; x++) {
-        Rectangle rectangle = new Rectangle(20,20, Color.WHITE);
+        Rectangle rectangle = new Rectangle(20, 20, Color.WHITE);
         if (x == 0) {
           xPikselit = 0;
         } else {
@@ -75,21 +78,17 @@ public class MapCreator extends Application {
             if (event.getButton().equals(MouseButton.PRIMARY)) {
               if (type == DrawType.OBSTACLE) {
                 rectangle.setFill(Color.BLACK);
-              }
-              else if (type == DrawType.START && !startDrawn) {
+              } else if (type == DrawType.START && !startDrawn) {
                 rectangle.setFill(Color.GREEN);
                 startDrawn = true;
-              }
-              else if (type == DrawType.GOAL && !goalDrawn) {
+              } else if (type == DrawType.GOAL && !goalDrawn) {
                 rectangle.setFill(Color.RED);
                 goalDrawn = true;
               }
-            }
-            else if (event.getButton().equals(MouseButton.SECONDARY)) {
+            } else if (event.getButton().equals(MouseButton.SECONDARY)) {
               if (rectangle.getFill() == Color.GREEN) {
                 startDrawn = false;
-              }
-              else if (rectangle.getFill() == Color.RED) {
+              } else if (rectangle.getFill() == Color.RED) {
                 goalDrawn = false;
               }
               rectangle.setFill(Color.WHITE);
@@ -114,8 +113,7 @@ public class MapCreator extends Application {
                 goalDrawn = false;
               }
               rectangle.setFill(Color.BLACK);
-            }
-            else if (event.getButton().equals(MouseButton.SECONDARY)) {
+            } else if (event.getButton().equals(MouseButton.SECONDARY)) {
               if (rectangle.getFill() == Color.GREEN) {
                 startDrawn = false;
               } else if (rectangle.getFill() == Color.RED) {
@@ -135,6 +133,12 @@ public class MapCreator extends Application {
     }
   }
 
+  /**
+   * Pyyhkii ruudukon tyhjäksi
+   *
+   * @param stage
+   * @throws Exception
+   */
   public void resetMap(Stage stage) throws Exception {
     this.type = DrawType.START;
     startDrawn = false;
@@ -145,9 +149,14 @@ public class MapCreator extends Application {
     start(stage);
   }
 
+  /**
+   * Luo char-matriisin piirretystä ruudukosta.
+   *
+   * @return char-matriisi / kartta
+   */
   public char[][] generateCharArray() {
-    for (int i = 0; i < rectChar.length; i ++) {
-      for (int j = 0; j < rectChar[0].length; j ++) {
+    for (int i = 0; i < rectChar.length; i++) {
+      for (int j = 0; j < rectChar[0].length; j++) {
         Rectangle rect = rectChar[i][j];
         if (rect.getFill() == Color.WHITE) {
           mapArray[i][j] = '.';
@@ -163,42 +172,62 @@ public class MapCreator extends Application {
     return mapArray;
   }
 
+  /**
+   * Käyttää dijkstran algoritmia ja suorittaa ruudukon värittämismetodit.
+   */
   public void solveMapUsingDijkstra() {
     generateCharArray();
     this.dijkstra = new Dijkstra(new MapReaderIO(), mapArray);
-    //dijkstra.initVerkko();
     dijkstra.runDijkstra();
-    distToGoal.setText("Dist: " + dijkstra.getEtaisyysMaaliin());
-    ArrayList<Node> visitedNodes = dijkstra.getVisitedOrder();
-    animateAlgorithm(visitedNodes);
-
+    if (dijkstra.getGoalNode() != null) {
+      distToGoal.setText("Dist: " + dijkstra.getEtaisyysMaaliin());
+      ArrayList<Node> visitedNodes = dijkstra.getVisitedOrder();
+      animateAlgorithm(visitedNodes);
+    } else {
+      System.out.println("Goal node unreachable!");
+    }
   }
 
+  /**
+   * Dijkstran algoritmin animaatio. Värittää uuden vieraillun solmun/ruudun tasaisin aikavälein. Värittää lopuksi lyhimmän reitin maalisolmusta aloitussolmuun.
+   *
+   * @param visitedNodes Vieraillut solmut.
+   */
   public void animateAlgorithm(ArrayList<Node> visitedNodes) {
     Timeline timeline = new Timeline(new KeyFrame(
-        Duration.millis(1),
+        Duration.millis(5),
         event -> {
           paintSquare(visitedNodes.get(nodeToPaint));
           numOfVisitedNodes.setText("Nodes: " + nodeToPaint);
-          nodeToPaint ++;
+          nodeToPaint++;
         }
     ));
-    timeline.setCycleCount(visitedNodes.size()-1);
+    timeline.setCycleCount(visitedNodes.size() - 1);
     timeline.play();
     timeline.setOnFinished(e -> {
       drawShortestPath(dijkstra.getSolvedMap());
     });
   }
 
+  /**
+   * Värittää parametrina annettavan solmun.
+   *
+   * @param node Väritettävä solmu
+   */
   public void paintSquare(Node node) {
     if (!node.getGoal() && !node.getStart()) {
       rectChar[node.getY()][node.getX()].setFill(Color.AQUA);
     }
   }
 
+  /**
+   * Värittää lyhimmän reitin maalisolmun ja aloitussolmun välille.
+   *
+   * @param solvedMap ratkaistu kartta/ char-matriisi
+   */
   public void drawShortestPath(char[][] solvedMap) {
-    for (int i = 0; i < solvedMap.length; i ++) {
-      for (int j = 0; j < solvedMap[0].length; j ++) {
+    for (int i = 0; i < solvedMap.length; i++) {
+      for (int j = 0; j < solvedMap[0].length; j++) {
         if (solvedMap[i][j] == 'X') {
           rectChar[i][j].setFill(Color.YELLOW);
         }

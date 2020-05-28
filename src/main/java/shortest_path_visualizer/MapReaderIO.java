@@ -48,7 +48,7 @@ public class MapReaderIO implements IO {
   }
 
   /**
-   * Hakee Scanner-oliolle annetusta tiedostosta seuraavan rivin
+   * Hakee Scanner-oliolle annetusta tiedostosta seuraavan rivin.
    * @return .txt-tiedoston seuraava rivi
    */
 

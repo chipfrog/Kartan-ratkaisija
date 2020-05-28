@@ -12,6 +12,7 @@ import shortest_path_visualizer.Node;
 public class DijkstraTest {
   File testMap = new File("src/test/resources/kartat/testikartta.txt");
   File specialCaseMap = new File("src/test/resources/kartat/erikoistapaus1.txt");
+  File unreachableGoalMap = new File ("src/test/resources/kartat/saavuttamatonmaali.txt");
 
   IOStub ioStub = new IOStub();
   MapReader mapReader = new MapReader(ioStub);
@@ -71,6 +72,13 @@ public class DijkstraTest {
   public void tracesShortestPathBackToNodeClosestToStartingNode() {
     d.runDijkstra();
     assertTrue(d.haeReitti().getEtaisyys() == 1);
+  }
+
+  @Test
+  public void programDoesNotCrashWhenGoalNodeIsUnreachable() throws FileNotFoundException{
+    Dijkstra d = initDijkstraWithNewMap(unreachableGoalMap);
+    d.runDijkstra();
+    assertTrue(d.getGoalNode() == null);
   }
 
   @Test

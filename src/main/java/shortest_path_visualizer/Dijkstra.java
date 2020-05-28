@@ -28,11 +28,15 @@ public class Dijkstra {
     this.keko = new PriorityQueue<>();
     this.visitedOrder = new ArrayList<>();
     this.etaisyysMaaliin = Integer.MAX_VALUE;
+    this.goalNode = null;
   }
 
+  /**
+   * Suorittaa Dijkstran algoritmin.
+   */
   public void runDijkstra() {
     initVerkko();
-    initEtaisyydet(startingNode);
+    initEtaisyydet();
     keko.add(startingNode);
 
     while (!keko.isEmpty()) {
@@ -65,6 +69,7 @@ public class Dijkstra {
       }
     }
   }
+
   public ArrayList<Node> getVisitedOrder() {
     return this.visitedOrder;
   }
@@ -73,6 +78,12 @@ public class Dijkstra {
     return this.etaisyysMaaliin;
   }
 
+
+  /**
+   * Piirtää karttamatriisiin lyhimmän reitin maalisolmusta aloitussolmuun, kun solmujen etäisyydet on ensin selvitetty Dijkstran algoritmilla.
+   *
+   * @return Maalisolmu, jos reitti alotussolmuun löytyy. Null, jos ei löydy.
+   */
   public Node haeReitti() {
     Node currentNode = goalNode;
     while (currentNode.getEtaisyys() != 1) {
@@ -85,16 +96,21 @@ public class Dijkstra {
     return currentNode;
   }
 
+  /**
+   * Hakee parametrina annetulle solmulle naapurisolmun, jonka etäisyys aloitussolmuun on pienin.
+   *
+   * @param node Solmu, jolle etäisyydeltään pienin naapurisolmu haetaan.
+   * @return Solmu, jonka etäisyys aloitussolmuun pienin.
+   */
   public Node pieninNaapuri(Node node) {
     int minDist = Integer.MAX_VALUE;
     Node smallestDistNode = null;
     ArrayList<Node> naapurit = verkko[node.getTunnus()];
 
-    for (int i = 0; i < naapurit.size(); i ++) {
+    for (int i = 0; i < naapurit.size(); i++) {
       if (naapurit.get(i).getStart()) {
         smallestDistNode = naapurit.get(i);
-      }
-      else if (naapurit.get(i).getEtaisyys() < minDist) {
+      } else if (naapurit.get(i).getEtaisyys() < minDist) {
         minDist = naapurit.get(i).getEtaisyys();
         smallestDistNode = naapurit.get(i);
       }
@@ -103,6 +119,11 @@ public class Dijkstra {
     return smallestDistNode;
   }
 
+  /**
+   * Palauttaa ratkaistun kartan, jossa näkyvät vieraillut solmut ja eräs lyhin reitti aloitussolmusta maalisolmuun. Dijkstran algoritmi tulee ajaan ensin.
+   *
+   * @return Karttamatriisi, johon merkattu käydyt solmut ja lyhin reitti.
+   */
   public char[][] getSolvedMap() {
     haeReitti();
     return this.karttamatriisi;
@@ -110,8 +131,8 @@ public class Dijkstra {
 
 
   public void printMap() {
-    for (int i = 0; i < karttamatriisi.length; i ++) {
-      for (int j = 0; j < karttamatriisi[0].length; j ++) {
+    for (int i = 0; i < karttamatriisi.length; i++) {
+      for (int j = 0; j < karttamatriisi[0].length; j++) {
         io.printChar(karttamatriisi[i][j]);
       }
       io.printString("");
@@ -124,24 +145,25 @@ public class Dijkstra {
 
   private void initVerkko() {
     int solmut = karttamatriisi.length * karttamatriisi[0].length;
-    this.verkko = new ArrayList[solmut + 1];
+    this.verkko = new ArrayList[solmut];
 
-    int solmunumero = 0;
+    // Täytetään solmumatriisi solmuolioilla. Merkitään mikä on aloitussolmu ja mikä maalisolmu.
+    int solmutunnus = 0;
     for (int i = 0; i < karttamatriisi.length; i++) {
       for (int j = 0; j < karttamatriisi[0].length; j++) {
-        Node node = new Node(solmunumero, j, i);
+        Node node = new Node(solmutunnus, j, i);
         node.setEtaisyys(Integer.MAX_VALUE);
         if (karttamatriisi[i][j] == 'G') {
           node.setAsGoalNode();
-        }
-        else if (karttamatriisi[i][j] == 'S') {
+        } else if (karttamatriisi[i][j] == 'S') {
           node.setAsStartNode();
           this.startingNode = node;
         }
         solmuMatriisi[i][j] = node;
-        solmunumero++;
+        solmutunnus++;
       }
     }
+    // Lisätään kullekin solmumatriisin solmulle lista naapurisolmuista
     for (int i = 0; i < karttamatriisi.length; i++) {
       for (int j = 0; j < karttamatriisi[0].length; j++) {
         verkko[solmuMatriisi[i][j].getTunnus()] = haeNaapurisolmut(j, i);
@@ -149,8 +171,15 @@ public class Dijkstra {
     }
   }
 
-  public void initEtaisyydet(Node startingNode) {
-    for(int i = 0; i < etaisyys.length; i ++) {
+  public Node getGoalNode() {
+    return this.goalNode;
+  }
+
+  /**
+   * Alustaa solmujen etäisyystaulukon. Kunkin solmun etäisyydeksi tulee aluksi "ääretön".
+   */
+  public void initEtaisyydet() {
+    for (int i = 0; i < etaisyys.length; i++) {
       etaisyys[i] = Integer.MAX_VALUE;
     }
     etaisyys[startingNode.getTunnus()] = 0;
@@ -159,6 +188,7 @@ public class Dijkstra {
   /**
    * Metodi hakee matriisikartan solmulle kaikki naapurisolmut, eli solmut jotka eivät ole esteitä.
    * Tarkasteltavan solmun x- ja y-koordinaatit annettu parametreina.
+   *
    * @param currentX solmun sarake matriisissa
    * @param currentY solmun rivi matriisissa
    * @return lista naapurisolmuista
@@ -226,6 +256,7 @@ public class Dijkstra {
 
   /**
    * Tarkistaa onko naapurisolmuja etelässä.
+   *
    * @param currentX solmun sarake matriisissa
    * @param currentY solmun rivi matriisissa
    * @param naapurit lista, johon naapurisolmut lisätään
@@ -236,8 +267,10 @@ public class Dijkstra {
       naapurit.add(solmuMatriisi[currentY + 1][currentX]);
     }
   }
+
   /**
    * Tarkistaa onko naapurisolmuja pohjoisessa.
+   *
    * @param currentX solmun sarake matriisissa
    * @param currentY solmun rivi matriisissa
    * @param naapurit lista, johon naapurisolmut lisätään
@@ -248,8 +281,10 @@ public class Dijkstra {
       naapurit.add(solmuMatriisi[currentY - 1][currentX]);
     }
   }
+
   /**
    * Tarkistaa onko naapurisolmuja idässä.
+   *
    * @param currentX solmun sarake matriisissa
    * @param currentY solmun rivi matriisissa
    * @param naapurit lista, johon naapurisolmut lisätään
@@ -260,8 +295,10 @@ public class Dijkstra {
       naapurit.add(solmuMatriisi[currentY][currentX + 1]);
     }
   }
+
   /**
    * Tarkistaa onko naapurisolmuja lännessä.
+   *
    * @param currentX solmun sarake matriisissa
    * @param currentY solmun rivi matriisissa
    * @param naapurit lista, johon naapurisolmut lisätään
