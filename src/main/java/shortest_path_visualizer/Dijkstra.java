@@ -1,7 +1,6 @@
 package shortest_path_visualizer;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.PriorityQueue;
 
 /**
@@ -9,7 +8,7 @@ import java.util.PriorityQueue;
  */
 
 public class Dijkstra {
-  //private final IO io;
+  private final IO io;
   private final char[][] karttamatriisi;
   private final Node[][] solmuMatriisi;
 
@@ -19,14 +18,16 @@ public class Dijkstra {
   private Node startingNode;
   private Node goalNode;
   private ArrayList<Node> visitedOrder;
+  private int etaisyysMaaliin;
 
-  public Dijkstra(char[][] karttamatriisi) {
-    //this.io = io;
+  public Dijkstra(IO io, char[][] karttamatriisi) {
+    this.io = io;
     this.karttamatriisi = karttamatriisi;
     this.solmuMatriisi = new Node[karttamatriisi.length][karttamatriisi[0].length];
     this.etaisyys = new int[karttamatriisi.length * karttamatriisi[0].length];
     this.keko = new PriorityQueue<>();
     this.visitedOrder = new ArrayList<>();
+    this.etaisyysMaaliin = Integer.MAX_VALUE;
   }
 
   public void runDijkstra() {
@@ -42,7 +43,8 @@ public class Dijkstra {
       visitedOrder.add(node);
       if (node.getGoal()) {
         this.goalNode = node;
-        System.out.println("Etaisyys maaliin: " + node.getEtaisyys());
+        this.etaisyysMaaliin = node.getEtaisyys();
+        System.out.println("Etäisyys maaliin: " + node.getEtaisyys());
         break;
       }
       if (!node.getStart()) {
@@ -66,9 +68,13 @@ public class Dijkstra {
     return this.visitedOrder;
   }
 
+  public int getEtaisyysMaaliin() {
+    return this.etaisyysMaaliin;
+  }
+
   public void haeReitti() {
     Node currentNode = goalNode;
-    while (!currentNode.getStart()) {
+    while (currentNode.getEtaisyys() != 1) {
       Node naapuri = pieninNaapuri(currentNode);
       currentNode = naapuri;
       if (!naapuri.getStart()) {
@@ -104,9 +110,9 @@ public class Dijkstra {
   public void printMap() {
     for (int i = 0; i < karttamatriisi.length; i ++) {
       for (int j = 0; j < karttamatriisi[0].length; j ++) {
-        System.out.print(karttamatriisi[i][j]);
+        io.printChar(karttamatriisi[i][j]);
       }
-      System.out.println();
+      io.printString("");
     }
   }
 

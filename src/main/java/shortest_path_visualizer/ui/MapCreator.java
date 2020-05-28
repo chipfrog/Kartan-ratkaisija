@@ -1,7 +1,6 @@
 package shortest_path_visualizer.ui;
 
 import java.util.ArrayList;
-import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -23,6 +22,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import shortest_path_visualizer.Dijkstra;
+import shortest_path_visualizer.MapReaderIO;
 import shortest_path_visualizer.Node;
 
 /**
@@ -41,6 +41,7 @@ public class MapCreator extends Application {
   private Dijkstra dijkstra;
   private int nodeToPaint;
   private Label numOfVisitedNodes;
+  private Label distToGoal;
 
   public MapCreator() {
     this.cols = 50;
@@ -53,7 +54,7 @@ public class MapCreator extends Application {
     this.pane = new Pane();
     this.nodeToPaint = 1;
     this.numOfVisitedNodes = new Label("Nodes: " + 0);
-
+    this.distToGoal = new Label("Dist: ");
   }
 
   public void createGrid() {
@@ -125,7 +126,7 @@ public class MapCreator extends Application {
           }
         });
         yPikselit = y * 20;
-        rectangle.setStyle("-fx-stroke: gray; -fx-stroke-width: 2;");
+        rectangle.setStyle("-fx-stroke: lightgray; -fx-stroke-width: 2;");
         rectangle.setLayoutX(xPikselit);
         rectangle.setLayoutY(yPikselit);
         rectChar[y][x] = rectangle;
@@ -138,6 +139,9 @@ public class MapCreator extends Application {
     this.type = DrawType.START;
     startDrawn = false;
     goalDrawn = false;
+    nodeToPaint = 1;
+    numOfVisitedNodes.setText("Nodes: " + 0);
+    distToGoal.setText("Nodes: ");
     start(stage);
   }
 
@@ -151,7 +155,7 @@ public class MapCreator extends Application {
           mapArray[i][j] = 'T';
         } else if (rect.getFill() == Color.GREEN) {
           mapArray[i][j] = 'S';
-        } else {
+        } else if (rect.getFill() == Color.RED) {
           mapArray[i][j] = 'G';
         }
       }
@@ -161,9 +165,11 @@ public class MapCreator extends Application {
 
   public void solveMapUsingDijkstra() {
     generateCharArray();
-    this.dijkstra = new Dijkstra(mapArray);
+    this.dijkstra = new Dijkstra(new MapReaderIO(), mapArray);
+    dijkstra.printMap();
     dijkstra.initVerkko();
     dijkstra.runDijkstra();
+    distToGoal.setText("Dist: " + dijkstra.getEtaisyysMaaliin());
     //dijkstra.printMap();
 
     ArrayList<Node> visitedNodes = dijkstra.getVisitedOrder();
@@ -173,14 +179,14 @@ public class MapCreator extends Application {
 
   public void animateAlgorithm(ArrayList<Node> visitedNodes) {
     Timeline timeline = new Timeline(new KeyFrame(
-        Duration.millis(10),
+        Duration.millis(1),
         event -> {
           paintSquare(visitedNodes.get(nodeToPaint));
           numOfVisitedNodes.setText("Nodes: " + nodeToPaint);
           nodeToPaint ++;
         }
     ));
-    timeline.setCycleCount(visitedNodes.size() - 10);
+    timeline.setCycleCount(visitedNodes.size()-1);
     timeline.play();
     timeline.setOnFinished(e -> {
       drawShortestPath(dijkstra.getSolvedMap());
@@ -230,14 +236,14 @@ public class MapCreator extends Application {
     reset.setOnAction(e -> {
       try {
         resetMap(primaryStage);
-        nodeToPaint = 1;
       } catch (Exception exception) {
         exception.printStackTrace();
       }
     });
 
     buttonMenu.setSpacing(15);
-    buttonMenu.getChildren().addAll(startPoint, goal, obstacle, genArray, reset, numOfVisitedNodes);
+    buttonMenu.getChildren().addAll(startPoint, goal, obstacle, genArray,
+        reset, numOfVisitedNodes, distToGoal);
 
     HBox hB = new HBox(20);
     hB.getChildren().addAll(buttonMenu, pane);

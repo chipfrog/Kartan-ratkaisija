@@ -11,7 +11,7 @@ public class Node implements Comparable<Node> {
 
   public Node(int tunnus, int xCoor, int yCoor) {
     this.tunnus = tunnus;
-    this.etaisyys = etaisyys;
+    //this.etaisyys = etaisyys;
     this.vierailtu = false;
     this.start = false;
     this.goal = false;
