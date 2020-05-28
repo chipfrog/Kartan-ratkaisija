@@ -31,6 +31,7 @@ public class Dijkstra {
   }
 
   public void runDijkstra() {
+    initVerkko();
     initEtaisyydet(startingNode);
     keko.add(startingNode);
 
@@ -72,7 +73,7 @@ public class Dijkstra {
     return this.etaisyysMaaliin;
   }
 
-  public void haeReitti() {
+  public Node haeReitti() {
     Node currentNode = goalNode;
     while (currentNode.getEtaisyys() != 1) {
       Node naapuri = pieninNaapuri(currentNode);
@@ -81,6 +82,7 @@ public class Dijkstra {
         karttamatriisi[currentNode.getY()][currentNode.getX()] = 'X';
       }
     }
+    return currentNode;
   }
 
   public Node pieninNaapuri(Node node) {
@@ -120,7 +122,7 @@ public class Dijkstra {
    * Muodostaa solmuista vieruslistan, eli hakee matriisin jokaiselle solmulle naapurisolmut.
    */
 
-  public void initVerkko() {
+  private void initVerkko() {
     int solmut = karttamatriisi.length * karttamatriisi[0].length;
     this.verkko = new ArrayList[solmut + 1];
 

@@ -166,12 +166,9 @@ public class MapCreator extends Application {
   public void solveMapUsingDijkstra() {
     generateCharArray();
     this.dijkstra = new Dijkstra(new MapReaderIO(), mapArray);
-    dijkstra.printMap();
-    dijkstra.initVerkko();
+    //dijkstra.initVerkko();
     dijkstra.runDijkstra();
     distToGoal.setText("Dist: " + dijkstra.getEtaisyysMaaliin());
-    //dijkstra.printMap();
-
     ArrayList<Node> visitedNodes = dijkstra.getVisitedOrder();
     animateAlgorithm(visitedNodes);
 

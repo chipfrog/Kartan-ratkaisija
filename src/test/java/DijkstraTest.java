@@ -10,7 +10,9 @@ import shortest_path_visualizer.MapReader;
 import shortest_path_visualizer.Node;
 
 public class DijkstraTest {
-  File testMap = new File("src/test/resources/testikartta.txt");
+  File testMap = new File("src/test/resources/kartat/testikartta.txt");
+  File specialCaseMap = new File("src/test/resources/kartat/erikoistapaus1.txt");
+
   IOStub ioStub = new IOStub();
   MapReader mapReader = new MapReader(ioStub);
   char[][] mapMatrix;
@@ -22,6 +24,11 @@ public class DijkstraTest {
     mapMatrix = mapReader.getMapArray();
     d = new Dijkstra(ioStub, mapMatrix);
 
+  }
+  private Dijkstra initDijkstraWithNewMap(File file) throws FileNotFoundException{
+    mapReader.createMatrix(file);
+    char[][] newMapMatrix = mapReader.getMapArray();
+    return new Dijkstra(ioStub, newMapMatrix);
   }
 
   @Test
@@ -53,6 +60,30 @@ public class DijkstraTest {
     ArrayList<Node> neighbours = d.haeNaapurisolmut(18,2);
     assertTrue(neighbours.size() == 2);
   }
+
+  @Test
+  public void returnsShortestDistanceInBasicSituation() {
+    d.runDijkstra();
+    assertTrue(d.getEtaisyysMaaliin() == 5);
+  }
+
+  @Test
+  public void tracesShortestPathBackToNodeClosestToStartingNode() {
+    d.runDijkstra();
+    assertTrue(d.haeReitti().getEtaisyys() == 1);
+  }
+
+  @Test
+  public void tracesShortestPathBackToNodeClosestToStartingNodeInSpecialMap() throws FileNotFoundException {
+    Dijkstra d = initDijkstraWithNewMap(specialCaseMap);
+    d.runDijkstra();
+    assertTrue(d.getEtaisyysMaaliin() == 10);
+    assertTrue(d.haeReitti().getEtaisyys() == 1);
+  }
+
+
+
+
 
 
 

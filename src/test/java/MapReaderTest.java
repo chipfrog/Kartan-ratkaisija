@@ -8,7 +8,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class MapReaderTest {
-    File testMap = new File("src/test/resources/testikartta.txt");
+    File testMap = new File("src/test/resources/kartat/testikartta.txt");
 
     @Test
     public void matrixCanBeCreatedFromFile() throws FileNotFoundException {
