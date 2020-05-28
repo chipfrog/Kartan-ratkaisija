@@ -1,6 +1,6 @@
-[![CircleCI](https://circleci.com/gh/chipfrog/Shortest-path-visualizer.svg?style=svg)](https://circleci.com/gh/chipfrog/Shortest-path-visualizer)
-
 # Shortest path visualizer
+[![CircleCI](https://circleci.com/gh/chipfrog/Shortest-path-visualizer.svg?style=svg)](https://circleci.com/gh/chipfrog/Shortest-path-visualizer)
+[![codecov](https://codecov.io/gh/chipfrog/Shortest-path-visualizer/branch/master/graph/badge.svg)](https://codecov.io/gh/chipfrog/Shortest-path-visualizer)
 
 ## Viikkoraportit
 
