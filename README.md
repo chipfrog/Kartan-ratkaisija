@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/chipfrog/Shortest-path-visualizer.svg?style=svg)](https://circleci.com/gh/chipfrog/Shortest-path-visualizer)
+
 # Shortest path visualizer
 
 ## Viikkoraportit
