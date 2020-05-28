@@ -10,7 +10,7 @@ Testien suorittaminen konsolissa:
 
 Jacoco-raportin generointi:
 
-`./gradlw run jacocoTestReport`
+`./gradlw test jacocoTestReport`
 
 Jacocon generoiman testikattavuusraportin sijainti: 
 
