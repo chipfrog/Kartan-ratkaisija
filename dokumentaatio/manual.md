@@ -4,14 +4,14 @@ _Varsinaisen sovelluksen ohjeet tulossa myöhemmin..._
 
 ## Testien ajaminen
 
-Testien suorittaminen konsolissa:
+Testien suorittaminen konsolissa: `./gradlew test`
 
-`./gradlew test`
+Jacoco-raportin generointi: `./gradlw test jacocoTestReport`
 
-Jacoco-raportin generointi:
+Jacocon generoiman testikattavuusraportin sijainti: _/build/reports/jacoco/test/html/index.html_
 
-`./gradlw test jacocoTestReport`
+## Checkstyle
+Konsolissa:
+`./gradlew checkstyleMain`
 
-Jacocon generoiman testikattavuusraportin sijainti: 
-
-_/build/reports/jacoco/test/html/index.html_
+Raportti löytyy sijainnista: _/build/reports/checkstyle_
