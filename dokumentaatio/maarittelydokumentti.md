@@ -4,7 +4,7 @@
 
 Tarkoituksena on toteuttaa javalla ohjelma, joka etsii lyhimmän reitin verkon kahden solmun välillä erilaisia reitinhakualgoritmeja käyttäen. 
 Ohjelman avulla voidaan vertailla algoritmien nopeuseroja ja läpikäytyjä solmuja reitinhaussa, sekä mahdollisesti visualisoida niiden reitinhakuprosesseja.
-Verkkona toimii ruudukko, jossa yksittäinen ruutu kuvaa yhtä solmua ja jokaisesta solmusta on kaari kaikkiin ympäröiviin solmuihin (yhdestä ruudusta pääsee siis kahdeksaan ympäröivään ruutuun). Kaikki kaaret solmujen välillä ovat kustannukseltaan 1 arvoisia.
+Verkkona toimii ruudukko, jossa yksittäinen ruutu kuvaa yhtä solmua ja jokaisesta solmusta on kaari kaikkiin ympäröiviin solmuihin pohjois-etelä- ja itä-länsiakseleilla (yhdestä ruudusta pääsee siis neljään ympäröivään ruutuun). Kaikki kaaret solmujen välillä ovat kustannukseltaan 1 arvoisia.
 Käyttäjä voi vapaasti piirtää ruudukkoon esteitä, jotka algoritmin tulee tarvittaessa kiertää, ja valita halutun lähtöpisteen, sekä maalin. 
 Tämän jälkeen valitaan käytettävä reitinhakualgoritmi ja ohjelma piirtää lyhimmän reitin maaliin, sekä värittää ja laskee läpikäydyt ruudut ja ilmoittaa reitin hakemiseen kuluneen ajan. Sitten saman tehtävän voi antaa toiselle algoritmille, jolloin tuloksia pääsee vertailemaan. Ratkaistun tehtävän voi halutessaan myös tallentaa kuvana. Mikäli piirtämisen toteuttaminen ruudukkoineen käy liian hankalaksi, toteutetaan reitinhakualgoritmit vain valmiisiin ascii-merkkisiin [karttoihin](https://www.movingai.com/benchmarks/grids.html) ja visualisointi jätetään visualisoijasta toteuttamatta.
 
