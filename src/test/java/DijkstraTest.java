@@ -2,7 +2,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 import shortest_path_visualizer.Dijkstra;
@@ -24,6 +23,7 @@ public class DijkstraTest {
     mapReader.createMatrix(testMap);
     mapMatrix = mapReader.getMapArray();
     d = new Dijkstra(ioStub, mapMatrix);
+    d.initVerkko();
 
   }
   private Dijkstra initDijkstraWithNewMap(File file) throws FileNotFoundException{
@@ -34,32 +34,62 @@ public class DijkstraTest {
 
   @Test
   public void cellHasFourNeighboursIfNoneOfThemIsObstacle() {
-    ArrayList<Node> neighbours = d.haeNaapurisolmut(30,4);
-    assertTrue(neighbours.size() == 4);
+    Node[] neighbours = d.haeNaapurisolmut(30,4);
+    int nodes = 0;
+    for (int i = 0; i < neighbours.length; i ++) {
+      if (neighbours[i] != null) {
+        nodes ++;
+      }
+    }
+    assertTrue(nodes == 4);
   }
 
   @Test
   public void cellHasNoNeighboursIfItIsObstacle() {
-    ArrayList<Node> neighbours = d.haeNaapurisolmut(0,0);
-    assertTrue(neighbours.size() == 0);
+    Node[] neighbours = d.haeNaapurisolmut(0,0);
+    int nodes = 0;
+    for (int i = 0; i < neighbours.length; i ++) {
+      if (neighbours[i] != null) {
+        nodes ++;
+      }
+    }
+    assertTrue(nodes == 0);
   }
 
   @Test
   public void cellHasThreeNeighboursIfOneOfThemIsObstacle() {
-    ArrayList<Node> neighbours = d.haeNaapurisolmut(10,1);
-    assertTrue(neighbours.size() == 3);
+    Node[] neighbours = d.haeNaapurisolmut(10,1);
+    int nodes = 0;
+    for (int i = 0; i < neighbours.length; i ++) {
+      if (neighbours[i] != null) {
+        nodes ++;
+      }
+    }
+    assertTrue(nodes == 3);
   }
 
   @Test
   public void cellHasOneNeighbourIfThreeSidesAreBlocked() {
-    ArrayList<Node> neighbours = d.haeNaapurisolmut(19,1);
-    assertTrue(neighbours.size() == 1);
+    Node[]  neighbours = d.haeNaapurisolmut(19,1);
+    int nodes = 0;
+    for (int i = 0; i < neighbours.length; i ++) {
+      if (neighbours[i] != null) {
+        nodes ++;
+      }
+    }
+    assertTrue(nodes == 1);
   }
 
   @Test
   public void cellHasTwoNeighboursIfTwoSidesAreBlocked() {
-    ArrayList<Node> neighbours = d.haeNaapurisolmut(18,2);
-    assertTrue(neighbours.size() == 2);
+    Node[]  neighbours = d.haeNaapurisolmut(18,2);
+    int nodes = 0;
+    for (int i = 0; i < neighbours.length; i ++) {
+      if (neighbours[i] != null) {
+        nodes ++;
+      }
+    }
+    assertTrue(nodes == 2);
   }
 
   @Test
