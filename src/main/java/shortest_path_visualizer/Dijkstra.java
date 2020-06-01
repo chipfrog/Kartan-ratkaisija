@@ -20,6 +20,7 @@ public class Dijkstra {
   private ArrayList<Node> visitedOrder;
   private int etaisyysMaaliin;
   private int iNaapurilista;
+  private Keko heap;
 
   public Dijkstra(IO io, char[][] karttamatriisi) {
     this.io = io;
@@ -31,6 +32,7 @@ public class Dijkstra {
     this.etaisyysMaaliin = Integer.MAX_VALUE;
     this.goalNode = null;
     this.iNaapurilista = 0;
+    this.heap = new Keko();
   }
 
   /**
@@ -39,10 +41,10 @@ public class Dijkstra {
   public void runDijkstra() {
     initVerkko();
     initEtaisyydet();
-    keko.add(startingNode);
+    heap.addNode(startingNode);
 
-    while (!keko.isEmpty()) {
-      Node node = keko.poll();
+    while(!heap.isEmpty()) {
+      Node node = heap.pollNode();
       if (node.onVierailtu()) {
         continue;
       }
@@ -51,7 +53,6 @@ public class Dijkstra {
       if (node.getGoal()) {
         this.goalNode = node;
         this.etaisyysMaaliin = node.getEtaisyys();
-        System.out.println("Etäisyys maaliin: " + node.getEtaisyys());
         break;
       }
       if (!node.getStart()) {
@@ -67,7 +68,7 @@ public class Dijkstra {
             etaisyys[naapuri.getTunnus()] = uusiEtaisyys;
             solmuMatriisi[naapuri.getY()][naapuri.getX()].setEtaisyys(uusiEtaisyys);
             naapuri.setEtaisyys(uusiEtaisyys);
-            keko.add(naapuri);
+            heap.addNode(naapuri);
           }
         }
       }
