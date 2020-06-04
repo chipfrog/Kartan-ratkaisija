@@ -1,138 +1,80 @@
 package shortest_path_visualizer;
 
+
 import java.util.ArrayList;
+import java.util.PriorityQueue;
 
-/**
- * Luokka, jossa toteutetaan Dijkstran algoritmi.
- */
-
-public class Dijkstra {
+public class AStar {
   private final IO io;
   private final char[][] karttamatriisi;
-  private final Node[][] solmuMatriisi;
+  private final Node[][] solmumatriisi;
   private int[] etaisyys;
-  private Node [][] verkko;
+  private Node[] parent;
+  private PriorityQueue <Node> openList;
+  private ArrayList<Node> closedList;
+  private int iNaapurilista;
+  private Node[][] verkko;
   private Node startingNode;
   private Node goalNode;
-  private ArrayList<Node> visitedOrder;
   private int etaisyysMaaliin;
-  private int iNaapurilista;
-  private Keko heap;
+  private ArrayList<Node> visitedOrder;
+  private Node takaisin;
 
-  public Dijkstra(IO io, char[][] karttamatriisi) {
+  public AStar(IO io, char[][] karttamatriisi) {
     this.io = io;
     this.karttamatriisi = karttamatriisi;
-    this.solmuMatriisi = new Node[karttamatriisi.length][karttamatriisi[0].length];
+    this.solmumatriisi = new Node[karttamatriisi.length][karttamatriisi[0].length];
     this.etaisyys = new int[karttamatriisi.length * karttamatriisi[0].length];
-    this.visitedOrder = new ArrayList<>();
-    this.etaisyysMaaliin = Integer.MAX_VALUE;
-    this.goalNode = null;
     this.iNaapurilista = 0;
-    this.heap = new Keko();
+    this.etaisyysMaaliin = Integer.MAX_VALUE;
+    this.visitedOrder = new ArrayList<>();
+    this.takaisin = goalNode;
+    this.closedList = new ArrayList<>();
+
   }
 
-  /**
-   * Suorittaa Dijkstran algoritmin.
-   */
-  public void runDijkstra() {
+  public void runAStar() {
     initVerkko();
-    initEtaisyydet();
-    heap.addNode(startingNode);
+    this.openList = new PriorityQueue();
+    openList.add(startingNode);
+    etaisyys[startingNode.getTunnus()] = 0;
+    int matka = 0;
 
-    while(!heap.isEmpty()) {
-      Node node = heap.pollNode();
-      if (node.onVierailtu()) {
-        continue;
-      }
-      node.vieraile();
-      visitedOrder.add(node);
-      if (node.isGoal()) {
-        this.goalNode = node;
-        this.etaisyysMaaliin = node.getEtaisyys();
+    while(!openList.isEmpty()) {
+      Node current = openList.poll();
+      matka = current.getArvioituMatka();
+      closedList.add(current);
+
+
+      if (current.isGoal()) {
+        System.out.println("Matka: " + matka);
         break;
       }
-      if (!node.isStart()) {
-        karttamatriisi[node.getY()][node.getX()] = 'O';
-      }
 
-      for (Node naapuri : verkko[node.getTunnus()]) {
+      Node[] naapurit  = verkko[current.getTunnus()];
+      for (Node naapuri : naapurit) {
         if (naapuri != null) {
-          int nykyinenEtaisyys = etaisyys[naapuri.getTunnus()];
-          int uusiEtaisyys = etaisyys[node.getTunnus()] + 1;
+          int g_matka = etaisyys[current.getTunnus()] + 1;
 
-          if (uusiEtaisyys < nykyinenEtaisyys) {
-            etaisyys[naapuri.getTunnus()] = uusiEtaisyys;
-            solmuMatriisi[naapuri.getY()][naapuri.getX()].setEtaisyys(uusiEtaisyys);
-            naapuri.setEtaisyys(uusiEtaisyys);
-            heap.addNode(naapuri);
+          if (!closedList.contains(naapuri) || g_matka < etaisyys[naapuri.getTunnus()]) {
+            etaisyys[naapuri.getTunnus()] = g_matka;
+            int f_matka = g_matka + manhattanDist(goalNode, naapuri);
+            naapuri.setArvioituMatka(f_matka);
+            openList.add(naapuri);
+            naapuri.setParent(current);
+            if (!visitedOrder.contains(naapuri)) {
+              visitedOrder.add(naapuri);
+            }
+            if (!naapuri.isGoal()) {
+              karttamatriisi[naapuri.getY()][naapuri.getX()] = 'O';
+            }
           }
         }
       }
     }
+    getReitti();
+    printMap();
   }
-
-  public ArrayList<Node> getVisitedOrder() {
-    return this.visitedOrder;
-  }
-
-  public int getEtaisyysMaaliin() {
-    return this.etaisyysMaaliin;
-  }
-
-
-  /**
-   * Piirtää karttamatriisiin lyhimmän reitin maalisolmusta aloitussolmuun, kun solmujen etäisyydet on ensin selvitetty Dijkstran algoritmilla.
-   *
-   * @return Maalisolmu, jos reitti alotussolmuun löytyy. Null, jos ei löydy.
-   */
-  public Node haeReitti() {
-    Node currentNode = goalNode;
-    while (currentNode.getEtaisyys() != 1) {
-      Node naapuri = pieninNaapuri(currentNode);
-      currentNode = naapuri;
-      if (!naapuri.isStart()) {
-        karttamatriisi[currentNode.getY()][currentNode.getX()] = 'X';
-      }
-    }
-    return currentNode;
-  }
-
-  /**
-   * Hakee parametrina annetulle solmulle naapurisolmun, jonka etäisyys aloitussolmuun on pienin.
-   *
-   * @param node Solmu, jolle etäisyydeltään pienin naapurisolmu haetaan.
-   * @return Solmu, jonka etäisyys aloitussolmuun pienin.
-   */
-  public Node pieninNaapuri(Node node) {
-    int minDist = Integer.MAX_VALUE;
-    Node smallestDistNode = null;
-    Node[] naapurit = verkko[node.getTunnus()];
-
-    for (int i = 0; i < naapurit.length; i ++) {
-      if (naapurit[i] != null) {
-        if (naapurit[i].isStart()) {
-          smallestDistNode = naapurit[i];
-        } else if (naapurit[i].getEtaisyys() < minDist) {
-          minDist = naapurit[i].getEtaisyys();
-          smallestDistNode = naapurit[i];
-        }
-      }
-    }
-
-    return smallestDistNode;
-  }
-
-  /**
-   * Palauttaa ratkaistun kartan, jossa näkyvät vieraillut solmut ja eräs lyhin reitti aloitussolmusta maalisolmuun. Dijkstran algoritmi tulee ajaan ensin.
-   *
-   * @return Karttamatriisi, johon merkattu käydyt solmut ja lyhin reitti.
-   */
-  public char[][] getSolvedMap() {
-    haeReitti();
-    return this.karttamatriisi;
-  }
-
-
   public void printMap() {
     for (int i = 0; i < karttamatriisi.length; i++) {
       for (int j = 0; j < karttamatriisi[0].length; j++) {
@@ -142,9 +84,26 @@ public class Dijkstra {
     }
   }
 
-  /**
-   * Muodostaa solmuista vieruslistan, eli hakee matriisin jokaiselle solmulle naapurisolmut.
-   */
+  public char[][] getReitti() {
+    takaisin = goalNode.getParent();
+    while (!takaisin.isStart()) {
+      karttamatriisi[takaisin.getY()][takaisin.getX()] = 'X';
+      takaisin = takaisin.getParent();
+    }
+    return karttamatriisi;
+  }
+
+  public ArrayList<Node> getVisitedOrder() {
+    return visitedOrder;
+  }
+
+  public int getEtaisyysMaaliin() {
+    return etaisyysMaaliin;
+  }
+
+  public int manhattanDist(Node n1, Node n2) {
+    return Math.abs(n1.getX() - n2.getX()) + Math.abs(n1.getY() - n2.getY());
+  }
 
   public void initVerkko() {
     int solmut = karttamatriisi.length * karttamatriisi[0].length;
@@ -155,37 +114,25 @@ public class Dijkstra {
     for (int i = 0; i < karttamatriisi.length; i++) {
       for (int j = 0; j < karttamatriisi[0].length; j++) {
         Node node = new Node(solmutunnus, j, i);
-        node.setEtaisyys(Integer.MAX_VALUE);
+        //node.setEtaisyys(Integer.MAX_VALUE);
         if (karttamatriisi[i][j] == 'G') {
           node.setAsGoalNode();
+          this.goalNode = node;
         } else if (karttamatriisi[i][j] == 'S') {
           node.setAsStartNode();
+          node.setArvioituMatka(0);
           this.startingNode = node;
         }
-        solmuMatriisi[i][j] = node;
+        solmumatriisi[i][j] = node;
         solmutunnus++;
       }
     }
     // Lisätään kullekin solmumatriisin solmulle lista naapurisolmuista
     for (int i = 0; i < karttamatriisi.length; i++) {
       for (int j = 0; j < karttamatriisi[0].length; j++) {
-        verkko[solmuMatriisi[i][j].getTunnus()] = haeNaapurisolmut(j, i);
+        verkko[solmumatriisi[i][j].getTunnus()] = haeNaapurisolmut(j, i);
       }
     }
-  }
-
-  public Node getGoalNode() {
-    return this.goalNode;
-  }
-
-  /**
-   * Alustaa solmujen etäisyystaulukon. Kunkin solmun etäisyydeksi tulee aluksi "ääretön".
-   */
-  public void initEtaisyydet() {
-    for (int i = 0; i < etaisyys.length; i++) {
-      etaisyys[i] = Integer.MAX_VALUE;
-    }
-    etaisyys[startingNode.getTunnus()] = 0;
   }
 
   /**
@@ -268,7 +215,7 @@ public class Dijkstra {
 
   private void checkSouth(int currentX, int currentY, Node[] naapurit, int indeksi) {
     if (karttamatriisi[currentY + 1][currentX] != 'T') {
-      naapurit[indeksi] = solmuMatriisi[currentY + 1][currentX];
+      naapurit[indeksi] = solmumatriisi[currentY + 1][currentX];
       iNaapurilista ++;
     }
   }
@@ -283,7 +230,7 @@ public class Dijkstra {
 
   private void checkNorth(int currentX, int currentY, Node[] naapurit, int indeksi) {
     if (karttamatriisi[currentY - 1][currentX] != 'T') {
-      naapurit[indeksi] = solmuMatriisi[currentY - 1][currentX];
+      naapurit[indeksi] = solmumatriisi[currentY - 1][currentX];
       iNaapurilista ++;
     }
   }
@@ -298,7 +245,7 @@ public class Dijkstra {
 
   private void checkEast(int currentX, int currentY, Node[] naapurit, int indeksi) {
     if (karttamatriisi[currentY][currentX + 1] != 'T') {
-      naapurit[indeksi] = solmuMatriisi[currentY][currentX + 1];
+      naapurit[indeksi] = solmumatriisi[currentY][currentX + 1];
       iNaapurilista ++;
     }
   }
@@ -313,8 +260,9 @@ public class Dijkstra {
 
   private void checkWest(int currentX, int currentY, Node[] naapurit, int indeksi) {
     if (karttamatriisi[currentY][currentX - 1] != 'T') {
-      naapurit[indeksi] = solmuMatriisi[currentY][currentX - 1];
+      naapurit[indeksi] = solmumatriisi[currentY][currentX - 1];
       iNaapurilista ++;
     }
   }
+
 }

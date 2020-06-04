@@ -8,6 +8,8 @@ public class Node implements Comparable<Node> {
   private boolean goal;
   private int xCoor;
   private int yCoor;
+  private Node parent;
+  private int arvioituMatka;
 
   public Node(int tunnus, int xCoor, int yCoor) {
     this.tunnus = tunnus;
@@ -16,7 +18,22 @@ public class Node implements Comparable<Node> {
     this.goal = false;
     this.xCoor = xCoor;
     this.yCoor = yCoor;
+  }
 
+  public void setParent(Node parent) {
+    this.parent = parent;
+  }
+
+  public Node getParent() {
+    return parent;
+  }
+
+  public void setArvioituMatka(int matka) {
+    this.arvioituMatka = matka;
+  }
+
+  public int getArvioituMatka() {
+    return arvioituMatka;
   }
 
   public int getX() {
@@ -35,11 +52,11 @@ public class Node implements Comparable<Node> {
     this.goal = true;
   }
 
-  public boolean getStart() {
+  public boolean isStart() {
     return this.start;
   }
 
-  public boolean getGoal() {
+  public boolean isGoal() {
     return this.goal;
   }
 
@@ -65,6 +82,6 @@ public class Node implements Comparable<Node> {
 
   @Override
   public int compareTo(Node n) {
-    return this.etaisyys - n.etaisyys;
+    return this.arvioituMatka - n.arvioituMatka;
   }
 }

@@ -21,6 +21,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import shortest_path_visualizer.AStar;
 import shortest_path_visualizer.Dijkstra;
 import shortest_path_visualizer.MapReaderIO;
 import shortest_path_visualizer.Node;
@@ -39,6 +40,7 @@ public class MapCreator extends Application {
   private boolean goalDrawn;
   private Rectangle[][] rectChar;
   private Dijkstra dijkstra;
+  private AStar aStar;
   private int nodeToPaint;
   private Label numOfVisitedNodes;
   private Label distToGoal;
@@ -182,10 +184,20 @@ public class MapCreator extends Application {
     if (dijkstra.getGoalNode() != null) {
       distToGoal.setText("Dist: " + dijkstra.getEtaisyysMaaliin());
       ArrayList<Node> visitedNodes = dijkstra.getVisitedOrder();
-      animateAlgorithm(visitedNodes);
+      animateDijkstra(visitedNodes);
     } else {
       System.out.println("Goal node unreachable!");
     }
+  }
+
+  public void solveMapUsingAStar() {
+    generateCharArray();
+    this.aStar = new AStar(new MapReaderIO(), mapArray);
+    aStar.runAStar();
+    distToGoal.setText("Dist: " + aStar.getEtaisyysMaaliin());
+    ArrayList<Node> visitedNodes = aStar.getVisitedOrder();
+    animateAStar(visitedNodes);
+
   }
 
   /**
@@ -193,7 +205,7 @@ public class MapCreator extends Application {
    *
    * @param visitedNodes Vieraillut solmut.
    */
-  public void animateAlgorithm(ArrayList<Node> visitedNodes) {
+  public void animateAStar(ArrayList<Node> visitedNodes) {
     Timeline timeline = new Timeline(new KeyFrame(
         Duration.millis(5),
         event -> {
@@ -204,9 +216,28 @@ public class MapCreator extends Application {
     ));
     timeline.setCycleCount(visitedNodes.size() - 1);
     timeline.play();
+
+    timeline.setOnFinished(e -> {
+      drawShortestPath(aStar.getReitti());
+    });
+  }
+
+  public void animateDijkstra(ArrayList<Node> visitedNodes) {
+    Timeline timeline = new Timeline(new KeyFrame(
+        Duration.millis(5),
+        event -> {
+          paintSquare(visitedNodes.get(nodeToPaint));
+          numOfVisitedNodes.setText("Nodes: " + nodeToPaint);
+          nodeToPaint++;
+        }
+    ));
+    timeline.setCycleCount(visitedNodes.size() - 1);
+    timeline.play();
+
     timeline.setOnFinished(e -> {
       drawShortestPath(dijkstra.getSolvedMap());
     });
+
   }
 
   /**
@@ -215,7 +246,7 @@ public class MapCreator extends Application {
    * @param node Väritettävä solmu
    */
   public void paintSquare(Node node) {
-    if (!node.getGoal() && !node.getStart()) {
+    if (!node.isGoal() && !node.isStart()) {
       rectChar[node.getY()][node.getX()].setFill(Color.AQUA);
     }
   }
@@ -258,6 +289,9 @@ public class MapCreator extends Application {
     Button genArray = new Button("Dijkstra");
     genArray.setOnAction(e -> solveMapUsingDijkstra());
 
+    Button aStar = new Button("A*");
+    aStar.setOnAction(e -> solveMapUsingAStar());
+
     Button reset = new Button("Reset");
     reset.setOnAction(e -> {
       try {
@@ -268,7 +302,7 @@ public class MapCreator extends Application {
     });
 
     buttonMenu.setSpacing(15);
-    buttonMenu.getChildren().addAll(startPoint, goal, obstacle, genArray,
+    buttonMenu.getChildren().addAll(startPoint, goal, obstacle, genArray, aStar,
         reset, numOfVisitedNodes, distToGoal);
 
     HBox hB = new HBox(20);
