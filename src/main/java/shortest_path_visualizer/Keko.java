@@ -6,6 +6,9 @@ public class Keko {
   private int sijainti;
   private int juuri = 1;
 
+  /**
+   * Minimikeon toteutus. Pitää yllä hakupuuta, jonka juurena solmu, jonka etäisyys maalisolmuun pienin.
+   */
   public Keko() {
     this.keko = new Node[1000];
     this.pienin = new Node(0, -1, -1);
@@ -14,10 +17,16 @@ public class Keko {
     this.sijainti = 1;
   }
 
+  /** Kertoo onko keko tyhjä. Jos tyhjä, sijainnin arvo 1. Tämä siksi, että indeksissä 0 on pienin mahdollinen arvo, ei siis minkään todellisen solmun etäisyys.
+   * @return Onko puu tyhjä vai ei
+   */
   public boolean isEmpty() {
     return sijainti == 1;
   }
 
+  /** Hakee ja poistaa puun juuressa olevan solmun.
+   * @return Solmu, jonka etäisyys maalisolmuun pienin.
+   */
   public Node pollNode() {
     Node nodeToReturn = keko[juuri];
     keko[juuri] = keko[sijainti - 1];
@@ -27,6 +36,9 @@ public class Keko {
     return nodeToReturn;
   }
 
+  /** Päivittää kekoa ja etsii sille uuden juurisolmun.
+   * @param currentPos Nykyinen sijainti puussa.
+   */
   private void findNewRootNode(int currentPos) {
     if (!leaf(currentPos)) {
       if (keko[currentPos].getEtaisyys() > keko[leftChild(currentPos)].getEtaisyys()
@@ -44,6 +56,10 @@ public class Keko {
     }
   }
 
+  /** Kertoo onko tutkittava solmu puun lehti vai ei.
+   * @param pos Sijainti puussa
+   * @return Lehti vai ei
+   */
   private boolean leaf(int pos) {
     return (pos >= sijainti / 2 && pos <= sijainti);
   }
@@ -56,12 +72,19 @@ public class Keko {
     return 2 * pos + 1;
   }
 
+  /** Vaihtaa parametreina annettavien solmujen paikkaa puussa.
+   * @param pos1 Paikkaa vaihtava solmu 1
+   * @param pos2 Paikkaa vaihtava solmu 2
+   */
   private void swapPlaces(int pos1, int pos2) {
     Node temp = keko[pos1];
     keko[pos1] = keko[pos2];
     keko[pos2] = temp;
   }
 
+  /** Lisää puuhun uuden solmun ja sijoittaa sen oikealle paikalle.
+   * @param node Puuhun lisättävä solmu
+   */
   public void addNode(Node node) {
     keko[sijainti] = node;
     int currentPos = sijainti;

@@ -9,7 +9,6 @@ public class AStar {
   private final char[][] karttamatriisi;
   private final Node[][] solmumatriisi;
   private int[] etaisyys;
-  private Node[] parent;
   private PriorityQueue <Node> openList;
   private ArrayList<Node> closedList;
   private int iNaapurilista;
@@ -33,6 +32,9 @@ public class AStar {
 
   }
 
+  /**
+   * Suorittaa A*-algoritmin.
+   */
   public void runAStar() {
     initVerkko();
     this.openList = new PriorityQueue();
@@ -84,6 +86,9 @@ public class AStar {
     }
   }
 
+  /** Päivittää karttamatriisiin reitin maalisolmusta lähtösolmuun. Katsoo maalisolmusta alkaen, mikä solmu on edeltävän solmun vanhempi jne.
+   * @return (Toisinaan) lyhimmällä reitillä päivitetty karttamatriisi
+   */
   public char[][] getReitti() {
     takaisin = goalNode.getParent();
     while (!takaisin.isStart()) {
@@ -93,6 +98,9 @@ public class AStar {
     return karttamatriisi;
   }
 
+  /** Palauttaa listan vierailluista solmuista vierailujärjestyksessä.
+   * @return listga vierailluista solmuista
+   */
   public ArrayList<Node> getVisitedOrder() {
     return visitedOrder;
   }
@@ -101,10 +109,18 @@ public class AStar {
     return etaisyysMaaliin;
   }
 
+  /** Laskee Manhattan-etäisyyden parametrina annettujen solmujen välille.
+   * @param n1 Solmu 1
+   * @param n2 Solmu 2
+   * @return Manhattan-etäisyys solmujen 1 ja 2 välillä
+   */
   public int manhattanDist(Node n1, Node n2) {
     return Math.abs(n1.getX() - n2.getX()) + Math.abs(n1.getY() - n2.getY());
   }
 
+  /**
+   * Alustaa verkon. Luo kuhunkin matriisin solmuun uuden solmun ja tallentaa sille listan naapurisolmuista.
+   */
   public void initVerkko() {
     int solmut = karttamatriisi.length * karttamatriisi[0].length;
     this.verkko = new Node[solmut][];
