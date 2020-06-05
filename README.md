@@ -19,3 +19,5 @@
 [Käyttöohjeet](https://github.com/chipfrog/Shortest-path-visualizer/blob/master/dokumentaatio/manual.md) (testien ajaminen)
 
 [Testausdokumentti](https://github.com/chipfrog/Shortest-path-visualizer/blob/master/dokumentaatio/Testausdokumentti.md)
+
+[Toteutusdokumentti](https://github.com/chipfrog/Shortest-path-visualizer/blob/master/dokumentaatio/Toteutusdokumentti.md)
