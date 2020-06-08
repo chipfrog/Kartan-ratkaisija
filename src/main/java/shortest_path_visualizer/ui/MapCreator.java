@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -11,6 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseDragEvent;
@@ -46,6 +49,7 @@ public class MapCreator extends Application {
   private Label numOfVisitedNodes;
   private Label distToGoal;
   private boolean runClicked;
+  private int animationSpeed;
 
   public MapCreator() {
     this.cols = 50;
@@ -60,6 +64,7 @@ public class MapCreator extends Application {
     this.numOfVisitedNodes = new Label("Nodes: " + 0);
     this.distToGoal = new Label("Distance: ");
     this.runClicked = false;
+    this.animationSpeed = 5;
   }
 
   /**
@@ -233,7 +238,7 @@ public class MapCreator extends Application {
    */
   public void animateAStar(ArrayList<Node> visitedNodes) {
     Timeline timeline = new Timeline(new KeyFrame(
-        Duration.millis(5),
+        Duration.millis(animationSpeed),
         event -> {
           paintSquare(visitedNodes.get(nodeToPaint));
           numOfVisitedNodes.setText("Nodes: " + nodeToPaint);
@@ -250,7 +255,7 @@ public class MapCreator extends Application {
 
   public void animateDijkstra(ArrayList<Node> visitedNodes) {
     Timeline timeline = new Timeline(new KeyFrame(
-        Duration.millis(5),
+        Duration.millis(animationSpeed),
         event -> {
           paintSquare(visitedNodes.get(nodeToPaint));
           numOfVisitedNodes.setText("Nodes: " + nodeToPaint);
@@ -263,7 +268,6 @@ public class MapCreator extends Application {
     timeline.setOnFinished(e -> {
       drawShortestPath(dijkstra.getSolvedMap());
     });
-
   }
 
   /**
@@ -356,20 +360,43 @@ public class MapCreator extends Application {
         exception.printStackTrace();
       }
     });
+    Label speedSlider = new Label("Animation speed: ");
+
+    Slider slider = new Slider();
+    slider.setMin(1);
+    slider.setMax(50);
+    slider.setValue(5);
+    slider.setBlockIncrement(5);
+    slider.setMinorTickCount(5);
+    slider.setShowTickLabels(true);
+    slider.setShowTickMarks(true);
+    slider.setSnapToTicks(true);
+
+    slider.valueProperty().addListener(new ChangeListener<Number>() {
+      @Override
+      public void changed(ObservableValue<? extends Number> observable, Number oldValue,
+                          Number newValue) {
+        animationSpeed = newValue.intValue();
+      }
+    });
 
     VBox drawChoice = new VBox();
     Label draw = new Label("Draw:");
     drawChoice.getChildren().addAll(draw, startPoint, goal, obstacle);
     drawChoice.setSpacing(10);
 
-    VBox otherOptions = new VBox();
+    VBox configurations = new VBox();
     Label algo = new Label("Algorithm:");
-    otherOptions.getChildren().addAll(algo, comboBox, run, tryAgain, clear, numOfVisitedNodes, distToGoal);
+    configurations.getChildren().addAll(algo, comboBox, speedSlider, slider);
+    configurations.setSpacing(10);
+
+    VBox otherOptions = new VBox();
+    otherOptions.getChildren().addAll(run, tryAgain, clear, numOfVisitedNodes, distToGoal);
     otherOptions.setSpacing(10);
 
     VBox controls = new VBox();
     controls.setSpacing(40);
-    controls.getChildren().addAll(drawChoice, otherOptions);
+    controls.getChildren().addAll(drawChoice, configurations, otherOptions);
 
     HBox hB = new HBox(20);
     hB.getChildren().addAll(controls, pane);
