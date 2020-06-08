@@ -8,6 +8,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
@@ -44,6 +45,7 @@ public class MapCreator extends Application {
   private int nodeToPaint;
   private Label numOfVisitedNodes;
   private Label distToGoal;
+  private boolean runClicked;
 
   public MapCreator() {
     this.cols = 50;
@@ -54,25 +56,26 @@ public class MapCreator extends Application {
     this.startDrawn = false;
     this.goalDrawn = false;
     this.pane = new Pane();
-    this.nodeToPaint = 1;
+    this.nodeToPaint = 0;
     this.numOfVisitedNodes = new Label("Nodes: " + 0);
-    this.distToGoal = new Label("Dist: ");
+    this.distToGoal = new Label("Distance: ");
+    this.runClicked = false;
   }
 
   /**
    * Luo ruudukon, jonka ruudut voi värittää. Musta = este, vihreä = aloitussolmu, punainen = maalisolmu, valkoinen = tavallinen solmu.
    */
-  public void createGrid() {
+  public void createGrid(int sivu) {
     double xPikselit = 0;
     double yPikselit = 0;
 
     for (int y = 0; y < rows; y++) {
       for (int x = 0; x < cols; x++) {
-        Rectangle rectangle = new Rectangle(20, 20, Color.WHITE);
+        Rectangle rectangle = new Rectangle(sivu, sivu, Color.WHITE);
         if (x == 0) {
           xPikselit = 0;
         } else {
-          xPikselit += 20;
+          xPikselit += sivu;
         }
         rectangle.setOnMouseClicked(new EventHandler<MouseEvent>() {
           @Override
@@ -122,7 +125,7 @@ public class MapCreator extends Application {
             }
           }
         });
-        yPikselit = y * 20;
+        yPikselit = y * sivu;
         rectangle.setStyle("-fx-stroke: lightgray; -fx-stroke-width: 2;");
         rectangle.setLayoutX(xPikselit);
         rectangle.setLayoutY(yPikselit);
@@ -144,7 +147,7 @@ public class MapCreator extends Application {
     goalDrawn = false;
     nodeToPaint = 0;
     numOfVisitedNodes.setText("Nodes: " + 0);
-    distToGoal.setText("Nodes: ");
+    distToGoal.setText("Distance: ");
     start(stage);
   }
 
@@ -289,9 +292,20 @@ public class MapCreator extends Application {
     }
   }
 
+  private void resetSolution() {
+    for (int i = 0; i < rectChar.length; i ++) {
+      for (int j = 0; j < rectChar[0].length; j ++) {
+        if (rectChar[i][j].getFill() == Color.AQUA || rectChar[i][j].getFill() == Color.YELLOW) {
+          rectChar[i][j].setFill(Color.WHITE);
+        }
+      }
+    }
+    nodeToPaint = 0;
+  }
+
   @Override
   public void start(Stage primaryStage) throws Exception {
-    createGrid();
+    createGrid(20);
 
     final ToggleGroup group = new ToggleGroup();
     RadioButton startPoint = new RadioButton("Start point");
@@ -307,29 +321,59 @@ public class MapCreator extends Application {
     goal.setToggleGroup(group);
     goal.setOnAction(e -> this.type = DrawType.GOAL);
 
-    VBox buttonMenu = new VBox();
+    ComboBox <String> comboBox = new ComboBox();
+    comboBox.getItems().addAll("A*", "Dijkstra");
 
-    Button genArray = new Button("Dijkstra");
-    genArray.setOnAction(e -> solveMapUsingDijkstra());
+    Button run = new Button("Run");
+    run.setOnAction(e -> {
+      if (!runClicked) {
+        if (comboBox.getValue() == null) {
+          System.out.println("Valitse algoritmi!");
+        }
+        else if (comboBox.getValue().equals("A*")) {
+          runClicked = true;
+          solveMapUsingAStar();
+        }
+        else if (comboBox.getValue().equals("Dijkstra")) {
+          runClicked = true;
+          solveMapUsingDijkstra();
+        }
+      }
+    });
 
-    Button aStar = new Button("A*");
-    aStar.setOnAction(e -> solveMapUsingAStar());
+    Button tryAgain = new Button("Erase solution");
+    tryAgain.setOnAction(e -> {
+      resetSolution();
+      runClicked = false;
+    });
 
-    Button reset = new Button("Reset");
-    reset.setOnAction(e -> {
+    Button clear = new Button("Clear");
+    clear.setOnAction(e -> {
       try {
+        runClicked = false;
         resetMap(primaryStage);
       } catch (Exception exception) {
         exception.printStackTrace();
       }
     });
 
-    buttonMenu.setSpacing(15);
-    buttonMenu.getChildren().addAll(startPoint, goal, obstacle, genArray, aStar,
-        reset, numOfVisitedNodes, distToGoal);
+    VBox drawChoice = new VBox();
+    Label draw = new Label("Draw:");
+    drawChoice.getChildren().addAll(draw, startPoint, goal, obstacle);
+    drawChoice.setSpacing(10);
+
+    VBox otherOptions = new VBox();
+    Label algo = new Label("Algorithm:");
+    otherOptions.getChildren().addAll(algo, comboBox, run, tryAgain, clear, numOfVisitedNodes, distToGoal);
+    otherOptions.setSpacing(10);
+
+    VBox controls = new VBox();
+    controls.setSpacing(40);
+    controls.getChildren().addAll(drawChoice, otherOptions);
 
     HBox hB = new HBox(20);
-    hB.getChildren().addAll(buttonMenu, pane);
+    hB.getChildren().addAll(controls, pane);
+    hB.setSpacing(30);
     hB.setPadding(new Insets(20));
 
     Scene scene = new Scene(hB);
