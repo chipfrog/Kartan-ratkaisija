@@ -2,7 +2,6 @@ package shortest_path_visualizer;
 
 
 import java.util.ArrayList;
-import java.util.PriorityQueue;
 
 public class AStar {
   private final IO io;
@@ -17,6 +16,7 @@ public class AStar {
   private int etaisyysMaaliin;
   private ArrayList<Node> visitedOrder;
   private Node takaisin;
+  private boolean goalFound;
 
   public AStar(IO io, char[][] karttamatriisi) {
     this.io = io;
@@ -26,6 +26,7 @@ public class AStar {
     this.iNaapurilista = 0;
     this.etaisyysMaaliin = Integer.MAX_VALUE;
     this.visitedOrder = new ArrayList<>();
+    this.goalFound = false;
   }
 
   /**
@@ -43,6 +44,7 @@ public class AStar {
       addedToOpenList[current.getY()][current.getX()] = false;
       if (current.isGoal()) {
         System.out.println("Maali löytyi!");
+        goalFound = true;
         etaisyysMaaliin = current.getG_Matka();
         break;
       }
@@ -63,6 +65,10 @@ public class AStar {
         }
       }
     }
+  }
+
+  public boolean goalWasFound() {
+    return goalFound;
   }
 
   public void printMap() {

@@ -78,12 +78,12 @@ public class MapCreator extends Application {
           @Override
           public void handle(MouseEvent event) {
             if (event.getButton().equals(MouseButton.PRIMARY)) {
-              if (type == DrawType.OBSTACLE) {
+              if (type == DrawType.OBSTACLE && rectangle.getFill() != Color.GREEN) {
                 rectangle.setFill(Color.BLACK);
-              } else if (type == DrawType.START && !startDrawn) {
+              } else if (type == DrawType.START && !startDrawn && rectangle.getFill() != Color.RED) {
                 rectangle.setFill(Color.GREEN);
                 startDrawn = true;
-              } else if (type == DrawType.GOAL && !goalDrawn) {
+              } else if (type == DrawType.GOAL && !goalDrawn && rectangle.getFill() != Color.GREEN) {
                 rectangle.setFill(Color.RED);
                 goalDrawn = true;
               }
@@ -109,12 +109,9 @@ public class MapCreator extends Application {
           @Override
           public void handle(MouseDragEvent event) {
             if (event.getButton().equals(MouseButton.PRIMARY) && type == DrawType.OBSTACLE) {
-              if (rectangle.getFill() == Color.GREEN) {
-                startDrawn = false;
-              } else if (rectangle.getFill() == Color.RED) {
-                goalDrawn = false;
+              if (rectangle.getFill() != Color.GREEN && rectangle.getFill() != Color.RED) {
+                rectangle.setFill(Color.BLACK);
               }
-              rectangle.setFill(Color.BLACK);
             } else if (event.getButton().equals(MouseButton.SECONDARY)) {
               if (rectangle.getFill() == Color.GREEN) {
                 startDrawn = false;
@@ -174,30 +171,56 @@ public class MapCreator extends Application {
     return mapArray;
   }
 
+  private boolean mapHasStartAndGoal() {
+    boolean startAdded = false;
+    boolean goalAdded = false;
+    for (int i = 0; i < rectChar.length; i++) {
+      for (int j = 0; j < rectChar[0].length; j++) {
+        if (mapArray[i][j] == 'S') {
+          startAdded = true;
+        } else if (mapArray[i][j] == 'G') {
+          goalAdded = true;
+        }
+      }
+    }
+    return (startAdded && goalAdded);
+  }
+
   /**
    * Käyttää dijkstran algoritmia ja suorittaa ruudukon värittämismetodit.
    */
   public void solveMapUsingDijkstra() {
     generateCharArray();
-    this.dijkstra = new Dijkstra(new MapReaderIO(), mapArray);
-    dijkstra.runDijkstra();
-    if (dijkstra.getGoalNode() != null) {
-      distToGoal.setText("Dist: " + dijkstra.getEtaisyysMaaliin());
-      ArrayList<Node> visitedNodes = dijkstra.getVisitedOrder();
-      animateDijkstra(visitedNodes);
+    if (mapHasStartAndGoal()) {
+      this.dijkstra = new Dijkstra(new MapReaderIO(), mapArray);
+      dijkstra.runDijkstra();
+      if (dijkstra.getGoalNode() != null) {
+        distToGoal.setText("Dist: " + dijkstra.getEtaisyysMaaliin());
+        ArrayList<Node> visitedNodes = dijkstra.getVisitedOrder();
+        animateDijkstra(visitedNodes);
+      } else {
+        System.out.println("Goal node unreachable!");
+      }
     } else {
-      System.out.println("Goal node unreachable!");
+      System.out.println("You must add start and goal!");
     }
   }
 
   public void solveMapUsingAStar() {
     generateCharArray();
-    this.aStar = new AStar(new MapReaderIO(), mapArray);
-    aStar.runAStar();
-    distToGoal.setText("Dist: " + aStar.getEtaisyysMaaliin());
-    ArrayList<Node> visitedNodes = aStar.getVisitedOrder();
-    animateAStar(visitedNodes);
-
+    if (mapHasStartAndGoal()) {
+      this.aStar = new AStar(new MapReaderIO(), mapArray);
+      aStar.runAStar();
+      if (aStar.goalWasFound()) {
+        distToGoal.setText("Dist: " + aStar.getEtaisyysMaaliin());
+        ArrayList<Node> visitedNodes = aStar.getVisitedOrder();
+        animateAStar(visitedNodes);
+      } else {
+        System.out.println("Goal node unreachable!");
+      }
+    } else {
+      System.out.println("You must add start and goal!");
+    }
   }
 
   /**

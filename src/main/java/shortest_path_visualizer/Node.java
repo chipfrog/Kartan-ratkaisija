@@ -1,6 +1,6 @@
 package shortest_path_visualizer;
 
-public class Node implements Comparable<Node> {
+public class Node {
   private int tunnus;
   private int etaisyys;
   private boolean vierailtu;
@@ -78,10 +78,5 @@ public class Node implements Comparable<Node> {
 
   public int getEtaisyys() {
     return this.etaisyys;
-  }
-
-  @Override
-  public int compareTo(Node n) {
-    return this.etaisyys - n.getEtaisyys();
   }
 }
