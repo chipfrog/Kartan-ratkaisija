@@ -9,7 +9,9 @@ public class Node implements Comparable<Node> {
   private int xCoor;
   private int yCoor;
   private Node parent;
-  private int arvioituMatka;
+  private int f_Matka;
+  private int h_Matka;
+  private int g_Matka;
 
   public Node(int tunnus, int xCoor, int yCoor) {
     this.tunnus = tunnus;
@@ -28,12 +30,28 @@ public class Node implements Comparable<Node> {
     return parent;
   }
 
-  public void setArvioituMatka(int matka) {
-    this.arvioituMatka = matka;
+  public void setH_Matka(int h) {
+    this.h_Matka = h;
   }
 
-  public int getArvioituMatka() {
-    return arvioituMatka;
+  public void setG_Matka(int g) {
+    this.g_Matka = g;
+  }
+
+  public int getG_Matka() {
+    return this.g_Matka;
+  }
+
+  public void setF_Matka() {
+    this.f_Matka = g_Matka + h_Matka;
+  }
+
+  public void setArvioituMatka(int matka) {
+    this.f_Matka = matka;
+  }
+
+  public int getFMatka() {
+    return f_Matka;
   }
 
   public int getX() {
@@ -82,6 +100,6 @@ public class Node implements Comparable<Node> {
 
   @Override
   public int compareTo(Node n) {
-    return this.arvioituMatka - n.arvioituMatka;
+    return this.f_Matka - n.f_Matka;
   }
 }
