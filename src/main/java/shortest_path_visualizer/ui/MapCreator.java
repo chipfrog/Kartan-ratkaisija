@@ -145,7 +145,7 @@ public class MapCreator extends Application {
     this.type = DrawType.START;
     startDrawn = false;
     goalDrawn = false;
-    nodeToPaint = 1;
+    nodeToPaint = 0;
     numOfVisitedNodes.setText("Nodes: " + 0);
     distToGoal.setText("Nodes: ");
     start(stage);

@@ -8,12 +8,10 @@ public class AStar {
   private final IO io;
   private final char[][] karttamatriisi;
   private final Node[][] solmumatriisi;
-  private int[] gDist;
-  private int[] fDist;
-  private PriorityQueue <Node> openList;
-  private ArrayList<Node> closedList;
+  private Keko openList;
   private int iNaapurilista;
   private Node[][] verkko;
+  private boolean[][] addedToOpenList;
   private Node startingNode;
   private Node goalNode;
   private int etaisyysMaaliin;
@@ -24,13 +22,10 @@ public class AStar {
     this.io = io;
     this.karttamatriisi = karttamatriisi;
     this.solmumatriisi = new Node[karttamatriisi.length][karttamatriisi[0].length];
-    this.gDist = new int[karttamatriisi.length * karttamatriisi[0].length];
-    this.fDist = new int[karttamatriisi.length * karttamatriisi[0].length];
+    this.addedToOpenList = new boolean[karttamatriisi.length][karttamatriisi[0].length];
     this.iNaapurilista = 0;
     this.etaisyysMaaliin = Integer.MAX_VALUE;
     this.visitedOrder = new ArrayList<>();
-
-
   }
 
   /**
@@ -38,21 +33,17 @@ public class AStar {
    */
   public void runAStar() {
     initVerkko();
-    initDist();
-    this.openList = new PriorityQueue();
-    this.closedList = new ArrayList<>();
-
+    this.openList = new Keko();
     startingNode.setG_Matka(0);
-    startingNode.setH_Matka(manhattanDist(startingNode, goalNode));
-    startingNode.setF_Matka();
-
-    openList.add(startingNode);
-    int matka = 0;
+    startingNode.setEtaisyys(manhattanDist(startingNode, goalNode));
+    openList.addNode(startingNode);
 
     while (!openList.isEmpty()) {
-      Node current = openList.poll();
+      Node current = openList.pollNode();
+      addedToOpenList[current.getY()][current.getX()] = false;
       if (current.isGoal()) {
         System.out.println("Maali löytyi!");
+        etaisyysMaaliin = current.getG_Matka();
         break;
       }
       for (Node naapuri : verkko[current.getTunnus()]) {
@@ -61,10 +52,11 @@ public class AStar {
           if (uusiGMatka < naapuri.getG_Matka()) {
             naapuri.setParent(current);
             naapuri.setG_Matka(uusiGMatka);
-            naapuri.setH_Matka(manhattanDist(naapuri, goalNode));
-            naapuri.setF_Matka();
-            if (!openList.contains(naapuri)) {
-              openList.add(naapuri);
+            naapuri.setEtaisyys(uusiGMatka + manhattanDist(naapuri, goalNode));
+
+            if (!addedToOpenList[naapuri.getY()][naapuri.getX()]) {
+              openList.addNode(naapuri);
+              addedToOpenList[naapuri.getY()][naapuri.getX()] = true;
               visitedOrder.add(naapuri);
             }
           }
@@ -72,7 +64,6 @@ public class AStar {
       }
     }
   }
-
 
   public void printMap() {
     for (int i = 0; i < karttamatriisi.length; i++) {
@@ -89,10 +80,8 @@ public class AStar {
   public char[][] getReitti() {
     takaisin = goalNode.getParent();
     while (!takaisin.isStart()) {
-      System.out.println(takaisin.getParent().getTunnus());
       karttamatriisi[takaisin.getY()][takaisin.getX()] = 'X';
       takaisin = takaisin.getParent();
-
     }
     return karttamatriisi;
   }
@@ -117,13 +106,6 @@ public class AStar {
     return Math.abs(n1.getX() - n2.getX()) + Math.abs(n1.getY() - n2.getY());
   }
 
-  private void initDist() {
-    for (int i = 0; i < gDist.length; i++) {
-      gDist[i] = Integer.MAX_VALUE;
-      fDist[i] = Integer.MAX_VALUE;
-    }
-  }
-
   /**
    * Alustaa verkon. Luo kuhunkin matriisin solmuun uuden solmun ja tallentaa sille listan naapurisolmuista.
    */
@@ -137,16 +119,14 @@ public class AStar {
       for (int j = 0; j < karttamatriisi[0].length; j++) {
         Node node = new Node(solmutunnus, j, i);
         node.setG_Matka(Integer.MAX_VALUE);
-        node.setH_Matka(Integer.MAX_VALUE);
-        node.setF_Matka();
+        node.setEtaisyys(Integer.MAX_VALUE);
 
         if (karttamatriisi[i][j] == 'G') {
           node.setAsGoalNode();
           this.goalNode = node;
         } else if (karttamatriisi[i][j] == 'S') {
           node.setAsStartNode();
-          node.setG_Matka(0);
-          node.setArvioituMatka(0);
+          //node.setG_Matka(0);
           this.startingNode = node;
         }
         solmumatriisi[i][j] = node;
