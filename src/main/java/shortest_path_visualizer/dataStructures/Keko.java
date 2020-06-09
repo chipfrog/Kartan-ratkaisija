@@ -1,4 +1,6 @@
-package shortest_path_visualizer;
+package shortest_path_visualizer.dataStructures;
+
+import shortest_path_visualizer.utils.Node;
 
 public class Keko {
   private Node[] keko;

@@ -25,10 +25,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import shortest_path_visualizer.AStar;
-import shortest_path_visualizer.Dijkstra;
-import shortest_path_visualizer.MapReaderIO;
-import shortest_path_visualizer.Node;
+import shortest_path_visualizer.algorithms.AStar;
+import shortest_path_visualizer.algorithms.Dijkstra;
+import shortest_path_visualizer.IO.MapReaderIO;
+import shortest_path_visualizer.utils.Node;
 
 /**
  * JavaFX-toteutus karttojen luomiseen.

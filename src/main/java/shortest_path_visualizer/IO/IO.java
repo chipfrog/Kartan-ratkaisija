@@ -1,4 +1,4 @@
-package shortest_path_visualizer;
+package shortest_path_visualizer.IO;
 
 import java.io.File;
 import java.io.FileNotFoundException;

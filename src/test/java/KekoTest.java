@@ -1,8 +1,8 @@
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.assertTrue;
-import shortest_path_visualizer.Keko;
-import shortest_path_visualizer.Node;
+import shortest_path_visualizer.dataStructures.Keko;
+import shortest_path_visualizer.utils.Node;
 
 public class KekoTest {
   Keko keko;

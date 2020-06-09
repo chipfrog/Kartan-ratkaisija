@@ -4,8 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
-import shortest_path_visualizer.AStar;
-import shortest_path_visualizer.MapReader;
+import shortest_path_visualizer.algorithms.AStar;
+import shortest_path_visualizer.IO.MapReader;
 
 public class AStarTest {
   File testMap = new File("src/test/resources/kartat/testikartta.txt");

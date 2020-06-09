@@ -1,4 +1,4 @@
-package shortest_path_visualizer;
+package shortest_path_visualizer.utils;
 
 public class Node {
   private int tunnus;

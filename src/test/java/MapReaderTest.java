@@ -1,5 +1,5 @@
 import org.junit.Test;
-import shortest_path_visualizer.MapReader;
+import shortest_path_visualizer.IO.MapReader;
 
 import java.io.File;
 import java.io.FileNotFoundException;

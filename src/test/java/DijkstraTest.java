@@ -4,9 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
-import shortest_path_visualizer.Dijkstra;
-import shortest_path_visualizer.MapReader;
-import shortest_path_visualizer.Node;
+import shortest_path_visualizer.algorithms.Dijkstra;
+import shortest_path_visualizer.IO.MapReader;
+import shortest_path_visualizer.utils.Node;
 
 public class DijkstraTest {
   File testMap = new File("src/test/resources/kartat/testikartta.txt");
