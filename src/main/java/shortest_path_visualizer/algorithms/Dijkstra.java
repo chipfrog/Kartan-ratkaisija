@@ -3,6 +3,7 @@ package shortest_path_visualizer.algorithms;
 import java.util.ArrayList;
 import shortest_path_visualizer.IO.IO;
 import shortest_path_visualizer.dataStructures.Keko;
+import shortest_path_visualizer.utils.NeighbourFinder;
 import shortest_path_visualizer.utils.Node;
 
 /**
@@ -19,10 +20,10 @@ public class Dijkstra {
   private Node goalNode;
   private ArrayList<Node> visitedOrder;
   private int etaisyysMaaliin;
-  private int iNaapurilista;
   private Keko heap;
+  private NeighbourFinder finder;
 
-  public Dijkstra(IO io, char[][] karttamatriisi) {
+  public Dijkstra (IO io, char[][] karttamatriisi) {
     this.io = io;
     this.karttamatriisi = karttamatriisi;
     this.solmuMatriisi = new Node[karttamatriisi.length][karttamatriisi[0].length];
@@ -30,8 +31,8 @@ public class Dijkstra {
     this.visitedOrder = new ArrayList<>();
     this.etaisyysMaaliin = Integer.MAX_VALUE;
     this.goalNode = null;
-    this.iNaapurilista = 0;
     this.heap = new Keko();
+    this.finder = new NeighbourFinder(karttamatriisi, solmuMatriisi);
   }
 
   /**
@@ -177,6 +178,10 @@ public class Dijkstra {
     }
   }
 
+  public Node[] haeNaapurisolmut(int x, int y) {
+    return finder.haeNaapurisolmut(x, y);
+  }
+
   public Node getGoalNode() {
     return this.goalNode;
   }
@@ -184,140 +189,11 @@ public class Dijkstra {
   /**
    * Alustaa solmujen etäisyystaulukon. Kunkin solmun etäisyydeksi tulee aluksi "ääretön".
    */
+
   public void initEtaisyydet() {
     for (int i = 0; i < etaisyys.length; i++) {
       etaisyys[i] = Integer.MAX_VALUE;
     }
     etaisyys[startingNode.getTunnus()] = 0;
-  }
-
-  /**
-   * Metodi hakee matriisikartan solmulle kaikki naapurisolmut, eli solmut jotka eivät ole esteitä.
-   * Tarkasteltavan solmun x- ja y-koordinaatit annettu parametreina.
-   *
-   * @param currentX solmun sarake matriisissa
-   * @param currentY solmun rivi matriisissa
-   * @return lista naapurisolmuista
-   */
-
-  public Node[] haeNaapurisolmut(int currentX, int currentY) {
-    Node[] naapurit = new Node[4];
-    iNaapurilista = 0;
-
-    if (karttamatriisi[currentY][currentX] != 'T') {
-      // Vasen yläkulma
-      if (currentX == 0 && currentY == 0) {
-        checkSouth(currentX, currentY, naapurit, iNaapurilista);
-        checkEast(currentX, currentY, naapurit, iNaapurilista);
-      }
-      // Oikea yläkulma
-      else if (currentX == karttamatriisi[0].length - 1 && currentY == 0) {
-        checkSouth(currentX, currentY, naapurit, iNaapurilista);
-        checkWest(currentX, currentY, naapurit, iNaapurilista);
-      }
-      // Vasen alakulma
-      else if (currentX == 0 && currentY == karttamatriisi.length - 1) {
-        checkNorth(currentX, currentY, naapurit, iNaapurilista);
-        checkEast(currentX, currentY, naapurit, iNaapurilista);
-      }
-      // Oikea alakulma
-      else if (currentX == karttamatriisi[0].length - 1 &&
-          currentY == karttamatriisi.length - 1) {
-        checkNorth(currentX, currentY, naapurit, iNaapurilista);
-        checkWest(currentX, currentY, naapurit, iNaapurilista);
-      }
-      // Vasen reuna
-      else if (currentX == 0) {
-        checkNorth(currentX, currentY, naapurit, iNaapurilista);
-        checkSouth(currentX, currentY, naapurit, iNaapurilista);
-        checkEast(currentX, currentY, naapurit, iNaapurilista);
-      }
-      // Oikea reuna
-      else if (currentX == karttamatriisi[0].length - 1) {
-        checkNorth(currentX, currentY, naapurit, iNaapurilista);
-        checkSouth(currentX, currentY, naapurit, iNaapurilista);
-        checkWest(currentX, currentY, naapurit, iNaapurilista);
-      }
-      // Alareuna
-      else if (currentY == karttamatriisi.length - 1) {
-        checkNorth(currentX, currentY, naapurit, iNaapurilista);
-        checkWest(currentX, currentY, naapurit, iNaapurilista);
-        checkEast(currentX, currentY, naapurit, iNaapurilista);
-      }
-      // Yläreuna
-      else if (currentY == 0) {
-        checkSouth(currentX, currentY, naapurit, iNaapurilista);
-        checkWest(currentX, currentY, naapurit, iNaapurilista);
-        checkEast(currentX, currentY, naapurit, iNaapurilista);
-      }
-      // "Keskellä"
-      else {
-        checkNorth(currentX, currentY, naapurit, iNaapurilista);
-        checkSouth(currentX, currentY, naapurit, iNaapurilista);
-        checkWest(currentX, currentY, naapurit, iNaapurilista);
-        checkEast(currentX, currentY, naapurit, iNaapurilista);
-      }
-    }
-    return naapurit;
-  }
-
-  /**
-   * Tarkistaa onko naapurisolmuja etelässä.
-   *
-   * @param currentX solmun sarake matriisissa
-   * @param currentY solmun rivi matriisissa
-   * @param naapurit lista, johon naapurisolmut lisätään
-   */
-
-  private void checkSouth(int currentX, int currentY, Node[] naapurit, int indeksi) {
-    if (karttamatriisi[currentY + 1][currentX] != 'T') {
-      naapurit[indeksi] = solmuMatriisi[currentY + 1][currentX];
-      iNaapurilista ++;
-    }
-  }
-
-  /**
-   * Tarkistaa onko naapurisolmuja pohjoisessa.
-   *
-   * @param currentX solmun sarake matriisissa
-   * @param currentY solmun rivi matriisissa
-   * @param naapurit lista, johon naapurisolmut lisätään
-   */
-
-  private void checkNorth(int currentX, int currentY, Node[] naapurit, int indeksi) {
-    if (karttamatriisi[currentY - 1][currentX] != 'T') {
-      naapurit[indeksi] = solmuMatriisi[currentY - 1][currentX];
-      iNaapurilista ++;
-    }
-  }
-
-  /**
-   * Tarkistaa onko naapurisolmuja idässä.
-   *
-   * @param currentX solmun sarake matriisissa
-   * @param currentY solmun rivi matriisissa
-   * @param naapurit lista, johon naapurisolmut lisätään
-   */
-
-  private void checkEast(int currentX, int currentY, Node[] naapurit, int indeksi) {
-    if (karttamatriisi[currentY][currentX + 1] != 'T') {
-      naapurit[indeksi] = solmuMatriisi[currentY][currentX + 1];
-      iNaapurilista ++;
-    }
-  }
-
-  /**
-   * Tarkistaa onko naapurisolmuja lännessä.
-   *
-   * @param currentX solmun sarake matriisissa
-   * @param currentY solmun rivi matriisissa
-   * @param naapurit lista, johon naapurisolmut lisätään
-   */
-
-  private void checkWest(int currentX, int currentY, Node[] naapurit, int indeksi) {
-    if (karttamatriisi[currentY][currentX - 1] != 'T') {
-      naapurit[indeksi] = solmuMatriisi[currentY][currentX - 1];
-      iNaapurilista ++;
-    }
   }
 }
