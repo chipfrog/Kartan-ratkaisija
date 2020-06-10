@@ -14,6 +14,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseDragEvent;
@@ -25,6 +26,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import shortest_path_visualizer.IO.MapFileCreator;
 import shortest_path_visualizer.algorithms.AStar;
 import shortest_path_visualizer.algorithms.Dijkstra;
 import shortest_path_visualizer.IO.MapReaderIO;
@@ -50,6 +52,8 @@ public class MapCreator extends Application {
   private Label distToGoal;
   private boolean runClicked;
   private int animationSpeed;
+  private MapFileCreator mapFileCreator;
+  private String fileName;
 
   public MapCreator() {
     this.cols = 50;
@@ -62,9 +66,11 @@ public class MapCreator extends Application {
     this.pane = new Pane();
     this.nodeToPaint = 0;
     this.numOfVisitedNodes = new Label("Nodes: " + 0);
-    this.distToGoal = new Label("Distance: ");
+    this.distToGoal = new Label("Distance: " + 0);
     this.runClicked = false;
     this.animationSpeed = 5;
+    this.mapFileCreator = new MapFileCreator(new MapReaderIO());
+    this.fileName = "";
   }
 
   /**
@@ -152,7 +158,7 @@ public class MapCreator extends Application {
     goalDrawn = false;
     nodeToPaint = 0;
     numOfVisitedNodes.setText("Nodes: " + 0);
-    distToGoal.setText("Distance: ");
+    distToGoal.setText("Distance: " + 0);
     start(stage);
   }
 
@@ -203,7 +209,7 @@ public class MapCreator extends Application {
       this.dijkstra = new Dijkstra(new MapReaderIO(), mapArray);
       dijkstra.runDijkstra();
       if (dijkstra.getGoalNode() != null) {
-        distToGoal.setText("Dist: " + dijkstra.getEtaisyysMaaliin());
+        distToGoal.setText("Distance: " + dijkstra.getEtaisyysMaaliin());
         ArrayList<Node> visitedNodes = dijkstra.getVisitedOrder();
         animateDijkstra(visitedNodes);
       } else {
@@ -304,6 +310,8 @@ public class MapCreator extends Application {
         }
       }
     }
+    numOfVisitedNodes.setText("Nodes: " + 0);
+    distToGoal.setText("Distance: " + 0);
     nodeToPaint = 0;
   }
 
@@ -360,6 +368,21 @@ public class MapCreator extends Application {
         exception.printStackTrace();
       }
     });
+
+    Label saveMap = new Label("Save map");
+    TextField nameField = new TextField();
+
+    Button save = new Button("Save Map");
+    save.setOnAction(e -> {
+      generateCharArray();
+      mapFileCreator.WriteMapToFile(mapArray, nameField.getText());
+      nameField.setText("");
+    });
+
+    VBox mapSaving = new VBox();
+    mapSaving.getChildren().addAll(saveMap, nameField, save);
+    mapSaving.setSpacing(10);
+
     Label speedSlider = new Label("Animation speed: ");
 
     Slider slider = new Slider();
@@ -396,7 +419,7 @@ public class MapCreator extends Application {
 
     VBox controls = new VBox();
     controls.setSpacing(40);
-    controls.getChildren().addAll(drawChoice, configurations, otherOptions);
+    controls.getChildren().addAll(drawChoice, configurations, otherOptions, mapSaving);
 
     HBox hB = new HBox(20);
     hB.getChildren().addAll(controls, pane);

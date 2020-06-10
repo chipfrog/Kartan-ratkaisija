@@ -118,21 +118,4 @@ public class DijkstraTest {
     assertTrue(d.getEtaisyysMaaliin() == 10);
     assertTrue(d.haeReitti().getEtaisyys() == 1);
   }
-
-
-
-
-
-
-
-
-
-  /*@Test
-  public void mapSavedAsIntegerMatrixContainsAllCells() {
-    d.initVerkko();
-    assertTrue(d.getSolmumatriisi().length * d.getSolmumatriisi()[0].length == 2401);
-  }
-*/
-
-
 }
