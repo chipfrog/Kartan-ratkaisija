@@ -1,12 +1,14 @@
 # Käyttöohjeet
 
-_Varsinaisen sovelluksen ohjeet tulossa myöhemmin..._
+## Sovelluksen suorittaminen
+
+`./gradlew run`
 
 ## Testien ajaminen
 
 Testien suorittaminen konsolissa: `./gradlew test`
 
-Jacoco-raportin generointi: `./gradlw test jacocoTestReport`
+Jacoco-raportin generointi: `./gradlew test jacocoTestReport`
 
 Jacocon generoiman testikattavuusraportin sijainti: _/build/reports/jacoco/test/html/index.html_
 
