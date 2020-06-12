@@ -8,4 +8,5 @@ Luulin saaneeni A*:n toimimaan oikein, mutta edelleen joissakin satunnaisissa ti
 merkittävästi eroa Dijkstrasta, joten parannettavaa selkeästi on edelleen. Käytin suorituskyvyn testaukseen muutamia [Moving AI Lab -karttoja](https://www.movingai.com/benchmarks/grids.html),
 sillä sovelluksessa piirretyt kartat ovat niin pieniä, että tehokkuuserojen hakeminen ei tunnu yhtä luotettavalta.
 
+Käytetty aika n. 10h
 
