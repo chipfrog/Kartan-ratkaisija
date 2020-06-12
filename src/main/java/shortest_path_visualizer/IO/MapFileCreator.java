@@ -23,6 +23,7 @@ public class MapFileCreator {
         fileWriter.write("\n");
       }
       fileWriter.close();
+      io.printString("Tallennus onnistui!");
     } catch (IOException e) {
       io.printString("Error while writing a file!");
     }

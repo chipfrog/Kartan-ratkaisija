@@ -47,12 +47,11 @@ public class AStar {
       Node current = openList.pollNode();
       addedToOpenList[current.getY()][current.getX()] = false;
       if (current.isGoal()) {
-        System.out.println("Maali löytyi!");
         goalFound = true;
         etaisyysMaaliin = current.getG_Matka();
         break;
       }
-      for (Node naapuri : verkko[current.getTunnus()]) {
+      for (Node naapuri : haeNaapurisolmut(current.getX(), current.getY())) {
         if (naapuri != null) {
           int uusiGMatka = current.getG_Matka() + 1;
           if (uusiGMatka < naapuri.getG_Matka()) {
@@ -64,6 +63,9 @@ public class AStar {
               openList.addNode(naapuri);
               addedToOpenList[naapuri.getY()][naapuri.getX()] = true;
               visitedOrder.add(naapuri);
+              naapuri.vieraile();
+            } else if (naapuri.onVierailtu()) {
+              openList.addNode(naapuri);
             }
           }
         }
@@ -143,12 +145,12 @@ public class AStar {
         solmutunnus++;
       }
     }
-    // Lisätään kullekin solmumatriisin solmulle lista naapurisolmuista
+    /*// Lisätään kullekin solmumatriisin solmulle lista naapurisolmuista
     for (int i = 0; i < karttamatriisi.length; i++) {
       for (int j = 0; j < karttamatriisi[0].length; j++) {
         verkko[solmumatriisi[i][j].getTunnus()] = haeNaapurisolmut(j, i);
       }
-    }
+    }*/
   }
 
   private Node[] haeNaapurisolmut(int x, int y) {

@@ -12,7 +12,7 @@ public class Keko {
    * Minimikeon toteutus. Pitää yllä hakupuuta, jonka juurena solmu, jonka etäisyys maalisolmuun pienin.
    */
   public Keko() {
-    this.keko = new Node[1000];
+    this.keko = new Node[1000000];
     this.pienin = new Node(0, -1, -1);
     pienin.setEtaisyys(Integer.MIN_VALUE);
     keko[0] = pienin;

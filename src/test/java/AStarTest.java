@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import shortest_path_visualizer.algorithms.AStar;
 import shortest_path_visualizer.IO.MapReader;
+import shortest_path_visualizer.algorithms.Dijkstra;
 
 public class AStarTest {
   File testMap = new File("src/test/resources/kartat/testikartta.txt");
@@ -19,6 +20,12 @@ public class AStarTest {
     mapReader.createMatrix(testMap);
     mapMatrix = mapReader.getMapArray();
     a = new AStar(ioStub, mapMatrix);
+  }
+
+  private void changeMap(File file) throws FileNotFoundException {
+    mapReader.createMatrix(file);
+    mapMatrix = mapReader.getMapArray();
+    a = new AStar(ioStub, mapMatrix);
     a.initVerkko();
   }
 
@@ -26,6 +33,19 @@ public class AStarTest {
   public void returnsShortetsDistanceInBasicSituation() {
     a.runAStar();
     assertTrue(a.getEtaisyysMaaliin() == 5);
+  }
+
+  @Test
+  public void getsSameResultAsDijkstra() throws FileNotFoundException {
+    changeMap(new File("src/test/resources/kartat/virhe.txt"));
+    Dijkstra dijkstra = new Dijkstra(ioStub, mapMatrix);
+    dijkstra.runDijkstra();
+    int resultD = dijkstra.getEtaisyysMaaliin();
+    a.runAStar();
+    int resultA = a.getEtaisyysMaaliin();
+    System.out.println(resultA);
+    System.out.println(resultD);
+    assertTrue(resultA == resultD);
   }
 
 }

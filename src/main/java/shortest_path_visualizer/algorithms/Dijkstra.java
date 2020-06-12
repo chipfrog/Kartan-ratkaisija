@@ -59,7 +59,7 @@ public class Dijkstra {
         karttamatriisi[node.getY()][node.getX()] = 'O';
       }
 
-      for (Node naapuri : verkko[node.getTunnus()]) {
+      for (Node naapuri : haeNaapurisolmut(node.getX(), node.getY())) {
         if (naapuri != null) {
           int nykyinenEtaisyys = etaisyys[naapuri.getTunnus()];
           int uusiEtaisyys = etaisyys[node.getTunnus()] + 1;
@@ -110,7 +110,7 @@ public class Dijkstra {
   public Node pieninNaapuri(Node node) {
     int minDist = Integer.MAX_VALUE;
     Node smallestDistNode = null;
-    Node[] naapurit = verkko[node.getTunnus()];
+    Node[] naapurit = haeNaapurisolmut(node.getX(), node.getY());
 
     for (int i = 0; i < naapurit.length; i ++) {
       if (naapurit[i] != null) {
@@ -170,12 +170,12 @@ public class Dijkstra {
         solmutunnus++;
       }
     }
-    // Lisätään kullekin solmumatriisin solmulle lista naapurisolmuista
+    /*// Lisätään kullekin solmumatriisin solmulle lista naapurisolmuista
     for (int i = 0; i < karttamatriisi.length; i++) {
       for (int j = 0; j < karttamatriisi[0].length; j++) {
         verkko[solmuMatriisi[i][j].getTunnus()] = haeNaapurisolmut(j, i);
       }
-    }
+    }*/
   }
 
   public Node[] haeNaapurisolmut(int x, int y) {
