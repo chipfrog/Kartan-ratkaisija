@@ -1,5 +1,6 @@
 package shortest_path_visualizer.ui;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -30,6 +31,7 @@ import shortest_path_visualizer.IO.MapFileCreator;
 import shortest_path_visualizer.algorithms.AStar;
 import shortest_path_visualizer.algorithms.Dijkstra;
 import shortest_path_visualizer.IO.MapReaderIO;
+import shortest_path_visualizer.performanceTesting.PerformanceTest;
 import shortest_path_visualizer.utils.Node;
 
 /**
@@ -315,6 +317,9 @@ public class MapCreator extends Application {
     nodeToPaint = 0;
   }
 
+  private void runBenchmark() throws FileNotFoundException {
+  }
+
   @Override
   public void start(Stage primaryStage) throws Exception {
     createGrid(20);
@@ -417,9 +422,31 @@ public class MapCreator extends Application {
     otherOptions.getChildren().addAll(run, tryAgain, clear, numOfVisitedNodes, distToGoal);
     otherOptions.setSpacing(10);
 
+    Label avgD = new Label();
+    Label avgA = new Label();
+    Label distA = new Label();
+    Label distD = new Label();
+
+    Button runTest = new Button("Benchmark");
+    runTest.setOnAction(e -> {
+      try {
+        PerformanceTest test = new PerformanceTest();
+
+        test.testAStar();
+        avgA.setText("A* average: " + test.getAverage() + "ms");
+        distA.setText("Path length: " + test.getVastausA());
+
+        test.testDijkstra();
+        avgD.setText("Dijkstra average: " + test.getAverage() + "ms");
+        distD.setText("Path length: " + test.getVastausD());
+
+      } catch (FileNotFoundException exception) {
+      }
+    });
+
     VBox controls = new VBox();
     controls.setSpacing(40);
-    controls.getChildren().addAll(drawChoice, configurations, otherOptions, mapSaving);
+    controls.getChildren().addAll(drawChoice, configurations, otherOptions, mapSaving, runTest, avgA, distA, avgD, distD);
 
     HBox hB = new HBox(20);
     hB.getChildren().addAll(controls, pane);

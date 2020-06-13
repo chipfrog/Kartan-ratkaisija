@@ -164,6 +164,7 @@ public class Dijkstra {
           node.setAsGoalNode();
         } else if (karttamatriisi[i][j] == 'S') {
           node.setAsStartNode();
+          node.setEtaisyys(0);
           this.startingNode = node;
         }
         solmuMatriisi[i][j] = node;

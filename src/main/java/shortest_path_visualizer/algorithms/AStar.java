@@ -51,22 +51,28 @@ public class AStar {
         etaisyysMaaliin = current.getG_Matka();
         break;
       }
+      current.vieraile();
       for (Node naapuri : haeNaapurisolmut(current.getX(), current.getY())) {
         if (naapuri != null) {
           int uusiGMatka = current.getG_Matka() + 1;
-          if (uusiGMatka < naapuri.getG_Matka()) {
+          if (!naapuri.onVierailtu() || uusiGMatka < naapuri.getG_Matka()) {
             naapuri.setParent(current);
             naapuri.setG_Matka(uusiGMatka);
             naapuri.setEtaisyys(uusiGMatka + manhattanDist(naapuri, goalNode));
 
-            if (!addedToOpenList[naapuri.getY()][naapuri.getX()]) {
+            openList.addNode(naapuri);
+            addedToOpenList[naapuri.getY()][naapuri.getX()] = true;
+            visitedOrder.add(naapuri);
+            naapuri.vieraile();
+
+            /*if (!addedToOpenList[naapuri.getY()][naapuri.getX()]) {
               openList.addNode(naapuri);
               addedToOpenList[naapuri.getY()][naapuri.getX()] = true;
               visitedOrder.add(naapuri);
               naapuri.vieraile();
             } else if (naapuri.onVierailtu()) {
               openList.addNode(naapuri);
-            }
+            }*/
           }
         }
       }

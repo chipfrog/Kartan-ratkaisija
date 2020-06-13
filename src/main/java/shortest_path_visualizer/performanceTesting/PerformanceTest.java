@@ -37,7 +37,6 @@ public class PerformanceTest {
     mapReader.createMatrix(file);
     this.map = mapReader.getMapArray();
     this.dijkstra = new Dijkstra(new MapReaderIO(), this.map);
-
     dijkstra.runDijkstra();
     this.vastausD = dijkstra.getEtaisyysMaaliin();
 
@@ -66,15 +65,14 @@ public class PerformanceTest {
     }
   }
 
-  public long getAverage() {
+  public double getAverage() {
     long totalTime = 0;
     long divider = 0;
     for (int i = 1; i < times.length; i ++) {
       totalTime += times[i];
       divider ++;
     }
-    System.out.println(totalTime/1000000.0/divider);
-    return totalTime/divider;
+    return totalTime/1000000.0/divider;
   }
 
   public boolean samaVastaus() {
