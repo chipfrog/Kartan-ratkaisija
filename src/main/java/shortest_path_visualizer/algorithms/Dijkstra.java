@@ -52,7 +52,7 @@ public class Dijkstra {
       visitedOrder.add(node);
       if (node.isGoal()) {
         this.goalNode = node;
-        this.etaisyysMaaliin = node.getEtaisyys();
+        this.etaisyysMaaliin = (int) node.getEtaisyys();
         break;
       }
       if (!node.isStart()) {
@@ -117,7 +117,7 @@ public class Dijkstra {
         if (naapurit[i].isStart()) {
           smallestDistNode = naapurit[i];
         } else if (naapurit[i].getEtaisyys() < minDist) {
-          minDist = naapurit[i].getEtaisyys();
+          minDist = (int) naapurit[i].getEtaisyys();
           smallestDistNode = naapurit[i];
         }
       }

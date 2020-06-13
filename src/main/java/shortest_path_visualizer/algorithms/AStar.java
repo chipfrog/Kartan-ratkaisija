@@ -58,7 +58,8 @@ public class AStar {
           if (!naapuri.onVierailtu() || uusiGMatka < naapuri.getG_Matka()) {
             naapuri.setParent(current);
             naapuri.setG_Matka(uusiGMatka);
-            naapuri.setEtaisyys(uusiGMatka + manhattanDist(naapuri, goalNode));
+            double h = manhattanDist(naapuri, goalNode) * 1.001;
+            naapuri.setEtaisyys(uusiGMatka + h);
 
             openList.addNode(naapuri);
             addedToOpenList[naapuri.getY()][naapuri.getX()] = true;

@@ -2,7 +2,7 @@ package shortest_path_visualizer.utils;
 
 public class Node {
   private int tunnus;
-  private int etaisyys;
+  private double etaisyys;
   private boolean vierailtu;
   private boolean start;
   private boolean goal;
@@ -72,11 +72,11 @@ public class Node {
     return this.tunnus;
   }
 
-  public void setEtaisyys(int uusiEtaisyys) {
+  public void setEtaisyys(double uusiEtaisyys) {
     this.etaisyys = uusiEtaisyys;
   }
 
-  public int getEtaisyys() {
+  public double getEtaisyys() {
     return this.etaisyys;
   }
 }
