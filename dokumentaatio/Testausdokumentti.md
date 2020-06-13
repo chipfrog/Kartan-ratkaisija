@@ -9,4 +9,4 @@ löytääkö algoritmi oikean vastauksen. Testikartoista pyritään tekemään m
 käydään läpi. Algoritmit voidaan testata samoilla kartoilla, jolloin nähdään mahdolliset erot suoritusajassa
 ja läpikäytyjen solmujen määrissä. Testit voidaan ajaa komentoriviltä. 
 
-Tällä hetkellä ohjelmassa on vain ohjelman oikeanlaista toimintaa testaavia testejä, eikä vielä suorituskykytestejä.
+Suorituskykytestien tekeminen on nyt aloitettu. Suurikokoisesta kartasta haetaan reitti kahden pisteen välillä samalla algoritmilla 100 kertaa. Ensimmäistä ajoa ei huomioida ja jäljellä olevista ajoista lasketaan suoritusaikojen keskiarvo.
