@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.8'
     id 'jacoco'
     id 'checkstyle'
 }
@@ -15,6 +16,10 @@ version '1.0-SNAPSHOT'
 repositories {
     mavenCentral()
     jcenter()
+}
+javafx {
+    version = "11"
+    modules = [ 'javafx.base','javafx.controls', 'javafx.graphics' ]
 }
 
 dependencies {
