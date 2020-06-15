@@ -15,7 +15,6 @@ public class PerformanceTest {
   private AStar aStar;
   private char[][] map;
   private long[] times;
-  //private File file;
   private int vastausD;
   private int vastausA;
 
@@ -23,8 +22,6 @@ public class PerformanceTest {
     this.io = new MapReaderIO();
     this.mapReader = new MapReader(io);
     this.times = new long[5];
-    //this.file = new File("src/test/resources/kartat/Brushfire.txt");
-
   }
 
   /*public char[][] initMap() throws FileNotFoundException {
@@ -32,23 +29,19 @@ public class PerformanceTest {
     return mapReader.getMapArray();
   }*/
 
-  public void runAllScenarios() {
-
-  }
-
-
-
   public void testDijkstra(File file, Node start, Node goal) throws FileNotFoundException {
     mapReader.createMatrix(file);
     this.map = mapReader.getMapArray();
     this.map[start.getY()][start.getX()] = 'S';
     this.map[goal.getY()][goal.getX()] = 'G';
-    this.dijkstra = new Dijkstra(new MapReaderIO(), this.map);
+    this.dijkstra = new Dijkstra(new MapReaderIO());
+    dijkstra.setMap(this.map);
+
     dijkstra.runDijkstra();
     this.vastausD = dijkstra.getEtaisyysMaaliin();
 
     for (int i = 0; i < times.length; i ++) {
-      this.dijkstra = new Dijkstra(new MapReaderIO(), this.map);
+      dijkstra.setMap(map);
       long t1 = System.nanoTime();
       dijkstra.runDijkstra();
       long t2 = System.nanoTime();
@@ -62,12 +55,13 @@ public class PerformanceTest {
     this.map = mapReader.getMapArray();
     this.map[start.getY()][start.getX()] = 'S';
     this.map[goal.getY()][goal.getX()] = 'G';
-    this.aStar = new AStar(new MapReaderIO(), this.map);
+    this.aStar = new AStar(new MapReaderIO());
+    aStar.setMap(map);
     aStar.runAStar();
     this.vastausA = aStar.getEtaisyysMaaliin();
 
     for (int i = 0; i < times.length; i ++) {
-      this.aStar = new AStar(new MapReaderIO(), this.map);
+      aStar.setMap(map);
       long t1 = System.nanoTime();
       aStar.runAStar();
       long t2 = System.nanoTime();

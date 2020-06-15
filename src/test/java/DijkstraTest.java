@@ -22,14 +22,13 @@ public class DijkstraTest {
   public void initMatrix() throws FileNotFoundException {
     mapReader.createMatrix(testMap);
     mapMatrix = mapReader.getMapArray();
-    d = new Dijkstra(ioStub, mapMatrix);
-    d.initVerkko();
+    d = new Dijkstra(ioStub);
+    d.setMap(mapMatrix);
 
   }
-  private Dijkstra initDijkstraWithNewMap(File file) throws FileNotFoundException{
+  private char[][] initDijkstraWithNewMap(File file) throws FileNotFoundException{
     mapReader.createMatrix(file);
-    char[][] newMapMatrix = mapReader.getMapArray();
-    return new Dijkstra(ioStub, newMapMatrix);
+    return mapReader.getMapArray();
   }
 
   @Test
@@ -106,14 +105,14 @@ public class DijkstraTest {
 
   @Test
   public void programDoesNotCrashWhenGoalNodeIsUnreachable() throws FileNotFoundException{
-    Dijkstra d = initDijkstraWithNewMap(unreachableGoalMap);
+    d.setMap(initDijkstraWithNewMap(unreachableGoalMap));
     d.runDijkstra();
     assertTrue(d.getGoalNode() == null);
   }
 
   @Test
   public void tracesShortestPathBackToNodeClosestToStartingNodeInSpecialMap() throws FileNotFoundException {
-    Dijkstra d = initDijkstraWithNewMap(specialCaseMap);
+    d.setMap(initDijkstraWithNewMap(specialCaseMap));
     d.runDijkstra();
     assertTrue(d.getEtaisyysMaaliin() == 10);
     assertTrue(d.haeReitti().getEtaisyys() == 1);

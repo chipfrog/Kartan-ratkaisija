@@ -8,8 +8,8 @@ import shortest_path_visualizer.utils.Node;
 
 public class AStar {
   private final IO io;
-  private final char[][] karttamatriisi;
-  private final Node[][] solmumatriisi;
+  private char[][] karttamatriisi;
+  private Node[][] solmumatriisi;
   private Keko openList;
   private Node[][] verkko;
   private boolean[][] addedToOpenList;
@@ -21,22 +21,26 @@ public class AStar {
   private boolean goalFound;
   private NeighbourFinder finder;
 
-  public AStar(IO io, char[][] karttamatriisi) {
+  public AStar(IO io) {
     this.io = io;
-    this.karttamatriisi = karttamatriisi;
+  }
+
+  public void setMap(char[][] kartta) {
+    this.karttamatriisi = kartta;
     this.solmumatriisi = new Node[karttamatriisi.length][karttamatriisi[0].length];
     this.addedToOpenList = new boolean[karttamatriisi.length][karttamatriisi[0].length];
     this.etaisyysMaaliin = Integer.MAX_VALUE;
     this.visitedOrder = new ArrayList<>();
     this.goalFound = false;
     this.finder = new NeighbourFinder(karttamatriisi, solmumatriisi);
+    initVerkko();
   }
 
   /**
    * Suorittaa A*-algoritmin.
    */
   public void runAStar() {
-    initVerkko();
+    //initVerkko();
     this.openList = new Keko();
     startingNode.setG_Matka(0);
     startingNode.setEtaisyys(manhattanDist(startingNode, goalNode));

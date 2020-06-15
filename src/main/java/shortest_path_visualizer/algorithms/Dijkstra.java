@@ -12,40 +12,44 @@ import shortest_path_visualizer.utils.Node;
 
 public class Dijkstra {
   private final IO io;
-  private final char[][] karttamatriisi;
-  private final Node[][] solmuMatriisi;
+  private char[][] karttamatriisi;
+  private Node[][] solmuMatriisi;
   private int[] etaisyys;
   private Node [][] verkko;
   private Node startingNode;
   private Node goalNode;
   private ArrayList<Node> visitedOrder;
   private int etaisyysMaaliin;
-  private Keko heap;
+  private Keko keko;
   private NeighbourFinder finder;
 
-  public Dijkstra (IO io, char[][] karttamatriisi) {
+  public Dijkstra (IO io) {
     this.io = io;
-    this.karttamatriisi = karttamatriisi;
+  }
+
+  public void setMap(char[][] kartta) {
+    this.karttamatriisi = kartta;
     this.solmuMatriisi = new Node[karttamatriisi.length][karttamatriisi[0].length];
     this.etaisyys = new int[karttamatriisi.length * karttamatriisi[0].length];
     this.visitedOrder = new ArrayList<>();
     this.etaisyysMaaliin = Integer.MAX_VALUE;
     this.goalNode = null;
-    this.heap = new Keko();
+    this.keko = new Keko();
     this.finder = new NeighbourFinder(karttamatriisi, solmuMatriisi);
+    initVerkko();
+    initEtaisyydet();
   }
-  
 
   /**
    * Suorittaa Dijkstran algoritmin.
    */
   public void runDijkstra() {
-    initVerkko();
-    initEtaisyydet();
-    heap.addNode(startingNode);
+    /*initVerkko();
+    initEtaisyydet();*/
+    keko.addNode(startingNode);
 
-    while(!heap.isEmpty()) {
-      Node node = heap.pollNode();
+    while(!keko.isEmpty()) {
+      Node node = keko.pollNode();
       if (node.onVierailtu()) {
         continue;
       }
@@ -56,9 +60,9 @@ public class Dijkstra {
         this.etaisyysMaaliin = (int) node.getEtaisyys();
         break;
       }
-      if (!node.isStart()) {
+      /*if (!node.isStart()) {
         karttamatriisi[node.getY()][node.getX()] = 'O';
-      }
+      }*/
 
       for (Node naapuri : haeNaapurisolmut(node.getX(), node.getY())) {
         if (naapuri != null) {
@@ -69,7 +73,7 @@ public class Dijkstra {
             etaisyys[naapuri.getTunnus()] = uusiEtaisyys;
             solmuMatriisi[naapuri.getY()][naapuri.getX()].setEtaisyys(uusiEtaisyys);
             naapuri.setEtaisyys(uusiEtaisyys);
-            heap.addNode(naapuri);
+            keko.addNode(naapuri);
           }
         }
       }
@@ -123,7 +127,6 @@ public class Dijkstra {
         }
       }
     }
-
     return smallestDistNode;
   }
 

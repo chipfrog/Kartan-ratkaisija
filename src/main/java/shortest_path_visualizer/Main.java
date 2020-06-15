@@ -6,13 +6,13 @@ import javafx.application.Application;
 import shortest_path_visualizer.IO.BenchmarkFileReader;
 import shortest_path_visualizer.IO.MapReaderIO;
 import shortest_path_visualizer.performanceTesting.PerformanceTest;
-import shortest_path_visualizer.ui.MapCreator;
+import shortest_path_visualizer.ui.Ui;
 import shortest_path_visualizer.utils.Node;
 
 public class Main {
   public static void main(String[] args) throws FileNotFoundException {
 
-    BenchmarkFileReader b = new BenchmarkFileReader(new MapReaderIO());
+    /*BenchmarkFileReader b = new BenchmarkFileReader(new MapReaderIO());
     Node[][] startAndGoal = b.getScenarioCoordinates(new File("src/main/resources/Berlin_0_256.scen.txt"));
 
     double totalTimeD = 0;
@@ -23,10 +23,12 @@ public class Main {
       test.testDijkstra(new File("src/main/resources/Berlin_0_256.txt"), startAndGoal[i][0], startAndGoal[i][1]);
       totalTimeD += test.getAverage();
       int d = test.getVastausD();
+      System.out.println("Dijkstra: " + d);
 
       test.testAStar(new File("src/main/resources/Berlin_0_256.txt"), startAndGoal[i][0], startAndGoal[i][1]);
       totalTimeA += test.getAverage();
       int a = test.getVastausA();
+      System.out.println("A*: " + a);
 
       if (d != a) {
         System.out.println("Virhe!");
@@ -34,12 +36,12 @@ public class Main {
     }
 
     System.out.println("Dijkstra total time: " + totalTimeD);
-    System.out.println("A* total time: " + totalTimeA);
+    System.out.println("A* total time: " + totalTimeA);*/
 
 
     //System.out.println(test.getVastausD());
 
-    //Application.launch(MapCreator.class);
+    Application.launch(Ui.class);
 
     /*PerformanceTest test = new PerformanceTest();
     test.testAStar(new File("src/test/resources/kartat/Brushfire.txt"));

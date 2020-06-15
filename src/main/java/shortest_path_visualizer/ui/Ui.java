@@ -39,7 +39,7 @@ import shortest_path_visualizer.utils.Node;
  * JavaFX-toteutus karttojen luomiseen.
  */
 
-public class MapCreator extends Application {
+public class Ui extends Application {
   private Pane pane;
   private char[][] mapArray;
   private int rows;
@@ -58,9 +58,9 @@ public class MapCreator extends Application {
   private MapFileCreator mapFileCreator;
   private String fileName;
 
-  public MapCreator() {
-    this.cols = 50;
-    this.rows = 50;
+  public Ui() {
+    this.cols = 100;
+    this.rows = 80;
     this.mapArray = new char[rows][cols];
     this.rectChar = new Rectangle[rows][cols];
     this.type = DrawType.START;
@@ -209,7 +209,8 @@ public class MapCreator extends Application {
   public void solveMapUsingDijkstra() {
     generateCharArray();
     if (mapHasStartAndGoal()) {
-      this.dijkstra = new Dijkstra(new MapReaderIO(), mapArray);
+      this.dijkstra = new Dijkstra(new MapReaderIO());
+      dijkstra.setMap(mapArray);
       dijkstra.runDijkstra();
       if (dijkstra.getGoalNode() != null) {
         distToGoal.setText("Distance: " + dijkstra.getEtaisyysMaaliin());
@@ -226,7 +227,8 @@ public class MapCreator extends Application {
   public void solveMapUsingAStar() {
     generateCharArray();
     if (mapHasStartAndGoal()) {
-      this.aStar = new AStar(new MapReaderIO(), mapArray);
+      this.aStar = new AStar(new MapReaderIO());
+      aStar.setMap(mapArray);
       aStar.runAStar();
       if (aStar.goalWasFound()) {
         distToGoal.setText("Dist: " + aStar.getEtaisyysMaaliin());
@@ -323,7 +325,7 @@ public class MapCreator extends Application {
 
   @Override
   public void start(Stage primaryStage) throws Exception {
-    createGrid(20);
+    createGrid(15);
 
     final ToggleGroup group = new ToggleGroup();
     RadioButton startPoint = new RadioButton("Start point");

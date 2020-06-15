@@ -33,7 +33,6 @@ public class MapReader {
       String line = io.getNextLine();
       for (int i = 0; i < line.length(); i++) {
         array[currentRow][i] = line.charAt(i);
-
       }
       currentRow++;
     }

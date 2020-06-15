@@ -11,7 +11,6 @@ import java.util.Scanner;
 
 public class MapReaderIO implements IO {
   private Scanner scanner;
-  private File file;
 
   public MapReaderIO() {
 

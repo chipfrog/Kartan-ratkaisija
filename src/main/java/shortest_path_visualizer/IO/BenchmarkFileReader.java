@@ -18,11 +18,9 @@ public class BenchmarkFileReader {
       io.getNextLine();
       j ++;
     }
-
     Node[][] coordinates = new Node[j][2];
     io.setFile(file);
     io.getNextLine();
-
     j = 0;
 
     try {
@@ -32,8 +30,6 @@ public class BenchmarkFileReader {
         Node goal = new Node(0, Integer.parseInt(s.split("\\s+")[6]), Integer.parseInt(s.split("\\s+")[7]));
         coordinates[j][0] = start;
         coordinates[j][1] = goal;
-        /*System.out.println("Start: " + "x: " + start.getX() + " y: " + start.getY()
-        + " Goal: " + goal.getX() + " " + goal.getY());*/
         j ++;
       }
     } catch (Exception e) {
