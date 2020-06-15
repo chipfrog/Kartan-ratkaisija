@@ -129,7 +129,7 @@ public class NeighbourFinder {
 
   private void checkNorthEast(int currentX, int currentY, Node[] naapurit, int indeksi) {
     if (karttamatriisi[currentY - 1][currentX + 1] != '@'
-    && (karttamatriisi[currentY - 1][currentX] != '@' || karttamatriisi[currentY][currentX + 1] != '@')) {
+    && (karttamatriisi[currentY - 1][currentX] != '@' && karttamatriisi[currentY][currentX + 1] != '@')) {
       naapurit[indeksi] = solmuMatriisi[currentY - 1][currentX + 1];
       iNaapurilista ++;
     }
@@ -137,7 +137,7 @@ public class NeighbourFinder {
 
   private void checkNorthWest(int currentX, int currentY, Node[] naapurit, int indeksi) {
     if (karttamatriisi[currentY - 1][currentX - 1] != '@'
-    && (karttamatriisi[currentY - 1][currentX] != '@' || karttamatriisi[currentY][currentX - 1] != '@')) {
+    && (karttamatriisi[currentY - 1][currentX] != '@' && karttamatriisi[currentY][currentX - 1] != '@')) {
       naapurit[indeksi] = solmuMatriisi[currentY - 1][currentX -1];
       iNaapurilista ++;
     }
@@ -160,7 +160,7 @@ public class NeighbourFinder {
 
   private void checkSouthEast(int currentX, int currentY, Node[] naapurit, int indeksi) {
     if (karttamatriisi[currentY + 1][currentX + 1] != '@'
-    && (karttamatriisi[currentY + 1][currentX] != '@' || karttamatriisi[currentY][currentX + 1] != '@')) {
+    && (karttamatriisi[currentY + 1][currentX] != '@' && karttamatriisi[currentY][currentX + 1] != '@')) {
       naapurit[indeksi] = solmuMatriisi[currentY + 1][currentX + 1];
       iNaapurilista ++;
     }
@@ -183,7 +183,7 @@ public class NeighbourFinder {
 
   private void checkSouthWest(int currentX, int currentY, Node[] naapurit, int indeksi) {
     if (karttamatriisi[currentY + 1][currentX - 1] != '@' &&
-        (karttamatriisi[currentY + 1][currentX] != '@' || karttamatriisi[currentY][currentX - 1] != '@')) {
+        (karttamatriisi[currentY + 1][currentX] != '@' && karttamatriisi[currentY][currentX - 1] != '@')) {
       naapurit[indeksi] = solmuMatriisi[currentY + 1][currentX - 1];
       iNaapurilista ++;
     }

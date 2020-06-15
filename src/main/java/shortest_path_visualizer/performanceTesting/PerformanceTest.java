@@ -51,22 +51,12 @@ public class PerformanceTest {
     }
   }
 
-
-
   public void testAStar(File file, Node start, Node goal) throws FileNotFoundException {
     mapReader.createMatrix(file);
     this.map = mapReader.getMapArray();
-    this.map = mapReader.getMapArray();
     this.map[start.getY()][start.getX()] = 'S';
     this.map[goal.getY()][goal.getX()] = 'G';
-
-    for (int i = 0; i < map.length; i ++) {
-      for (int j = 0; j < map[0].length; j ++) {
-        io.printChar(map[i][j]);
-      }
-      System.out.println();
-    }
-    /*this.aStar = new AStar(new MapReaderIO());
+    this.aStar = new AStar(new MapReaderIO());
     aStar.setMap(map);
     aStar.runAStar();
     this.vastausA = aStar.getEtaisyysMaaliin();
@@ -77,7 +67,7 @@ public class PerformanceTest {
       aStar.runAStar();
       long t2 = System.nanoTime();
       times[i] = t2 - t1;
-    }*/
+    }
   }
 
   public double getAverage() {
