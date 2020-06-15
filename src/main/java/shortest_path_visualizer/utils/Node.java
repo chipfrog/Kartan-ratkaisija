@@ -9,7 +9,7 @@ public class Node {
   private int xCoor;
   private int yCoor;
   private Node parent;
-  private int g_Matka;
+  private double g_Matka;
 
   public Node(int tunnus, int xCoor, int yCoor) {
     this.tunnus = tunnus;
@@ -28,11 +28,11 @@ public class Node {
     return parent;
   }
 
-  public void setG_Matka(int g) {
+  public void setG_Matka(double g) {
     this.g_Matka = g;
   }
 
-  public int getG_Matka() {
+  public double getG_Matka() {
     return this.g_Matka;
   }
 

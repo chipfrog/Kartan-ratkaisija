@@ -59,8 +59,8 @@ public class Ui extends Application {
   private String fileName;
 
   public Ui() {
-    this.cols = 100;
-    this.rows = 80;
+    this.cols = 60;
+    this.rows = 60;
     this.mapArray = new char[rows][cols];
     this.rectChar = new Rectangle[rows][cols];
     this.type = DrawType.START;
@@ -177,7 +177,7 @@ public class Ui extends Application {
         if (rect.getFill() == Color.WHITE) {
           mapArray[i][j] = '.';
         } else if (rect.getFill() == Color.BLACK) {
-          mapArray[i][j] = 'T';
+          mapArray[i][j] = '@';
         } else if (rect.getFill() == Color.GREEN) {
           mapArray[i][j] = 'S';
         } else if (rect.getFill() == Color.RED) {

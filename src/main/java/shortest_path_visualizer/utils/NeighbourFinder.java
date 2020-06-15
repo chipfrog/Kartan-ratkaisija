@@ -21,23 +21,26 @@ public class NeighbourFinder {
    */
 
   public Node[] haeNaapurisolmut(int currentX, int currentY) {
-    Node[] naapurit = new Node[4];
+    Node[] naapurit = new Node[8];
     iNaapurilista = 0;
 
-    if (karttamatriisi[currentY][currentX] != 'T' && karttamatriisi[currentY][currentX] != '@') {
+    if (karttamatriisi[currentY][currentX] != '@') {
       // Vasen yläkulma
       if (currentX == 0 && currentY == 0) {
-        checkSouth(currentX, currentY, naapurit, iNaapurilista);
         checkEast(currentX, currentY, naapurit, iNaapurilista);
+        checkSouthEast(currentX, currentY, naapurit, iNaapurilista);
+        checkSouth(currentX, currentY, naapurit, iNaapurilista);
       }
       // Oikea yläkulma
       else if (currentX == karttamatriisi[0].length - 1 && currentY == 0) {
         checkSouth(currentX, currentY, naapurit, iNaapurilista);
+        checkSouthWest(currentX, currentY, naapurit, iNaapurilista);
         checkWest(currentX, currentY, naapurit, iNaapurilista);
       }
       // Vasen alakulma
       else if (currentX == 0 && currentY == karttamatriisi.length - 1) {
         checkNorth(currentX, currentY, naapurit, iNaapurilista);
+        checkNorthEast(currentX, currentY, naapurit, iNaapurilista);
         checkEast(currentX, currentY, naapurit, iNaapurilista);
       }
       // Oikea alakulma
@@ -45,37 +48,50 @@ public class NeighbourFinder {
           currentY == karttamatriisi.length - 1) {
         checkNorth(currentX, currentY, naapurit, iNaapurilista);
         checkWest(currentX, currentY, naapurit, iNaapurilista);
+        checkNorthWest(currentX, currentY, naapurit, iNaapurilista);
       }
       // Vasen reuna
       else if (currentX == 0) {
         checkNorth(currentX, currentY, naapurit, iNaapurilista);
-        checkSouth(currentX, currentY, naapurit, iNaapurilista);
+        checkNorthEast(currentX, currentY, naapurit, iNaapurilista);
         checkEast(currentX, currentY, naapurit, iNaapurilista);
+        checkSouthEast(currentX, currentY, naapurit, iNaapurilista);
+        checkSouth(currentX, currentY, naapurit, iNaapurilista);
       }
       // Oikea reuna
       else if (currentX == karttamatriisi[0].length - 1) {
         checkNorth(currentX, currentY, naapurit, iNaapurilista);
         checkSouth(currentX, currentY, naapurit, iNaapurilista);
+        checkSouthWest(currentX, currentY, naapurit, iNaapurilista);
         checkWest(currentX, currentY, naapurit, iNaapurilista);
+        checkNorthWest(currentX, currentY, naapurit, iNaapurilista);
       }
       // Alareuna
       else if (currentY == karttamatriisi.length - 1) {
         checkNorth(currentX, currentY, naapurit, iNaapurilista);
-        checkWest(currentX, currentY, naapurit, iNaapurilista);
+        checkNorthEast(currentX, currentY, naapurit, iNaapurilista);
         checkEast(currentX, currentY, naapurit, iNaapurilista);
+        checkWest(currentX, currentY, naapurit, iNaapurilista);
+        checkNorthWest(currentX, currentY, naapurit, iNaapurilista);
       }
       // Yläreuna
       else if (currentY == 0) {
-        checkSouth(currentX, currentY, naapurit, iNaapurilista);
-        checkWest(currentX, currentY, naapurit, iNaapurilista);
         checkEast(currentX, currentY, naapurit, iNaapurilista);
+        checkSouthEast(currentX, currentY, naapurit, iNaapurilista);
+        checkSouth(currentX, currentY, naapurit, iNaapurilista);
+        checkSouthWest(currentX, currentY, naapurit, iNaapurilista);
+        checkWest(currentX, currentY, naapurit, iNaapurilista);
       }
       // "Keskellä"
       else {
         checkNorth(currentX, currentY, naapurit, iNaapurilista);
-        checkSouth(currentX, currentY, naapurit, iNaapurilista);
-        checkWest(currentX, currentY, naapurit, iNaapurilista);
+        checkNorthEast(currentX, currentY, naapurit, iNaapurilista);
         checkEast(currentX, currentY, naapurit, iNaapurilista);
+        checkSouthEast(currentX, currentY, naapurit, iNaapurilista);
+        checkSouth(currentX, currentY, naapurit, iNaapurilista);
+        checkSouthWest(currentX, currentY, naapurit, iNaapurilista);
+        checkWest(currentX, currentY, naapurit, iNaapurilista);
+        checkNorthWest(currentX, currentY, naapurit, iNaapurilista);
       }
     }
     return naapurit;
@@ -90,7 +106,7 @@ public class NeighbourFinder {
    */
 
   private void checkSouth(int currentX, int currentY, Node[] naapurit, int indeksi) {
-    if (karttamatriisi[currentY + 1][currentX] != 'T' && karttamatriisi[currentY + 1][currentX] != '@') {
+    if (karttamatriisi[currentY + 1][currentX] != '@') {
       naapurit[indeksi] = solmuMatriisi[currentY + 1][currentX];
       iNaapurilista ++;
     }
@@ -105,8 +121,24 @@ public class NeighbourFinder {
    */
 
   private void checkNorth(int currentX, int currentY, Node[] naapurit, int indeksi) {
-    if (karttamatriisi[currentY - 1][currentX] != 'T' && karttamatriisi[currentY - 1][currentX] != '@') {
+    if (karttamatriisi[currentY - 1][currentX] != '@') {
       naapurit[indeksi] = solmuMatriisi[currentY - 1][currentX];
+      iNaapurilista ++;
+    }
+  }
+
+  private void checkNorthEast(int currentX, int currentY, Node[] naapurit, int indeksi) {
+    if (karttamatriisi[currentY - 1][currentX + 1] != '@'
+    && (karttamatriisi[currentY - 1][currentX] != '@' || karttamatriisi[currentY][currentX + 1] != '@')) {
+      naapurit[indeksi] = solmuMatriisi[currentY - 1][currentX + 1];
+      iNaapurilista ++;
+    }
+  }
+
+  private void checkNorthWest(int currentX, int currentY, Node[] naapurit, int indeksi) {
+    if (karttamatriisi[currentY - 1][currentX - 1] != '@'
+    && (karttamatriisi[currentY - 1][currentX] != '@' || karttamatriisi[currentY][currentX - 1] != '@')) {
+      naapurit[indeksi] = solmuMatriisi[currentY - 1][currentX -1];
       iNaapurilista ++;
     }
   }
@@ -120,8 +152,16 @@ public class NeighbourFinder {
    */
 
   private void checkEast(int currentX, int currentY, Node[] naapurit, int indeksi) {
-    if (karttamatriisi[currentY][currentX + 1] != 'T' && karttamatriisi[currentY][currentX + 1] != '@') {
+    if (karttamatriisi[currentY][currentX + 1] != '@') {
       naapurit[indeksi] = solmuMatriisi[currentY][currentX + 1];
+      iNaapurilista ++;
+    }
+  }
+
+  private void checkSouthEast(int currentX, int currentY, Node[] naapurit, int indeksi) {
+    if (karttamatriisi[currentY + 1][currentX + 1] != '@'
+    && (karttamatriisi[currentY + 1][currentX] != '@' || karttamatriisi[currentY][currentX + 1] != '@')) {
+      naapurit[indeksi] = solmuMatriisi[currentY + 1][currentX + 1];
       iNaapurilista ++;
     }
   }
@@ -135,8 +175,16 @@ public class NeighbourFinder {
    */
 
   private void checkWest(int currentX, int currentY, Node[] naapurit, int indeksi) {
-    if (karttamatriisi[currentY][currentX - 1] != 'T' && karttamatriisi[currentY][currentX - 1] != '@') {
+    if (karttamatriisi[currentY][currentX - 1] != '@') {
       naapurit[indeksi] = solmuMatriisi[currentY][currentX - 1];
+      iNaapurilista ++;
+    }
+  }
+
+  private void checkSouthWest(int currentX, int currentY, Node[] naapurit, int indeksi) {
+    if (karttamatriisi[currentY + 1][currentX - 1] != '@' &&
+        (karttamatriisi[currentY + 1][currentX] != '@' || karttamatriisi[currentY][currentX - 1] != '@')) {
+      naapurit[indeksi] = solmuMatriisi[currentY + 1][currentX - 1];
       iNaapurilista ++;
     }
   }

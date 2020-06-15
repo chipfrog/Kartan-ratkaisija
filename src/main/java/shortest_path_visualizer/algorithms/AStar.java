@@ -15,7 +15,7 @@ public class AStar {
   private boolean[][] addedToOpenList;
   private Node startingNode;
   private Node goalNode;
-  private int etaisyysMaaliin;
+  private double etaisyysMaaliin;
   private ArrayList<Node> visitedOrder;
   private Node takaisin;
   private boolean goalFound;
@@ -43,7 +43,7 @@ public class AStar {
     //initVerkko();
     this.openList = new Keko();
     startingNode.setG_Matka(0);
-    startingNode.setEtaisyys(manhattanDist(startingNode, goalNode));
+    startingNode.setEtaisyys(diagonalDist(startingNode, goalNode));
     openList.addNode(startingNode);
 
     while (!openList.isEmpty()) {
@@ -57,11 +57,11 @@ public class AStar {
       current.vieraile();
       for (Node naapuri : haeNaapurisolmut(current.getX(), current.getY())) {
         if (naapuri != null) {
-          int uusiGMatka = current.getG_Matka() + 1;
+          double uusiGMatka = current.getG_Matka() + neighbourDist(current, naapuri);
           if (!naapuri.onVierailtu() || uusiGMatka < naapuri.getG_Matka()) {
             naapuri.setParent(current);
             naapuri.setG_Matka(uusiGMatka);
-            double h = manhattanDist(naapuri, goalNode) * 1.001;
+            double h = diagonalDist(naapuri, goalNode); //* 1.001;
             naapuri.setEtaisyys(uusiGMatka + h);
 
             openList.addNode(naapuri);
@@ -118,7 +118,7 @@ public class AStar {
     return visitedOrder;
   }
 
-  public int getEtaisyysMaaliin() {
+  public double getEtaisyysMaaliin() {
     return etaisyysMaaliin;
   }
 
@@ -129,6 +129,19 @@ public class AStar {
    */
   public int manhattanDist(Node n1, Node n2) {
     return Math.abs(n1.getX() - n2.getX()) + Math.abs(n1.getY() - n2.getY());
+  }
+
+  public double diagonalDist(Node n1, Node n2) {
+    double dx = Math.abs(n1.getX() - n2.getX());
+    double dy = Math.abs(n1.getY() - n2.getY());
+    return (dx + dy) + (Math.sqrt(2) - 2) * Math.min(dx, dy);
+  }
+
+  public double neighbourDist(Node n1, Node n2) {
+    if (n1.getX() == n2.getX() || n1.getY() == n2.getY()) {
+      return 1;
+    }
+    return Math.sqrt(2);
   }
 
   /**
