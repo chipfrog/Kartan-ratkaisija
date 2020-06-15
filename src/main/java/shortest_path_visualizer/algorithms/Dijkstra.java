@@ -34,6 +34,7 @@ public class Dijkstra {
     this.heap = new Keko();
     this.finder = new NeighbourFinder(karttamatriisi, solmuMatriisi);
   }
+  
 
   /**
    * Suorittaa Dijkstran algoritmin.

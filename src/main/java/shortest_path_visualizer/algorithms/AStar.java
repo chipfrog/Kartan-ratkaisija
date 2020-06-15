@@ -1,6 +1,5 @@
 package shortest_path_visualizer.algorithms;
 
-
 import java.util.ArrayList;
 import shortest_path_visualizer.IO.IO;
 import shortest_path_visualizer.dataStructures.Keko;
@@ -63,8 +62,11 @@ public class AStar {
 
             openList.addNode(naapuri);
             addedToOpenList[naapuri.getY()][naapuri.getX()] = true;
-            visitedOrder.add(naapuri);
-            naapuri.vieraile();
+
+            if (!naapuri.onVierailtu()) {
+              visitedOrder.add(naapuri);
+              naapuri.vieraile();
+            }
 
             /*if (!addedToOpenList[naapuri.getY()][naapuri.getX()]) {
               openList.addNode(naapuri);

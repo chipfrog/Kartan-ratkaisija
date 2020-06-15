@@ -23,6 +23,7 @@ public class MapReader {
    * @param file matriisiksi muunnettava kartta
    * @throws FileNotFoundException
    */
+
   public void createMatrix(File file) throws FileNotFoundException {
     initArray(file);
     io.setFile(file);

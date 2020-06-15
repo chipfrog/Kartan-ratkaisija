@@ -1,5 +1,6 @@
 package shortest_path_visualizer.ui;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import javafx.animation.KeyFrame;
@@ -429,19 +430,19 @@ public class MapCreator extends Application {
 
     Button runTest = new Button("Benchmark");
     runTest.setOnAction(e -> {
-      try {
+      /*try {
         PerformanceTest test = new PerformanceTest();
 
-        test.testAStar();
+        test.testAStar(new File("src/test/resources/kartat/Brushfire.txt"));
         avgA.setText("A* average: " + test.getAverage() + "ms");
         distA.setText("Path length: " + test.getVastausA());
 
-        test.testDijkstra();
+        test.testDijkstra(new File("src/test/resources/kartat/Brushfire.txt"));
         avgD.setText("Dijkstra average: " + test.getAverage() + "ms");
         distD.setText("Path length: " + test.getVastausD());
 
       } catch (FileNotFoundException exception) {
-      }
+      }*/
     });
 
     VBox controls = new VBox();
