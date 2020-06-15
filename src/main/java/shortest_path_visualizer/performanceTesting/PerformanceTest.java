@@ -17,11 +17,13 @@ public class PerformanceTest {
   private long[] times;
   private int vastausD;
   private int vastausA;
+  private int kierroksia;
 
-  public PerformanceTest() {
+  public PerformanceTest(int kierroksia) {
+    this.kierroksia = kierroksia;
     this.io = new MapReaderIO();
     this.mapReader = new MapReader(io);
-    this.times = new long[5];
+    this.times = new long[kierroksia];
   }
 
   /*public char[][] initMap() throws FileNotFoundException {
@@ -40,7 +42,7 @@ public class PerformanceTest {
     dijkstra.runDijkstra();
     this.vastausD = dijkstra.getEtaisyysMaaliin();
 
-    for (int i = 0; i < times.length; i ++) {
+    for (int i = 0; i < kierroksia; i ++) {
       dijkstra.setMap(map);
       long t1 = System.nanoTime();
       dijkstra.runDijkstra();
@@ -60,7 +62,7 @@ public class PerformanceTest {
     aStar.runAStar();
     this.vastausA = aStar.getEtaisyysMaaliin();
 
-    for (int i = 0; i < times.length; i ++) {
+    for (int i = 0; i < kierroksia; i ++) {
       aStar.setMap(map);
       long t1 = System.nanoTime();
       aStar.runAStar();
