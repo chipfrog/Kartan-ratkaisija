@@ -3,6 +3,7 @@ package shortest_path_visualizer.algorithms;
 import shortest_path_visualizer.IO.IO;
 import shortest_path_visualizer.dataStructures.DynamicArray;
 import shortest_path_visualizer.dataStructures.Keko;
+import shortest_path_visualizer.utils.MathFunctions;
 import shortest_path_visualizer.utils.NeighbourFinder;
 import shortest_path_visualizer.utils.Node;
 
@@ -21,6 +22,7 @@ public class AStar {
   private boolean goalFound;
   private NeighbourFinder finder;
   private DynamicArray visitedNodes;
+  private MathFunctions math;
 
   public AStar(IO io) {
     this.io = io;
@@ -35,6 +37,7 @@ public class AStar {
     this.finder = new NeighbourFinder(karttamatriisi, solmumatriisi);
     this.etaisyys = new double[karttamatriisi.length * karttamatriisi[0].length];
     this.visitedNodes = new DynamicArray();
+    this.math = new MathFunctions();
     initVerkko();
     initEtaisyydet();
   }
@@ -116,9 +119,9 @@ public class AStar {
   }
 
   public double diagonalDist(Node n1, Node n2) {
-    double dx = Math.abs(n1.getX() - n2.getX());
-    double dy = Math.abs(n1.getY() - n2.getY());
-    return (dx + dy) + (Math.sqrt(2) - 2) * Math.min(dx, dy);
+    double dx = math.getAbs(n1.getX() - n2.getX());
+    double dy = math.getAbs(n1.getY() - n2.getY());
+    return (dx + dy) + (Math.sqrt(2) - 2) * math.getMin(dx, dy);
   }
 
   public double neighbourDist(Node n1, Node n2) {

@@ -2,8 +2,6 @@ package shortest_path_visualizer;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import javafx.application.Application;
 import shortest_path_visualizer.IO.BenchmarkFileReader;
 import shortest_path_visualizer.IO.MapReaderIO;
@@ -14,7 +12,7 @@ import shortest_path_visualizer.utils.Node;
 public class Main {
   public static void main(String[] args) throws FileNotFoundException {
 
-    BenchmarkFileReader b = new BenchmarkFileReader(new MapReaderIO());
+    /*BenchmarkFileReader b = new BenchmarkFileReader(new MapReaderIO());
     Node[][] startAndGoal = b.getScenarioCoordinates(new File("src/main/resources/Berlin_0_256.scen.txt"));
     double[] optimalPath = b.getOptimalPath();
 
@@ -43,8 +41,8 @@ public class Main {
     }
 
     System.out.println("Dijkstra total time: " + totalTimeD);
-    System.out.println("A* total time: " + totalTimeA);
+    System.out.println("A* total time: " + totalTimeA);*/
 
-    //Application.launch(Ui.class);
+    Application.launch(Ui.class);
   }
 }
