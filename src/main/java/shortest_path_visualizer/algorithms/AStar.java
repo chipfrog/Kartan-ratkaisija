@@ -12,6 +12,7 @@ public class AStar {
   private Node[][] solmumatriisi;
   private Keko openList;
   private Node[][] verkko;
+  private double[] etaisyys;
   private boolean[][] addedToOpenList;
   private Node startingNode;
   private Node goalNode;
@@ -33,14 +34,15 @@ public class AStar {
     this.visitedOrder = new ArrayList<>();
     this.goalFound = false;
     this.finder = new NeighbourFinder(karttamatriisi, solmumatriisi);
+    this.etaisyys = new double[karttamatriisi.length * karttamatriisi[0].length];
     initVerkko();
+    initEtaisyydet();
   }
 
   /**
    * Suorittaa A*-algoritmin.
    */
   public void runAStar() {
-    //initVerkko();
     this.openList = new Keko();
     startingNode.setG_Matka(0);
     startingNode.setEtaisyys(diagonalDist(startingNode, goalNode));
@@ -48,29 +50,31 @@ public class AStar {
 
     while (!openList.isEmpty()) {
       Node current = openList.pollNode();
-      addedToOpenList[current.getY()][current.getX()] = false;
+
       if (current.isGoal()) {
         goalFound = true;
         etaisyysMaaliin = current.getG_Matka();
         break;
       }
-      current.vieraile();
+      //current.vieraile();
       for (Node naapuri : haeNaapurisolmut(current.getX(), current.getY())) {
         if (naapuri != null) {
           double uusiGMatka = current.getG_Matka() + neighbourDist(current, naapuri);
-          if (!naapuri.onVierailtu() || uusiGMatka < naapuri.getG_Matka()) {
+
+          if (etaisyys[naapuri.getTunnus()] == Integer.MAX_VALUE || uusiGMatka < naapuri.getG_Matka()) {
+            etaisyys[naapuri.getTunnus()] = uusiGMatka;
             naapuri.setParent(current);
             naapuri.setG_Matka(uusiGMatka);
             double h = diagonalDist(naapuri, goalNode); //* 1.001;
             naapuri.setEtaisyys(uusiGMatka + h);
 
             openList.addNode(naapuri);
-            addedToOpenList[naapuri.getY()][naapuri.getX()] = true;
 
-            if (!naapuri.onVierailtu()) {
+
+            /*if (!naapuri.onVierailtu()) {
               visitedOrder.add(naapuri);
               naapuri.vieraile();
-            }
+            }*/
 
             /*if (!addedToOpenList[naapuri.getY()][naapuri.getX()]) {
               openList.addNode(naapuri);
@@ -177,6 +181,13 @@ public class AStar {
         verkko[solmumatriisi[i][j].getTunnus()] = haeNaapurisolmut(j, i);
       }
     }*/
+  }
+
+  public void initEtaisyydet() {
+    for (int i = 0; i < etaisyys.length; i++) {
+      etaisyys[i] = Integer.MAX_VALUE;
+    }
+    etaisyys[startingNode.getTunnus()] = 0;
   }
 
   private Node[] haeNaapurisolmut(int x, int y) {

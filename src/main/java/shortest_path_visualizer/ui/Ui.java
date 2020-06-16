@@ -34,6 +34,7 @@ import shortest_path_visualizer.IO.MapReader;
 import shortest_path_visualizer.algorithms.AStar;
 import shortest_path_visualizer.algorithms.Dijkstra;
 import shortest_path_visualizer.IO.MapReaderIO;
+import shortest_path_visualizer.dataStructures.DynamicArray;
 import shortest_path_visualizer.performanceTesting.PerformanceTest;
 import shortest_path_visualizer.utils.Node;
 
@@ -62,8 +63,8 @@ public class Ui extends Application {
 
 
   public Ui() {
-    this.cols = 256;
-    this.rows = 256;
+    this.cols = 60;
+    this.rows = 60;
     this.mapArray = new char[rows][cols];
     this.rectChar = new Rectangle[rows][cols];
     this.type = DrawType.START;
@@ -247,7 +248,7 @@ public class Ui extends Application {
       dijkstra.runDijkstra();
       if (dijkstra.getGoalNode() != null) {
         distToGoal.setText("Distance: " + dijkstra.getEtaisyysMaaliin());
-        ArrayList<Node> visitedNodes = dijkstra.getVisitedOrder();
+        DynamicArray visitedNodes = dijkstra.getVisitedOrder();
         animateDijkstra(visitedNodes);
       } else {
         System.out.println("Goal node unreachable!");
@@ -297,7 +298,7 @@ public class Ui extends Application {
     });
   }
 
-  public void animateDijkstra(ArrayList<Node> visitedNodes) {
+  public void animateDijkstra(DynamicArray visitedNodes) {
     Timeline timeline = new Timeline(new KeyFrame(
         Duration.millis(animationSpeed),
         event -> {
@@ -358,13 +359,13 @@ public class Ui extends Application {
 
   @Override
   public void start(Stage primaryStage) throws Exception {
-    //createGrid(15);
-    MapReader mapReader = new MapReader(new MapReaderIO());
+    createGrid(15);
+    /*MapReader mapReader = new MapReader(new MapReaderIO());
     mapReader.createMatrix(new File("src/main/resources/Berlin_0_256.txt"));
     char[][] kartta = mapReader.getMapArray();
-    kartta[17][251] = 'S';
-    kartta[82][249] = 'G';
-    preMadeMap(kartta, 4);
+    kartta[79][52] = 'S';
+    kartta[242][238] = 'G';
+    preMadeMap(kartta, 4);*/
 
     final ToggleGroup group = new ToggleGroup();
     RadioButton startPoint = new RadioButton("Start point");
