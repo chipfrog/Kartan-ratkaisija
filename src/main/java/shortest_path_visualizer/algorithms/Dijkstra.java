@@ -14,12 +14,12 @@ public class Dijkstra {
   private final IO io;
   private char[][] karttamatriisi;
   private Node[][] solmuMatriisi;
-  private int[] etaisyys;
+  private double[] etaisyys;
   private Node [][] verkko;
   private Node startingNode;
   private Node goalNode;
   private ArrayList<Node> visitedOrder;
-  private int etaisyysMaaliin;
+  private double etaisyysMaaliin;
   private Keko keko;
   private NeighbourFinder finder;
 
@@ -30,7 +30,7 @@ public class Dijkstra {
   public void setMap(char[][] kartta) {
     this.karttamatriisi = kartta;
     this.solmuMatriisi = new Node[karttamatriisi.length][karttamatriisi[0].length];
-    this.etaisyys = new int[karttamatriisi.length * karttamatriisi[0].length];
+    this.etaisyys = new double[karttamatriisi.length * karttamatriisi[0].length];
     this.visitedOrder = new ArrayList<>();
     this.etaisyysMaaliin = Integer.MAX_VALUE;
     this.goalNode = null;
@@ -57,7 +57,7 @@ public class Dijkstra {
       visitedOrder.add(node);
       if (node.isGoal()) {
         this.goalNode = node;
-        this.etaisyysMaaliin = (int) node.getEtaisyys();
+        this.etaisyysMaaliin = (double) node.getEtaisyys();
         break;
       }
       /*if (!node.isStart()) {
@@ -66,8 +66,8 @@ public class Dijkstra {
 
       for (Node naapuri : haeNaapurisolmut(node.getX(), node.getY())) {
         if (naapuri != null) {
-          int nykyinenEtaisyys = etaisyys[naapuri.getTunnus()];
-          int uusiEtaisyys = etaisyys[node.getTunnus()] + 1;
+          double nykyinenEtaisyys = etaisyys[naapuri.getTunnus()];
+          double uusiEtaisyys = etaisyys[node.getTunnus()] + neighbourDist(node, naapuri);
 
           if (uusiEtaisyys < nykyinenEtaisyys) {
             etaisyys[naapuri.getTunnus()] = uusiEtaisyys;
@@ -79,12 +79,19 @@ public class Dijkstra {
       }
     }
   }
+  public double neighbourDist(Node n1, Node n2) {
+    if (n1.getX() == n2.getX() || n1.getY() == n2.getY()) {
+      return 1;
+    }
+    return Math.sqrt(2);
+  }
+
 
   public ArrayList<Node> getVisitedOrder() {
     return this.visitedOrder;
   }
 
-  public int getEtaisyysMaaliin() {
+  public double getEtaisyysMaaliin() {
     return this.etaisyysMaaliin;
   }
 
@@ -96,7 +103,7 @@ public class Dijkstra {
    */
   public Node haeReitti() {
     Node currentNode = goalNode;
-    while (currentNode.getEtaisyys() != 1) {
+    while (!currentNode.isStart()) {
       Node naapuri = pieninNaapuri(currentNode);
       currentNode = naapuri;
       if (!naapuri.isStart()) {
@@ -113,7 +120,7 @@ public class Dijkstra {
    * @return Solmu, jonka etäisyys aloitussolmuun pienin.
    */
   public Node pieninNaapuri(Node node) {
-    int minDist = Integer.MAX_VALUE;
+    double minDist = Integer.MAX_VALUE;
     Node smallestDistNode = null;
     Node[] naapurit = haeNaapurisolmut(node.getX(), node.getY());
 
@@ -122,7 +129,7 @@ public class Dijkstra {
         if (naapurit[i].isStart()) {
           smallestDistNode = naapurit[i];
         } else if (naapurit[i].getEtaisyys() < minDist) {
-          minDist = (int) naapurit[i].getEtaisyys();
+          minDist = naapurit[i].getEtaisyys();
           smallestDistNode = naapurit[i];
         }
       }

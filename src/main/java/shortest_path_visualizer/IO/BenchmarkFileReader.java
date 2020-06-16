@@ -2,8 +2,6 @@ package shortest_path_visualizer.IO;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import shortest_path_visualizer.utils.Node;
 
 public class BenchmarkFileReader {

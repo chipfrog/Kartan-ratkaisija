@@ -28,7 +28,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.w3c.dom.css.Rect;
 import shortest_path_visualizer.IO.MapFileCreator;
+import shortest_path_visualizer.IO.MapReader;
 import shortest_path_visualizer.algorithms.AStar;
 import shortest_path_visualizer.algorithms.Dijkstra;
 import shortest_path_visualizer.IO.MapReaderIO;
@@ -58,9 +60,10 @@ public class Ui extends Application {
   private MapFileCreator mapFileCreator;
   private String fileName;
 
+
   public Ui() {
-    this.cols = 60;
-    this.rows = 60;
+    this.cols = 256;
+    this.rows = 256;
     this.mapArray = new char[rows][cols];
     this.rectChar = new Rectangle[rows][cols];
     this.type = DrawType.START;
@@ -148,6 +151,36 @@ public class Ui extends Application {
       }
     }
   }
+
+  public void preMadeMap(char[][] kartta, int sivu) {
+    double xPikselit = 0;
+    double yPikselit = 0;
+
+    for (int y = 0; y < kartta.length; y++) {
+      for (int x = 0; x < kartta[0].length; x++) {
+        Rectangle rectangle = new Rectangle(sivu, sivu, Color.WHITE);
+        if (kartta[y][x] == '@') {
+          rectangle.setFill(Color.BLACK);
+        }
+        else if (kartta[y][x] == 'S') {
+          rectangle.setFill(Color.GREEN);
+        } else if (kartta[y][x] == 'G') {
+          rectangle.setFill(Color.RED);
+        }
+        if (x == 0) {
+          xPikselit = 0;
+        } else {
+          xPikselit += sivu;
+        }
+        yPikselit = y * sivu;
+        rectangle.setLayoutX(xPikselit);
+        rectangle.setLayoutY(yPikselit);
+        rectChar[y][x] = rectangle;
+        pane.getChildren().add(rectangle);
+      }
+    }
+  }
+
 
   /**
    * Pyyhkii ruudukon tyhjäksi
@@ -325,7 +358,13 @@ public class Ui extends Application {
 
   @Override
   public void start(Stage primaryStage) throws Exception {
-    createGrid(15);
+    //createGrid(15);
+    MapReader mapReader = new MapReader(new MapReaderIO());
+    mapReader.createMatrix(new File("src/main/resources/Berlin_0_256.txt"));
+    char[][] kartta = mapReader.getMapArray();
+    kartta[17][251] = 'S';
+    kartta[82][249] = 'G';
+    preMadeMap(kartta, 4);
 
     final ToggleGroup group = new ToggleGroup();
     RadioButton startPoint = new RadioButton("Start point");
