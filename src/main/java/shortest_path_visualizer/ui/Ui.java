@@ -266,7 +266,7 @@ public class Ui extends Application {
       aStar.runAStar();
       if (aStar.goalWasFound()) {
         distToGoal.setText("Dist: " + aStar.getEtaisyysMaaliin());
-        ArrayList<Node> visitedNodes = aStar.getVisitedOrder();
+        DynamicArray visitedNodes = aStar.getVisitedOrder();
         animateAStar(visitedNodes);
       } else {
         System.out.println("Goal node unreachable!");
@@ -281,7 +281,7 @@ public class Ui extends Application {
    *
    * @param visitedNodes Vieraillut solmut.
    */
-  public void animateAStar(ArrayList<Node> visitedNodes) {
+  public void animateAStar(DynamicArray visitedNodes) {
     Timeline timeline = new Timeline(new KeyFrame(
         Duration.millis(animationSpeed),
         event -> {
