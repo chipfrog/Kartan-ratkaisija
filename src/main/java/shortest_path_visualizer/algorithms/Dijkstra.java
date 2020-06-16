@@ -149,16 +149,23 @@ public class Dijkstra {
     for (int i = 0; i < karttamatriisi.length; i++) {
       for (int j = 0; j < karttamatriisi[0].length; j++) {
         Node node = new Node(solmutunnus, j, i);
-        node.setEtaisyys(Integer.MAX_VALUE);
-        if (karttamatriisi[i][j] == 'G') {
-          node.setAsGoalNode();
-        } else if (karttamatriisi[i][j] == 'S') {
-          node.setAsStartNode();
-          node.setEtaisyys(0);
-          this.startingNode = node;
+        if (karttamatriisi[i][j] == '@') {
+          node = null;
+        }
+        else {
+          node.setEtaisyys(Integer.MAX_VALUE);
+
+          if (karttamatriisi[i][j] == 'G') {
+            node.setAsGoalNode();
+          } else if (karttamatriisi[i][j] == 'S') {
+            node.setAsStartNode();
+            node.setEtaisyys(0);
+            this.startingNode = node;
+          }
         }
         solmuMatriisi[i][j] = node;
         solmutunnus++;
+
       }
     }
   }

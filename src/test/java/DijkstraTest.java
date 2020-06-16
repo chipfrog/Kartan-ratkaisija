@@ -32,7 +32,7 @@ public class DijkstraTest {
   }
 
   @Test
-  public void cellHasFourNeighboursIfNoneOfThemIsObstacle() {
+  public void cellHasEightNeighboursIfNoneOfThemIsObstacle() {
     Node[] neighbours = d.haeNaapurisolmut(30,4);
     int nodes = 0;
     for (int i = 0; i < neighbours.length; i ++) {
@@ -40,7 +40,7 @@ public class DijkstraTest {
         nodes ++;
       }
     }
-    assertTrue(nodes == 4);
+    assertTrue(nodes == 8);
   }
 
   @Test
@@ -49,10 +49,12 @@ public class DijkstraTest {
     int nodes = 0;
     for (int i = 0; i < neighbours.length; i ++) {
       if (neighbours[i] != null) {
+        System.out.println(neighbours[i].getEtaisyys());
         nodes ++;
       }
     }
-    assertTrue(nodes == 0);
+    System.out.println(nodes);
+    assertTrue(nodes == 3);
   }
 
   @Test
@@ -69,14 +71,14 @@ public class DijkstraTest {
 
   @Test
   public void cellHasOneNeighbourIfThreeSidesAreBlocked() {
-    Node[]  neighbours = d.haeNaapurisolmut(19,1);
+    Node[]  neighbours = d.haeNaapurisolmut(0,0);
     int nodes = 0;
     for (int i = 0; i < neighbours.length; i ++) {
       if (neighbours[i] != null) {
         nodes ++;
       }
     }
-    assertTrue(nodes == 1);
+    assertTrue(nodes == 0);
   }
 
   @Test
@@ -100,7 +102,7 @@ public class DijkstraTest {
   @Test
   public void tracesShortestPathBackToNodeClosestToStartingNode() {
     d.runDijkstra();
-    assertTrue(d.haeReitti().getEtaisyys() == 1);
+    assertTrue(d.haeReitti().getEtaisyys() == 0);
   }
 
   @Test
