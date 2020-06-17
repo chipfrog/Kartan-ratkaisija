@@ -23,7 +23,11 @@ public class Node {
   }
 
   public Node(int x, int y, int dirH, int dirV, double distance) {
-
+    this.x = x;
+    this.y = y;
+    this.dirH = dirH;
+    this.dirV = dirV;
+    this.g_Matka = distance;
   }
 
   public void setDirH(int dirH) {

@@ -34,6 +34,7 @@ import shortest_path_visualizer.IO.MapReader;
 import shortest_path_visualizer.algorithms.AStar;
 import shortest_path_visualizer.algorithms.Dijkstra;
 import shortest_path_visualizer.IO.MapReaderIO;
+import shortest_path_visualizer.algorithms.JPS;
 import shortest_path_visualizer.dataStructures.DynamicArray;
 import shortest_path_visualizer.performanceTesting.PerformanceTest;
 import shortest_path_visualizer.utils.Node;
@@ -53,6 +54,7 @@ public class Ui extends Application {
   private Rectangle[][] rectChar;
   private Dijkstra dijkstra;
   private AStar aStar;
+  private JPS jps;
   private int nodeToPaint;
   private Label numOfVisitedNodes;
   private Label distToGoal;
@@ -258,6 +260,21 @@ public class Ui extends Application {
     }
   }
 
+  public void solveMapUsingJPS() {
+    generateCharArray();
+    if (mapHasStartAndGoal()) {
+      this.jps = new JPS(mapArray);
+      jps.runJPS();
+      if (jps.getGoalNode() != null) {
+        distToGoal.setText("Distance: " + jps.getGoalNode().getG_Matka());
+      } else {
+        System.out.println("Goal node unreachable!");
+      }
+    } else {
+      System.out.println("You must add start and goal!");
+    }
+  }
+
   public void solveMapUsingAStar() {
     generateCharArray();
     if (mapHasStartAndGoal()) {
@@ -382,7 +399,7 @@ public class Ui extends Application {
     goal.setOnAction(e -> this.type = DrawType.GOAL);
 
     ComboBox <String> comboBox = new ComboBox();
-    comboBox.getItems().addAll("A*", "Dijkstra");
+    comboBox.getItems().addAll("Dijkstra", "A*", "JPS");
 
     Button run = new Button("Run");
     run.setOnAction(e -> {
@@ -390,14 +407,19 @@ public class Ui extends Application {
         if (comboBox.getValue() == null) {
           System.out.println("Valitse algoritmi!");
         }
-        else if (comboBox.getValue().equals("A*")) {
-          runClicked = true;
-          solveMapUsingAStar();
-        }
         else if (comboBox.getValue().equals("Dijkstra")) {
           runClicked = true;
           solveMapUsingDijkstra();
         }
+        else if (comboBox.getValue().equals("A*")) {
+          runClicked = true;
+          solveMapUsingAStar();
+        }
+        else if (comboBox.getValue().equals("JPS")) {
+          runClicked = true;
+          solveMapUsingJPS();
+        }
+
       }
     });
 
