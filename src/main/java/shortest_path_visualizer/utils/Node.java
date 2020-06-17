@@ -6,18 +6,40 @@ public class Node {
   private boolean vierailtu;
   private boolean start;
   private boolean goal;
-  private int xCoor;
-  private int yCoor;
+  private int x;
+  private int y;
   private Node parent;
   private double g_Matka;
+  private int dirH;
+  private int dirV;
 
   public Node(int tunnus, int xCoor, int yCoor) {
     this.tunnus = tunnus;
     this.vierailtu = false;
     this.start = false;
     this.goal = false;
-    this.xCoor = xCoor;
-    this.yCoor = yCoor;
+    this.x = xCoor;
+    this.y = yCoor;
+  }
+
+  public Node(int x, int y, int dirH, int dirV, double distance) {
+
+  }
+
+  public void setDirH(int dirH) {
+    this.dirH = dirH;
+  }
+
+  public void setDirV(int dirV) {
+    this.dirV = dirV;
+  }
+
+  public int getDirV() {
+    return this.dirV;
+  }
+
+  public int getDirH() {
+    return this.dirH;
   }
 
   public void setParent(Node parent) {
@@ -37,11 +59,11 @@ public class Node {
   }
 
   public int getX() {
-    return this.xCoor;
+    return this.x;
   }
 
   public int getY() {
-    return this.yCoor;
+    return this.y;
   }
 
   public void setAsStartNode() {
