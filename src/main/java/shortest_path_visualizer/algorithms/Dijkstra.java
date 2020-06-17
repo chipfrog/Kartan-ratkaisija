@@ -170,6 +170,10 @@ public class Dijkstra {
     }
   }
 
+  public Node[][] getSolmuMatriisi() {
+    return this.solmuMatriisi;
+  }
+
   public Node[] haeNaapurisolmut(int x, int y) {
     return finder.haeNaapurisolmut(x, y);
   }
