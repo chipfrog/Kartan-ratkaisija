@@ -124,13 +124,13 @@ public class JPS {
       if (xNext + dirH >= 0 && xNext + dirH < kartta[0].length
           && y + 1 < kartta.length && y - 1 >= 0) {
         if (kartta[y][xNext + dirH] != '@' && kartta[y - 1][xNext + dirH] == '@') {
-          Node node = new Node(xNext, y, dirH, -1, distance);
+          Node node = new Node(xNext + dirH, y, dirH, -1, distance);
           node.setEtaisyys(distance + diagonalDist(node, goalNode));
           jumpPoints.addNode(node);
         }
 
         if (kartta[y][xNext +dirH] != '@' && kartta[y + 1][xNext + dirH] == '@') {
-          Node node = new Node(xNext, y, dirH, 1, distance);
+          Node node = new Node(xNext + dirH, y, dirH, 1, distance);
           node.setEtaisyys(distance + diagonalDist(node, goalNode));
           jumpPoints.addNode(node);
         }
