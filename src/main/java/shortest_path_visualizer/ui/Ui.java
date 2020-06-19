@@ -28,10 +28,14 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.w3c.dom.css.Rect;
 import shortest_path_visualizer.IO.MapFileCreator;
+import shortest_path_visualizer.IO.MapReader;
 import shortest_path_visualizer.algorithms.AStar;
 import shortest_path_visualizer.algorithms.Dijkstra;
 import shortest_path_visualizer.IO.MapReaderIO;
+import shortest_path_visualizer.algorithms.JPS;
+import shortest_path_visualizer.dataStructures.DynamicArray;
 import shortest_path_visualizer.performanceTesting.PerformanceTest;
 import shortest_path_visualizer.utils.Node;
 
@@ -50,6 +54,7 @@ public class Ui extends Application {
   private Rectangle[][] rectChar;
   private Dijkstra dijkstra;
   private AStar aStar;
+  private JPS jps;
   private int nodeToPaint;
   private Label numOfVisitedNodes;
   private Label distToGoal;
@@ -58,9 +63,10 @@ public class Ui extends Application {
   private MapFileCreator mapFileCreator;
   private String fileName;
 
+
   public Ui() {
-    this.cols = 100;
-    this.rows = 80;
+    this.cols = 60;
+    this.rows = 60;
     this.mapArray = new char[rows][cols];
     this.rectChar = new Rectangle[rows][cols];
     this.type = DrawType.START;
@@ -149,6 +155,36 @@ public class Ui extends Application {
     }
   }
 
+  public void preMadeMap(char[][] kartta, int sivu) {
+    double xPikselit = 0;
+    double yPikselit = 0;
+
+    for (int y = 0; y < kartta.length; y++) {
+      for (int x = 0; x < kartta[0].length; x++) {
+        Rectangle rectangle = new Rectangle(sivu, sivu, Color.WHITE);
+        if (kartta[y][x] == '@') {
+          rectangle.setFill(Color.BLACK);
+        }
+        else if (kartta[y][x] == 'S') {
+          rectangle.setFill(Color.GREEN);
+        } else if (kartta[y][x] == 'G') {
+          rectangle.setFill(Color.RED);
+        }
+        if (x == 0) {
+          xPikselit = 0;
+        } else {
+          xPikselit += sivu;
+        }
+        yPikselit = y * sivu;
+        rectangle.setLayoutX(xPikselit);
+        rectangle.setLayoutY(yPikselit);
+        rectChar[y][x] = rectangle;
+        pane.getChildren().add(rectangle);
+      }
+    }
+  }
+
+
   /**
    * Pyyhkii ruudukon tyhjäksi
    *
@@ -177,7 +213,7 @@ public class Ui extends Application {
         if (rect.getFill() == Color.WHITE) {
           mapArray[i][j] = '.';
         } else if (rect.getFill() == Color.BLACK) {
-          mapArray[i][j] = 'T';
+          mapArray[i][j] = '@';
         } else if (rect.getFill() == Color.GREEN) {
           mapArray[i][j] = 'S';
         } else if (rect.getFill() == Color.RED) {
@@ -214,8 +250,25 @@ public class Ui extends Application {
       dijkstra.runDijkstra();
       if (dijkstra.getGoalNode() != null) {
         distToGoal.setText("Distance: " + dijkstra.getEtaisyysMaaliin());
-        ArrayList<Node> visitedNodes = dijkstra.getVisitedOrder();
+        DynamicArray visitedNodes = dijkstra.getVisitedOrder();
         animateDijkstra(visitedNodes);
+      } else {
+        System.out.println("Goal node unreachable!");
+      }
+    } else {
+      System.out.println("You must add start and goal!");
+    }
+  }
+
+  public void solveMapUsingJPS() {
+    generateCharArray();
+    if (mapHasStartAndGoal()) {
+      this.jps = new JPS(mapArray);
+      jps.runJPS();
+      if (jps.getGoalNode() != null) {
+        distToGoal.setText("Distance: " + jps.getGoalNode().getG_Matka());
+        DynamicArray visitedNodes = jps.getVisitedNodes();
+        animateJPS(visitedNodes);
       } else {
         System.out.println("Goal node unreachable!");
       }
@@ -232,7 +285,7 @@ public class Ui extends Application {
       aStar.runAStar();
       if (aStar.goalWasFound()) {
         distToGoal.setText("Dist: " + aStar.getEtaisyysMaaliin());
-        ArrayList<Node> visitedNodes = aStar.getVisitedOrder();
+        DynamicArray visitedNodes = aStar.getVisitedOrder();
         animateAStar(visitedNodes);
       } else {
         System.out.println("Goal node unreachable!");
@@ -247,7 +300,7 @@ public class Ui extends Application {
    *
    * @param visitedNodes Vieraillut solmut.
    */
-  public void animateAStar(ArrayList<Node> visitedNodes) {
+  public void animateAStar(DynamicArray visitedNodes) {
     Timeline timeline = new Timeline(new KeyFrame(
         Duration.millis(animationSpeed),
         event -> {
@@ -264,7 +317,22 @@ public class Ui extends Application {
     });
   }
 
-  public void animateDijkstra(ArrayList<Node> visitedNodes) {
+  public void animateJPS(DynamicArray visitedNodes) {
+    if (visitedNodes.size() != 0) {
+      Timeline timeline = new Timeline(new KeyFrame(
+          Duration.millis(animationSpeed),
+          event -> {
+            paintSquare(visitedNodes.get(nodeToPaint));
+            numOfVisitedNodes.setText("Nodes: " + nodeToPaint);
+            nodeToPaint++;
+          }
+      ));
+      timeline.setCycleCount(visitedNodes.size() - 1);
+      timeline.play();
+    }
+  }
+
+  public void animateDijkstra(DynamicArray visitedNodes) {
     Timeline timeline = new Timeline(new KeyFrame(
         Duration.millis(animationSpeed),
         event -> {
@@ -326,6 +394,12 @@ public class Ui extends Application {
   @Override
   public void start(Stage primaryStage) throws Exception {
     createGrid(15);
+    /*MapReader mapReader = new MapReader(new MapReaderIO());
+    mapReader.createMatrix(new File("src/main/resources/Berlin_0_256.txt"));
+    char[][] kartta = mapReader.getMapArray();
+    kartta[79][52] = 'S';
+    kartta[242][238] = 'G';
+    preMadeMap(kartta, 4);*/
 
     final ToggleGroup group = new ToggleGroup();
     RadioButton startPoint = new RadioButton("Start point");
@@ -342,7 +416,7 @@ public class Ui extends Application {
     goal.setOnAction(e -> this.type = DrawType.GOAL);
 
     ComboBox <String> comboBox = new ComboBox();
-    comboBox.getItems().addAll("A*", "Dijkstra");
+    comboBox.getItems().addAll("Dijkstra", "A*", "JPS");
 
     Button run = new Button("Run");
     run.setOnAction(e -> {
@@ -350,14 +424,19 @@ public class Ui extends Application {
         if (comboBox.getValue() == null) {
           System.out.println("Valitse algoritmi!");
         }
-        else if (comboBox.getValue().equals("A*")) {
-          runClicked = true;
-          solveMapUsingAStar();
-        }
         else if (comboBox.getValue().equals("Dijkstra")) {
           runClicked = true;
           solveMapUsingDijkstra();
         }
+        else if (comboBox.getValue().equals("A*")) {
+          runClicked = true;
+          solveMapUsingAStar();
+        }
+        else if (comboBox.getValue().equals("JPS")) {
+          runClicked = true;
+          solveMapUsingJPS();
+        }
+
       }
     });
 

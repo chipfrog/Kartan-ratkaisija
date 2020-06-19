@@ -42,9 +42,9 @@ public class AStarTest {
     Dijkstra dijkstra = new Dijkstra(ioStub);
     dijkstra.setMap(mapMatrix);
     dijkstra.runDijkstra();
-    int resultD = dijkstra.getEtaisyysMaaliin();
+    double resultD = dijkstra.getEtaisyysMaaliin();
     a.runAStar();
-    int resultA = a.getEtaisyysMaaliin();
+    double resultA = a.getEtaisyysMaaliin();
     System.out.println(resultA);
     System.out.println(resultD);
     assertTrue(resultA == resultD);

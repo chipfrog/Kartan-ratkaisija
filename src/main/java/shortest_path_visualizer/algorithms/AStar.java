@@ -1,8 +1,9 @@
 package shortest_path_visualizer.algorithms;
 
-import java.util.ArrayList;
 import shortest_path_visualizer.IO.IO;
+import shortest_path_visualizer.dataStructures.DynamicArray;
 import shortest_path_visualizer.dataStructures.Keko;
+import shortest_path_visualizer.utils.MathFunctions;
 import shortest_path_visualizer.utils.NeighbourFinder;
 import shortest_path_visualizer.utils.Node;
 
@@ -12,14 +13,16 @@ public class AStar {
   private Node[][] solmumatriisi;
   private Keko openList;
   private Node[][] verkko;
+  private double[] etaisyys;
   private boolean[][] addedToOpenList;
   private Node startingNode;
   private Node goalNode;
-  private int etaisyysMaaliin;
-  private ArrayList<Node> visitedOrder;
+  private double etaisyysMaaliin;
   private Node takaisin;
   private boolean goalFound;
   private NeighbourFinder finder;
+  private DynamicArray visitedNodes;
+  private MathFunctions math;
 
   public AStar(IO io) {
     this.io = io;
@@ -30,56 +33,49 @@ public class AStar {
     this.solmumatriisi = new Node[karttamatriisi.length][karttamatriisi[0].length];
     this.addedToOpenList = new boolean[karttamatriisi.length][karttamatriisi[0].length];
     this.etaisyysMaaliin = Integer.MAX_VALUE;
-    this.visitedOrder = new ArrayList<>();
     this.goalFound = false;
     this.finder = new NeighbourFinder(karttamatriisi, solmumatriisi);
+    this.etaisyys = new double[karttamatriisi.length * karttamatriisi[0].length];
+    this.visitedNodes = new DynamicArray();
+    this.math = new MathFunctions();
     initVerkko();
+    initEtaisyydet();
   }
 
   /**
    * Suorittaa A*-algoritmin.
    */
   public void runAStar() {
-    //initVerkko();
     this.openList = new Keko();
     startingNode.setG_Matka(0);
-    startingNode.setEtaisyys(manhattanDist(startingNode, goalNode));
+    startingNode.setEtaisyys(diagonalDist(startingNode, goalNode));
     openList.addNode(startingNode);
 
     while (!openList.isEmpty()) {
       Node current = openList.pollNode();
-      addedToOpenList[current.getY()][current.getX()] = false;
+
       if (current.isGoal()) {
         goalFound = true;
         etaisyysMaaliin = current.getG_Matka();
         break;
       }
-      current.vieraile();
+      //current.vieraile();
       for (Node naapuri : haeNaapurisolmut(current.getX(), current.getY())) {
         if (naapuri != null) {
-          int uusiGMatka = current.getG_Matka() + 1;
-          if (!naapuri.onVierailtu() || uusiGMatka < naapuri.getG_Matka()) {
+          double uusiGMatka = current.getG_Matka() + neighbourDist(current, naapuri);
+
+          if (etaisyys[naapuri.getTunnus()] == Integer.MAX_VALUE || uusiGMatka < naapuri.getG_Matka()) {
+            etaisyys[naapuri.getTunnus()] = uusiGMatka;
             naapuri.setParent(current);
             naapuri.setG_Matka(uusiGMatka);
-            double h = manhattanDist(naapuri, goalNode) * 1.001;
+            double h = diagonalDist(naapuri, goalNode); //* 1.001;
             naapuri.setEtaisyys(uusiGMatka + h);
-
             openList.addNode(naapuri);
-            addedToOpenList[naapuri.getY()][naapuri.getX()] = true;
 
             if (!naapuri.onVierailtu()) {
-              visitedOrder.add(naapuri);
+              visitedNodes.add(naapuri);
               naapuri.vieraile();
             }
-
-            /*if (!addedToOpenList[naapuri.getY()][naapuri.getX()]) {
-              openList.addNode(naapuri);
-              addedToOpenList[naapuri.getY()][naapuri.getX()] = true;
-              visitedOrder.add(naapuri);
-              naapuri.vieraile();
-            } else if (naapuri.onVierailtu()) {
-              openList.addNode(naapuri);
-            }*/
           }
         }
       }
@@ -88,15 +84,6 @@ public class AStar {
 
   public boolean goalWasFound() {
     return goalFound;
-  }
-
-  public void printMap() {
-    for (int i = 0; i < karttamatriisi.length; i++) {
-      for (int j = 0; j < karttamatriisi[0].length; j++) {
-        io.printChar(karttamatriisi[i][j]);
-      }
-      io.printString("");
-    }
   }
 
   /** Päivittää karttamatriisiin reitin maalisolmusta lähtösolmuun. Katsoo maalisolmusta alkaen, mikä solmu on edeltävän solmun vanhempi jne.
@@ -114,11 +101,11 @@ public class AStar {
   /** Palauttaa listan vierailluista solmuista vierailujärjestyksessä.
    * @return listga vierailluista solmuista
    */
-  public ArrayList<Node> getVisitedOrder() {
-    return visitedOrder;
+  public DynamicArray getVisitedOrder() {
+    return visitedNodes;
   }
 
-  public int getEtaisyysMaaliin() {
+  public double getEtaisyysMaaliin() {
     return etaisyysMaaliin;
   }
 
@@ -131,6 +118,19 @@ public class AStar {
     return Math.abs(n1.getX() - n2.getX()) + Math.abs(n1.getY() - n2.getY());
   }
 
+  public double diagonalDist(Node n1, Node n2) {
+    double dx = math.getAbs(n1.getX() - n2.getX());
+    double dy = math.getAbs(n1.getY() - n2.getY());
+    return (dx + dy) + (Math.sqrt(2) - 2) * math.getMin(dx, dy);
+  }
+
+  public double neighbourDist(Node n1, Node n2) {
+    if (n1.getX() == n2.getX() || n1.getY() == n2.getY()) {
+      return 1;
+    }
+    return Math.sqrt(2);
+  }
+
   /**
    * Alustaa verkon. Luo kuhunkin matriisin solmuun uuden solmun ja tallentaa sille listan naapurisolmuista.
    */
@@ -138,7 +138,6 @@ public class AStar {
     int solmut = karttamatriisi.length * karttamatriisi[0].length;
     this.verkko = new Node[solmut][];
 
-    // Täytetään solmumatriisi solmuolioilla. Merkitään mikä on aloitussolmu ja mikä maalisolmu.
     int solmutunnus = 0;
     for (int i = 0; i < karttamatriisi.length; i++) {
       for (int j = 0; j < karttamatriisi[0].length; j++) {
@@ -158,12 +157,13 @@ public class AStar {
         solmutunnus++;
       }
     }
-    /*// Lisätään kullekin solmumatriisin solmulle lista naapurisolmuista
-    for (int i = 0; i < karttamatriisi.length; i++) {
-      for (int j = 0; j < karttamatriisi[0].length; j++) {
-        verkko[solmumatriisi[i][j].getTunnus()] = haeNaapurisolmut(j, i);
-      }
-    }*/
+  }
+
+  public void initEtaisyydet() {
+    for (int i = 0; i < etaisyys.length; i++) {
+      etaisyys[i] = Integer.MAX_VALUE;
+    }
+    etaisyys[startingNode.getTunnus()] = 0;
   }
 
   private Node[] haeNaapurisolmut(int x, int y) {

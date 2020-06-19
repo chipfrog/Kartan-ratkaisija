@@ -32,7 +32,7 @@ public class DijkstraTest {
   }
 
   @Test
-  public void cellHasFourNeighboursIfNoneOfThemIsObstacle() {
+  public void cellHasEightNeighboursIfNoneOfThemIsObstacle() {
     Node[] neighbours = d.haeNaapurisolmut(30,4);
     int nodes = 0;
     for (int i = 0; i < neighbours.length; i ++) {
@@ -40,67 +40,20 @@ public class DijkstraTest {
         nodes ++;
       }
     }
-    assertTrue(nodes == 4);
-  }
-
-  @Test
-  public void cellHasNoNeighboursIfItIsObstacle() {
-    Node[] neighbours = d.haeNaapurisolmut(0,0);
-    int nodes = 0;
-    for (int i = 0; i < neighbours.length; i ++) {
-      if (neighbours[i] != null) {
-        nodes ++;
-      }
-    }
-    assertTrue(nodes == 0);
-  }
-
-  @Test
-  public void cellHasThreeNeighboursIfOneOfThemIsObstacle() {
-    Node[] neighbours = d.haeNaapurisolmut(10,1);
-    int nodes = 0;
-    for (int i = 0; i < neighbours.length; i ++) {
-      if (neighbours[i] != null) {
-        nodes ++;
-      }
-    }
-    assertTrue(nodes == 3);
-  }
-
-  @Test
-  public void cellHasOneNeighbourIfThreeSidesAreBlocked() {
-    Node[]  neighbours = d.haeNaapurisolmut(19,1);
-    int nodes = 0;
-    for (int i = 0; i < neighbours.length; i ++) {
-      if (neighbours[i] != null) {
-        nodes ++;
-      }
-    }
-    assertTrue(nodes == 1);
-  }
-
-  @Test
-  public void cellHasTwoNeighboursIfTwoSidesAreBlocked() {
-    Node[]  neighbours = d.haeNaapurisolmut(18,2);
-    int nodes = 0;
-    for (int i = 0; i < neighbours.length; i ++) {
-      if (neighbours[i] != null) {
-        nodes ++;
-      }
-    }
-    assertTrue(nodes == 2);
+    assertTrue(nodes == 8);
   }
 
   @Test
   public void returnsShortestDistanceInBasicSituation() {
     d.runDijkstra();
+    System.out.println(d.getEtaisyysMaaliin());
     assertTrue(d.getEtaisyysMaaliin() == 5);
   }
 
   @Test
   public void tracesShortestPathBackToNodeClosestToStartingNode() {
     d.runDijkstra();
-    assertTrue(d.haeReitti().getEtaisyys() == 1);
+    assertTrue(d.haeReitti().getEtaisyys() == 0);
   }
 
   @Test
@@ -115,6 +68,6 @@ public class DijkstraTest {
     d.setMap(initDijkstraWithNewMap(specialCaseMap));
     d.runDijkstra();
     assertTrue(d.getEtaisyysMaaliin() == 10);
-    assertTrue(d.haeReitti().getEtaisyys() == 1);
+    assertTrue(d.haeReitti().getEtaisyys() == 0);
   }
 }

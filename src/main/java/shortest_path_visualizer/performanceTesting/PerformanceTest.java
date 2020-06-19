@@ -9,14 +9,14 @@ import shortest_path_visualizer.algorithms.Dijkstra;
 import shortest_path_visualizer.utils.Node;
 
 public class PerformanceTest {
-  MapReaderIO io = new MapReaderIO();
-  MapReader mapReader = new MapReader(io);
+  MapReaderIO io;
+  MapReader mapReader;
   private Dijkstra dijkstra;
   private AStar aStar;
   private char[][] map;
   private long[] times;
-  private int vastausD;
-  private int vastausA;
+  private double vastausD;
+  private double vastausA;
   private int kierroksia;
 
   public PerformanceTest(int kierroksia) {
@@ -38,7 +38,6 @@ public class PerformanceTest {
     this.map[goal.getY()][goal.getX()] = 'G';
     this.dijkstra = new Dijkstra(new MapReaderIO());
     dijkstra.setMap(this.map);
-
     dijkstra.runDijkstra();
     this.vastausD = dijkstra.getEtaisyysMaaliin();
 
@@ -53,7 +52,6 @@ public class PerformanceTest {
 
   public void testAStar(File file, Node start, Node goal) throws FileNotFoundException {
     mapReader.createMatrix(file);
-    this.map = mapReader.getMapArray();
     this.map = mapReader.getMapArray();
     this.map[start.getY()][start.getX()] = 'S';
     this.map[goal.getY()][goal.getX()] = 'G';
@@ -85,11 +83,11 @@ public class PerformanceTest {
     return vastausA == vastausD;
   }
 
-  public int getVastausA() {
+  public double getVastausA() {
     return this.vastausA;
   }
 
-  public int getVastausD() {
+  public double getVastausD() {
     return this.vastausD;
   }
 }
