@@ -11,7 +11,7 @@ ja muutaman simppelin blogitekstin lisäksi löytynyt juuri materiaalia, joten a
 jos kartassa ei ole esteitä ja toteutus tuskin vastaa vielä muiltakaan osin JPS:ää. 
 
 Ennen lopullista palautusta yritän saada JPS:n toimimaan ja korjata bugin A*:ssä. Tavallisia ja tehokkuustestejä täytyy myös kirjoitella
-melko paljon ja korjata ohjelmaan kertyneitä pikkubugeja. Monia asioita voisi koodissa myös varmasti siistiä ja toteuttaa fiksummin, 
+melko paljon ja korjata ohjelmaan kertyneitä pikkubugeja. Vaaditut dokumentit täytyy myös ehtiä jossain kohtaa kirjoittaa valmiiksi. Monia asioita voisi koodissa myös varmasti siistiä ja toteuttaa fiksummin, 
 mutta aika ei tässä kohtaa taida enää riittää. Kiire tulee.
 
 Käytetty aika n. 10 h
