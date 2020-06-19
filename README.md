@@ -14,6 +14,8 @@
 
 [Viikkoraportti 5](https://github.com/chipfrog/Shortest-path-visualizer/blob/master/dokumentaatio/Viikkoraportti_5.md)
 
+[Viikkoraportti 6](https://github.com/chipfrog/Shortest-path-visualizer/blob/master/dokumentaatio/Vikkoraportti_6.md)
+
 ## Dokumentit
 
 [Määrittelydokumentti](https://github.com/chipfrog/Shortest-path-visualizer/blob/master/dokumentaatio/maarittelydokumentti.md)
