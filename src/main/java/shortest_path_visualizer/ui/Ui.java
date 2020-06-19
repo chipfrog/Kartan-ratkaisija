@@ -470,7 +470,7 @@ public class Ui extends Application {
     mapSaving.getChildren().addAll(saveMap, nameField, save);
     mapSaving.setSpacing(10);
 
-    Label speedSlider = new Label("Animation speed: ");
+    Label speedSlider = new Label("Animation delay: ");
 
     Slider slider = new Slider();
     slider.setMin(1);
