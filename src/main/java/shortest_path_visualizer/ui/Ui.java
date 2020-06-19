@@ -267,6 +267,8 @@ public class Ui extends Application {
       jps.runJPS();
       if (jps.getGoalNode() != null) {
         distToGoal.setText("Distance: " + jps.getGoalNode().getG_Matka());
+        DynamicArray visitedNodes = jps.getVisitedNodes();
+        animateJPS(visitedNodes);
       } else {
         System.out.println("Goal node unreachable!");
       }
@@ -313,6 +315,21 @@ public class Ui extends Application {
     timeline.setOnFinished(e -> {
       drawShortestPath(aStar.getReitti());
     });
+  }
+
+  public void animateJPS(DynamicArray visitedNodes) {
+    if (visitedNodes.size() != 0) {
+      Timeline timeline = new Timeline(new KeyFrame(
+          Duration.millis(animationSpeed),
+          event -> {
+            paintSquare(visitedNodes.get(nodeToPaint));
+            numOfVisitedNodes.setText("Nodes: " + nodeToPaint);
+            nodeToPaint++;
+          }
+      ));
+      timeline.setCycleCount(visitedNodes.size() - 1);
+      timeline.play();
+    }
   }
 
   public void animateDijkstra(DynamicArray visitedNodes) {

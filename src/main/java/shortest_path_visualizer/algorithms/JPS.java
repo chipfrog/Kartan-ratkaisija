@@ -1,6 +1,8 @@
 package shortest_path_visualizer.algorithms;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
+import shortest_path_visualizer.dataStructures.DynamicArray;
 import shortest_path_visualizer.dataStructures.Keko;
 import shortest_path_visualizer.utils.MathFunctions;
 import shortest_path_visualizer.utils.NeighbourFinder;
@@ -12,9 +14,9 @@ public class JPS {
   private Node goalNode;
   private Node startingNode;
   private Keko jumpPoints;
-  private NeighbourFinder finder;
   private MathFunctions math;
   private boolean goalFound;
+  private DynamicArray visitedNodes;
 
   public JPS(char[][] kartta) {
     this.kartta = kartta;
@@ -22,41 +24,49 @@ public class JPS {
     this.jumpPoints = new Keko();
     this.math = new MathFunctions();
     this.goalFound = false;
+    this.visitedNodes = new DynamicArray();
   }
 
   public void runJPS() {
     initSolmumatriisi();
-
     int x = startingNode.getX();
     int y = startingNode.getY();
 
-    int koko = 0;
+    // Luodaan aloitussolmut. Kaikki lähtevät samasta pisteestä, mutta eri suuntiin.
     for (int i = -1; i < 2; i ++) {
       for (int j = -1; j < 2; j++ ) {
-        Node n = new Node(x, y, j, i, 0);
-        n.setEtaisyys(diagonalDist(n, goalNode));
-        jumpPoints.addNode(n);
-        koko ++;
+        if (i == 0 && j == 0) {
+        } else {
+          Node n = new Node(x, y, j, i, 0);
+          n.setEtaisyys(diagonalDist(n, goalNode));
+          n.setAsStartNode();
+          jumpPoints.addNode(n);
+        }
       }
     }
-    System.out.println("Koko: " + koko);
-
     while (!jumpPoints.isEmpty()) {
-      if (goalFound) {
-        System.out.println("Maali löytyi!");
-        System.out.println("Etäisyys: " + goalNode.getG_Matka());
-        break;
+      Node current = jumpPoints.pollNode();
+      if (!current.isStart()) {
+        visitedNodes.add(current);
       }
 
-      Node current = jumpPoints.pollNode();
-      ArrayList<Node> foundJumpPoints = diagonalScan(current.getX(), current.getY(),
-      current.getDirH(), current.getDirV(), current.getG_Matka());
-      System.out.println(foundJumpPoints.size());
-      for (Node jp : foundJumpPoints) {
-        jumpPoints.addNode(jp);
+      if (goalFound) {
+        System.out.println("Maali löytyi!");
+        break;
+      }
+      if (current.getDirH() != 0 && current.getDirV() != 0) {
+        diagonalScan(current);
+      } else if (current.getDirH() != 0 && current.getDirV() == 0) {
+        horizontalScan(current);
+      } else if (current.getDirV() != 0 && current.getDirH() == 0) {
+        verticalScan(current);
       }
     }
   }
+  public DynamicArray getVisitedNodes() {
+    return this.visitedNodes;
+  }
+
   public Node getGoalNode() {
     return this.goalNode;
   }
@@ -84,227 +94,132 @@ public class JPS {
     }
   }
 
-  public ArrayList<Node> horizontalScan(int x, int y, int dirH, double distance) {
-    ArrayList<Node> jumpPoints = new ArrayList<>();
+  public void horizontalScan(Node parent) {
+    int x = parent.getX();
+    int y = parent.getY();
+    int dirH = parent.getDirH();
+    double distance = parent.getG_Matka();
+    int xNext = x;
 
     while (true) {
-      int x1 = x + dirH;
-      if (x1 > kartta[0].length || x1 < 0) {
-        return jumpPoints;
+      if (dirH == 0) {
+        break;
       }
-      if(kartta[y][x1] == '@') {
-        return jumpPoints;
+      xNext += dirH;
+      distance += 1;
+
+      if (xNext < 0 || xNext > kartta[0].length - 1) {
+        break;
       }
-      if (kartta [y][x1] == 'G') {
-        /*Node node = solmumatriisi[y][x1];
-        node.setG_Matka(distance + 1);*/
+      if (kartta[y][xNext] == '@') {
+        break;
+      }
+      if (kartta[y][xNext] == 'G') {
         goalFound = true;
-        goalNode.setG_Matka(distance + 1);
-        jumpPoints.add(goalNode);
-        return jumpPoints;
+        System.out.println("Maalietäisyys: " + distance);
+        goalNode.setG_Matka(distance);
+        break;
       }
 
-      distance = distance + 1;
-      int x2 = x1 + dirH;
+      if (xNext + dirH >= 0 && xNext + dirH < kartta[0].length
+          && y + 1 < kartta.length && y - 1 >= 0) {
+        if (kartta[y][xNext + dirH] != '@' && kartta[y - 1][xNext + dirH] == '@') {
+          Node node = new Node(xNext, y, dirH, -1, distance);
+          node.setEtaisyys(distance + diagonalDist(node, goalNode));
+          jumpPoints.addNode(node);
+        }
 
-      if (kartta[y - 1][x1] == '@' && kartta[y - 1][x2] != '@') {
-        /*Node node = solmumatriisi[y][x1];
-        node.setDirH(dirH);
-        node.setDirV(-1);
-        node.setG_Matka(distance);*/
-        Node node = new Node(x1, y, dirH, -1, distance);
-        node.setEtaisyys(diagonalDist(node, goalNode));
-        jumpPoints.add(node);
+        if (kartta[y][xNext +dirH] != '@' && kartta[y + 1][xNext + dirH] == '@') {
+          Node node = new Node(xNext, y, dirH, 1, distance);
+          node.setEtaisyys(distance + diagonalDist(node, goalNode));
+          jumpPoints.addNode(node);
+        }
       }
-
-      if (kartta[y + 1][x1] == '@' && kartta[y + 1][x2] != '@') {
-        /*Node node = solmumatriisi[y][x1];
-        node.setDirH(dirH);
-        node.setDirV(1);
-        node.setG_Matka(distance);*/
-        Node node = new Node(x1, y, dirH, 1, distance);
-        node.setEtaisyys(diagonalDist(node, goalNode));
-        jumpPoints.add(node);
-      }
-
-      if (jumpPoints.size() > 0) {
-        /*Node node = solmumatriisi[y][x1];
-        node.setDirH(dirH);
-        node.setDirV(0);
-        node.setG_Matka(distance);*/
-        Node node = new Node(x1, y, dirH, 0, distance);
-        node.setEtaisyys(diagonalDist(node, goalNode));
-        jumpPoints.add(node);
-      }
-      return jumpPoints;
-
     }
   }
 
-  public ArrayList<Node> verticalScan(int x, int y, int dirV, double distance) {
-    ArrayList<Node> jumpPoints = new ArrayList<>();
+  public void verticalScan(Node parent) {
+    int x = parent.getX();
+    int y = parent.getY();
+    int dirV = parent.getDirV();
+    double distance = parent.getG_Matka();
+    int yNext = y;
 
     while (true) {
-      int y1 = y + dirV;
-      if (y1 > kartta[0].length || y1 < 0) {
-        return jumpPoints;
+      if (dirV == 0) {
+        break;
       }
-      if(kartta[y1][x] == '@') {
-        return jumpPoints;
+      yNext += dirV;
+      distance += 1;
+      if (yNext < 0 || yNext > kartta[0].length - 1) {
+        break;
       }
-      if (kartta [y1][x] == 'G') {
-        /*Node node = solmumatriisi[y1][x];
-        node.setG_Matka(distance + 1);*/
-        goalNode.setG_Matka(distance + 1);
-        jumpPoints.add(goalNode);
-        return jumpPoints;
+      if (kartta[yNext][x] == '@') {
+        break;
       }
+      if (kartta[yNext][x] == 'G') {
+        goalFound = true;
+        System.out.println("Maalietäisyys: " + distance);
+        goalNode.setG_Matka(distance);
+        break;
+      }
+      if (yNext + dirV >= 0 && yNext + dirV < kartta.length
+          && x + 1 < kartta[0].length && x - 1 >= 0) {
 
-      distance = distance + 1;
-      int y2 = y1 + dirV;
-
-      if (kartta[y1][x - 1] == '@' && kartta[y2][x - 1] != '@') {
-        /*Node node = solmumatriisi[y1][x];
-        node.setDirV(dirV);
-        node.setDirH(-1);
-        node.setG_Matka(distance);*/
-        Node node = new Node(x, y1, -1, dirV, distance);
-        node.setEtaisyys(diagonalDist(node, goalNode));
-        jumpPoints.add(node);
+        if (kartta[yNext + dirV][x] != '@' && kartta[yNext + dirV][x - 1] == '@') {
+          Node node = new Node(x, yNext, -1, dirV, distance);
+          node.setEtaisyys(distance + diagonalDist(node, goalNode));
+          jumpPoints.addNode(node);
+        }
+        if (kartta[yNext + dirV][x] != '@' && kartta[yNext + dirV][x + 1] == '@') {
+          Node node = new Node(x, yNext, 1, dirV, distance);
+          node.setEtaisyys(distance + diagonalDist(node, goalNode));
+          jumpPoints.addNode(node);
+        }
       }
-
-      if (kartta[y1][x + 1] == '@' && kartta[y2][x + 1] != '@') {
-        /*Node node = solmumatriisi[y1][x];
-        node.setDirV(dirV);
-        node.setDirH(1);
-        node.setG_Matka(distance);*/
-        Node node = new Node(x, y1, 1, dirV, distance);
-        node.setEtaisyys(diagonalDist(node, goalNode));
-        jumpPoints.add(node);
-      }
-
-      if (jumpPoints.size() > 0) {
-        /*Node node = solmumatriisi[y1][x];
-        node.setDirV(dirV);
-        node.setDirH(0);
-        node.setG_Matka(distance);*/
-        Node node = new Node(x, y1, 0, dirV, distance);
-        node.setEtaisyys(diagonalDist(node, goalNode));
-        jumpPoints.add(node);
-      }
-      return jumpPoints;
     }
   }
 
-  public ArrayList<Node> diagonalScan(int x, int y, int dirH, int dirV, double distance) {
-    ArrayList<Node> jumpPoints = new ArrayList<>();
-    ArrayList<Node> horizontalNodes = new ArrayList<>();
-    ArrayList<Node> verticalNodes = new ArrayList<>();
-    boolean horScanDone = false;
-    boolean verScanDone = false;
+  public void diagonalScan(Node parent) {
+    int x = parent.getX();
+    int y = parent.getY();
+    int dirH = parent.getDirH();
+    int dirV = parent.getDirV();
+    double distance = parent.getG_Matka();
+    int yNext = y;
+    int xNext = x;
 
     while (true) {
-      int x1 = x + dirH;
-      int y1 = y + dirV;
+      xNext += dirH;
+      yNext += dirV;
+      distance += Math.sqrt(2);
 
-      if (x1 > kartta[0].length || x1 < 0 || y1 > kartta.length || y1 < 0) {
-        return jumpPoints;
+      if (xNext > kartta[0].length - 1|| xNext < 0 || yNext > kartta.length - 1 || yNext < 0) {
+        break;
       }
-
-      if(kartta[y1][x1] == '@') {
-        return jumpPoints;
+      if (kartta[yNext][xNext] == '@') {
+        break;
       }
-
-      if(kartta[y1][x1] == 'G') {
-        Node node = solmumatriisi[y1][x1];
-        node.setG_Matka(distance + Math.sqrt(2));
-        jumpPoints.add(node);
-        return jumpPoints;
+      if(kartta[yNext][xNext] == 'G') {
+        goalFound = true;
+        goalNode.setG_Matka(distance);
+        System.out.println("Maalietäisyys: " + distance);
+        break;
       }
+      Node newParent = new Node(xNext, yNext, dirH, dirV, distance);
+      horizontalScan(newParent);
+      verticalScan(newParent);
 
-      distance = distance + Math.sqrt(2);
-      System.out.println("Etäisyys: " + distance);
-      int x2 = x1 + dirH;
-      int y2 = y1 + dirV;
-
-      if (kartta[y1][x] == '@' && kartta[y2][x] != '@') {
-        /*Node node = solmumatriisi[y1][x1];
-        node.setG_Matka(distance);
-        node.setDirH(-1);
-        node.setDirV(1);*/
-        Node node = new Node(x1, y1, -1, 1, distance);
-        node.setEtaisyys(diagonalDist(node, goalNode));
-        jumpPoints.add(node);
+      if (kartta[yNext][x] == '@' && kartta[yNext + dirV][x] != '@') {
+        Node node = new Node(xNext, yNext, -(dirH), dirV, distance);
+        node.setEtaisyys(distance + diagonalDist(node, goalNode));
+        jumpPoints.addNode(node);
       }
-
-      if (kartta[y][x1] == '@' && kartta[y][x2] != '@') {
-        /*Node node = solmumatriisi[y1][x1];
-        node.setG_Matka(distance);
-        node.setDirH(1);
-        node.setDirV(-1);
-        */
-        Node node = new Node(x1, y1, 1, -1, distance);
-        node.setEtaisyys(diagonalDist(node, goalNode));
-        jumpPoints.add(node);
-        horScanDone = false;
-        verScanDone = false;
+      if (kartta[y][xNext] == '@' && kartta[y][xNext + dirH] != '@') {
+        Node node = new Node(xNext, yNext, dirH, -(dirV), distance);
+        node.setEtaisyys(distance + diagonalDist(node, goalNode));
+        jumpPoints.addNode(node);
       }
-
-      if (jumpPoints.size() == 0) {
-        horizontalNodes = horizontalScan(x1, y1, dirH, distance);
-        horScanDone = true;
-      }
-
-      if (horizontalNodes.size() > 0) {
-        Node parent = horizontalNodes.get(horizontalNodes.size() - 1);
-
-        for (Node node : horizontalNodes) {
-          node.setParent(parent);
-        }
-        jumpPoints.add(parent);
-
-        if (jumpPoints.size() == 0) {
-          verticalNodes = verticalScan(x1, y1, dirV, distance);
-          verScanDone = true;
-
-          if (verticalNodes.size() > 0) {
-            parent = verticalNodes.get(verticalNodes.size() - 1);
-            for (Node node : verticalNodes) {
-              node.setParent(parent);
-            }
-            jumpPoints.add(parent);
-
-            if(jumpPoints.size() > 0) {
-              if (!horScanDone) {
-                /*Node node = solmumatriisi[y1][x1];
-                node.setDirH(dirH);
-                node.setDirV(0);
-                node.setG_Matka(distance);*/
-                Node node = new Node(x1, y1, dirH, 0, distance);
-                node.setEtaisyys(diagonalDist(node, goalNode));
-                jumpPoints.add(node);
-              }
-
-              if (!verScanDone) {
-                /*Node node = solmumatriisi[y1][x1];
-                node.setDirH(0);
-                node.setDirV(dirV);
-                node.setG_Matka(distance);*/
-                Node node = new Node(x1, y1, 0, dirV, distance);
-                node.setEtaisyys(diagonalDist(node, goalNode));
-                jumpPoints.add(node);
-
-                node.setDirH(dirH);
-                jumpPoints.add(node);
-
-                return jumpPoints;
-              }
-            }
-          }
-        }
-
-      }
-
     }
   }
 
