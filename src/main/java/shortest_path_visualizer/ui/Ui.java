@@ -65,8 +65,8 @@ public class Ui extends Application {
 
 
   public Ui() {
-    this.cols = 60;
-    this.rows = 60;
+    this.cols = 50;
+    this.rows = 50;
     this.mapArray = new char[rows][cols];
     this.rectChar = new Rectangle[rows][cols];
     this.type = DrawType.START;
@@ -393,7 +393,7 @@ public class Ui extends Application {
 
   @Override
   public void start(Stage primaryStage) throws Exception {
-    createGrid(15);
+    createGrid(20);
     /*MapReader mapReader = new MapReader(new MapReaderIO());
     mapReader.createMatrix(new File("src/main/resources/Berlin_0_256.txt"));
     char[][] kartta = mapReader.getMapArray();

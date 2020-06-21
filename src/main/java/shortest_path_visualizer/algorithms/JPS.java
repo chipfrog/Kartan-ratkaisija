@@ -54,6 +54,7 @@ public class JPS {
         System.out.println("Maali löytyi!");
         break;
       }
+      // Tämä voi olla ongelmallinen ehto!
       if (current.getDirH() != 0 && current.getDirV() != 0) {
         diagonalScan(current);
       } else if (current.getDirH() != 0 && current.getDirV() == 0) {
@@ -61,6 +62,10 @@ public class JPS {
       } else if (current.getDirV() != 0 && current.getDirH() == 0) {
         verticalScan(current);
       }
+    }
+    if (!goalFound) {
+      System.out.println("Ei löytynyt");
+      System.out.println("Visited nodes: " + visitedNodes.size());
     }
   }
   public DynamicArray getVisitedNodes() {
@@ -97,6 +102,8 @@ public class JPS {
   public void horizontalScan(Node parent) {
     int x = parent.getX();
     int y = parent.getY();
+
+    System.out.println("x: " + x + ", y: " + y);
     int dirH = parent.getDirH();
     double distance = parent.getG_Matka();
     int dx = x;
@@ -125,13 +132,13 @@ public class JPS {
 
       if (x2 >= 0 && x2 < kartta[0].length
           && y + 1 < kartta.length && y - 1 >= 0) {
-        if (kartta[y][dx] == '@' && kartta[y - 1][x2] != '@') {
+        if (kartta[y - 1][dx] == '@' && kartta[y - 1][x2] != '@') {
           Node node = new Node(dx, y, dirH, -1, distance);
           node.setEtaisyys(distance + diagonalDist(node, goalNode));
           jumpPoints.addNode(node);
         }
 
-        if (kartta[y][dx] == '@' && kartta[y + 1][x2] != '@') {
+        if (kartta[y - 1][dx] == '@' && kartta[y + 1][x2] != '@') {
           Node node = new Node(dx, y, dirH, 1, distance);
           node.setEtaisyys(distance + diagonalDist(node, goalNode));
           jumpPoints.addNode(node);
@@ -167,15 +174,16 @@ public class JPS {
         goalNode.setG_Matka(distance);
         break;
       }
+      // Ehdot erikseen?
       if (y2 >= 0 && y2 < kartta.length
           && x + 1 < kartta[0].length && x - 1 >= 0) {
 
-        if (kartta[dy][x] == '@' && kartta[y2][x - 1] != '@') {
+        if (kartta[dy][x - 1] == '@' && kartta[y2][x - 1] != '@') {
           Node node = new Node(x, dy, -1, dirV, distance);
           node.setEtaisyys(distance + diagonalDist(node, goalNode));
           jumpPoints.addNode(node);
         }
-        if (kartta[dy][x] == '@' && kartta[y2][x + 1] != '@') {
+        if (kartta[dy][x - 1] == '@' && kartta[y2][x + 1] != '@') {
           Node node = new Node(x, dy, 1, dirV, distance);
           node.setEtaisyys(distance + diagonalDist(node, goalNode));
           jumpPoints.addNode(node);
@@ -210,19 +218,26 @@ public class JPS {
         System.out.println("Maalietäisyys: " + distance);
         break;
       }
-      Node newParent = new Node(xNext, yNext, dirH, dirV, distance);
+      // tähän ehkä kaksi eri vanhempaa dirH/dirV suhteen
+      // ja ehdot rajojen ylityksen varalle
+      Node newParent = new Node(xNext, yNext, dirH, 0, distance);
       horizontalScan(newParent);
+      newParent = new Node(xNext, yNext, 0, dirV, distance);
       verticalScan(newParent);
 
-      if (kartta[yNext][x] == '@' && kartta[yNext + dirV][x] != '@') {
-        Node node = new Node(xNext + dirH, yNext + dirV, -(dirH), dirV, distance);
-        node.setEtaisyys(distance + diagonalDist(node, goalNode));
-        jumpPoints.addNode(node);
+      if (xNext - 1 >= 0) {
+        if (kartta[yNext][xNext + (-1) * dirH] == '@' && kartta[yNext + dirV][xNext + (-1) * dirH] != '@') {
+          Node node = new Node(xNext, yNext, -(dirH), dirV, distance);
+          node.setEtaisyys(distance + diagonalDist(node, goalNode));
+          jumpPoints.addNode(node);
+        }
       }
-      if (kartta[y][xNext] == '@' && kartta[y][xNext + dirH] != '@') {
-        Node node = new Node(xNext + dirH, yNext + dirV, dirH, -(dirV), distance);
-        node.setEtaisyys(distance + diagonalDist(node, goalNode));
-        jumpPoints.addNode(node);
+      if (yNext - 1 >= 0) {
+        if (kartta[yNext + (-1) * dirV][xNext] == '@' && kartta[yNext + (-1) * dirV][xNext + dirH] != '@') {
+          Node node = new Node(xNext, yNext, dirH, -(dirV), distance);
+          node.setEtaisyys(distance + diagonalDist(node, goalNode));
+          jumpPoints.addNode(node);
+        }
       }
     }
   }
