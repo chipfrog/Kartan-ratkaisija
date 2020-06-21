@@ -18,17 +18,21 @@ public class JPS {
   private boolean goalFound;
   private DynamicArray visitedNodes;
 
-  public JPS(char[][] kartta) {
+  public JPS() {
+
+  }
+
+  public void setMap(char[][] kartta) {
     this.kartta = kartta;
     this.solmumatriisi = new Node[kartta.length][kartta[0].length];
     this.jumpPoints = new Keko();
     this.math = new MathFunctions();
     this.goalFound = false;
     this.visitedNodes = new DynamicArray();
+    initSolmumatriisi();
   }
 
   public void runJPS() {
-    initSolmumatriisi();
     int x = startingNode.getX();
     int y = startingNode.getY();
 
@@ -40,18 +44,21 @@ public class JPS {
           Node n = new Node(x, y, j, i, 0);
           n.setEtaisyys(diagonalDist(n, goalNode));
           n.setAsStartNode();
+          solmumatriisi[y][x] = n;
           jumpPoints.addNode(n);
         }
       }
     }
     while (!jumpPoints.isEmpty()) {
       Node current = jumpPoints.pollNode();
+      //System.out.println("X: " + current.getX() + "Y: " + current.getY());
+      //System.out.println("DirH: " + current.getDirH() + ", DirV: " + current.getDirV());
       if (!current.isStart()) {
         visitedNodes.add(current);
       }
 
       if (goalFound) {
-        System.out.println("Maali löytyi!");
+        //System.out.println("Maali löytyi!");
         break;
       }
       // Tämä voi olla ongelmallinen ehto!
@@ -63,9 +70,10 @@ public class JPS {
         verticalScan(current);
       }
     }
+    //System.out.println(visitedNodes.size());
     if (!goalFound) {
-      System.out.println("Ei löytynyt");
-      System.out.println("Visited nodes: " + visitedNodes.size());
+      //System.out.println("Ei löytynyt");
+      //System.out.println("Visited nodes: " + visitedNodes.size());
     }
   }
   public DynamicArray getVisitedNodes() {
@@ -103,7 +111,6 @@ public class JPS {
     int x = parent.getX();
     int y = parent.getY();
 
-    System.out.println("x: " + x + ", y: " + y);
     int dirH = parent.getDirH();
     double distance = parent.getG_Matka();
     int dx = x;
@@ -125,21 +132,23 @@ public class JPS {
 
       if (kartta[y][dx] == 'G') {
         goalFound = true;
-        System.out.println("Maalietäisyys: " + distance);
+        //System.out.println("Maalietäisyys: " + distance);
         goalNode.setG_Matka(distance);
         break;
       }
 
-      if (x2 >= 0 && x2 < kartta[0].length
-          && y + 1 < kartta.length && y - 1 >= 0) {
+      if (x2 >= 0 && x2 < kartta[0].length && y - 1 >= 0) {
         if (kartta[y - 1][dx] == '@' && kartta[y - 1][x2] != '@') {
           Node node = new Node(dx, y, dirH, -1, distance);
+          //Node node = new Node(x2, y - 1, dirH, -1, distance + Math.sqrt(2));
           node.setEtaisyys(distance + diagonalDist(node, goalNode));
           jumpPoints.addNode(node);
         }
-
+      }
+      if (x2 >= 0 && x2 < kartta[0].length && y + 1 < kartta.length) {
         if (kartta[y + 1][dx] == '@' && kartta[y + 1][x2] != '@') {
           Node node = new Node(dx, y, dirH, 1, distance);
+          //Node node = new Node(x2, y + 1, dirH, 1, distance + Math.sqrt(2));
           node.setEtaisyys(distance + diagonalDist(node, goalNode));
           jumpPoints.addNode(node);
         }
@@ -170,25 +179,30 @@ public class JPS {
 
       if (kartta[dy][x] == 'G') {
         goalFound = true;
-        System.out.println("Maalietäisyys: " + distance);
+        //System.out.println("Maalietäisyys: " + distance);
         goalNode.setG_Matka(distance);
         break;
       }
       // Ehdot erikseen?
-      if (y2 >= 0 && y2 < kartta.length
-          && x + 1 < kartta[0].length && x - 1 >= 0) {
+      if (y2 >= 0 && y2 < kartta.length && x - 1 >= 0) {
 
         if (kartta[dy][x - 1] == '@' && kartta[y2][x - 1] != '@') {
           Node node = new Node(x, dy, -1, dirV, distance);
-          node.setEtaisyys(distance + diagonalDist(node, goalNode));
-          jumpPoints.addNode(node);
-        }
-        if (kartta[dy][x + 1] == '@' && kartta[y2][x + 1] != '@') {
-          Node node = new Node(x, dy, 1, dirV, distance);
+          //Node node = new Node(x - 1, y2, -1, dirV, distance + Math.sqrt(2));
+          //System.out.println(node.getX()+ ";" + node.getY());
           node.setEtaisyys(distance + diagonalDist(node, goalNode));
           jumpPoints.addNode(node);
         }
       }
+
+      if (y2 >= 0 && y2 < kartta.length && x + 1 >= 0) {
+        Node node = new Node(x, dy, 1, dirV, distance);
+        //Node node = new Node(x + 1, y2, 1, dirV, distance + Math.sqrt(2));
+        node.setEtaisyys(distance + diagonalDist(node, goalNode));
+        jumpPoints.addNode(node);
+      }
+      
+      //dy += dirV;
     }
   }
 
@@ -200,7 +214,8 @@ public class JPS {
     double distance = parent.getG_Matka();
     int yNext = y;
     int xNext = x;
-
+     // TÄSSÄ VIRHE
+    // EI SAA ALUSSA PÄIVITTÄÄ xNEXT ja yNEXT
     while (true) {
       xNext += dirH;
       yNext += dirV;
@@ -215,7 +230,7 @@ public class JPS {
       if(kartta[yNext][xNext] == 'G') {
         goalFound = true;
         goalNode.setG_Matka(distance);
-        System.out.println("Maalietäisyys: " + distance);
+        //System.out.println("Maalietäisyys: " + distance);
         break;
       }
       // tähän ehkä kaksi eri vanhempaa dirH/dirV suhteen
@@ -224,6 +239,10 @@ public class JPS {
       horizontalScan(newParent);
       newParent = new Node(xNext, yNext, 0, dirV, distance);
       verticalScan(newParent);
+
+      /*xNext += dirH;
+      yNext += dirV;
+      distance += Math.sqrt(2);*/
 
       if (xNext - 1 >= 0 && xNext + 1 < kartta[0].length && yNext - 1 >= 0 && yNext + 1 < kartta.length) {
         if (kartta[yNext][xNext + (-1) * dirH] == '@' && kartta[yNext + dirV][xNext + (-1) * dirH] != '@') {

@@ -6,6 +6,7 @@ import shortest_path_visualizer.IO.MapReader;
 import shortest_path_visualizer.IO.MapReaderIO;
 import shortest_path_visualizer.algorithms.AStar;
 import shortest_path_visualizer.algorithms.Dijkstra;
+import shortest_path_visualizer.algorithms.JPS;
 import shortest_path_visualizer.utils.Node;
 
 public class PerformanceTest {
@@ -13,10 +14,12 @@ public class PerformanceTest {
   MapReader mapReader;
   private Dijkstra dijkstra;
   private AStar aStar;
+  private JPS jps;
   private char[][] map;
   private long[] times;
   private double vastausD;
   private double vastausA;
+  private double vastausJ;
   private int kierroksia;
 
   public PerformanceTest(int kierroksia) {
@@ -69,6 +72,27 @@ public class PerformanceTest {
     }
   }
 
+  public void testJPS(File file, Node start, Node goal) throws FileNotFoundException {
+    mapReader.createMatrix(file);
+    this.map = mapReader.getMapArray();
+    this.map[start.getY()][start.getX()] = 'S';
+    this.map[goal.getY()][goal.getX()] = 'G';
+    this.jps = new JPS();
+    jps.setMap(map);
+    jps.runJPS();
+    this.vastausJ = jps.getGoalNode().getG_Matka();
+
+    for (int i = 0; i < kierroksia; i ++) {
+      JPS jps = new JPS();
+      jps.setMap(map);
+      long t1 = System.nanoTime();
+      jps.runJPS();
+      long t2 = System.nanoTime();
+      times[i] = t2 - t1;
+    }
+
+  }
+
   public double getAverage() {
     long totalTime = 0;
     long divider = 0;
@@ -89,5 +113,9 @@ public class PerformanceTest {
 
   public double getVastausD() {
     return this.vastausD;
+  }
+
+  public double getVastausJ() {
+    return this.vastausJ;
   }
 }
