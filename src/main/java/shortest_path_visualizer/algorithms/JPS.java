@@ -185,7 +185,6 @@ public class JPS {
       }
       // Ehdot erikseen?
       if (y2 >= 0 && y2 < kartta.length && x - 1 >= 0) {
-
         if (kartta[dy][x - 1] == '@' && kartta[y2][x - 1] != '@') {
           Node node = new Node(x, dy, -1, dirV, distance);
           //Node node = new Node(x - 1, y2, -1, dirV, distance + Math.sqrt(2));
@@ -194,14 +193,14 @@ public class JPS {
           jumpPoints.addNode(node);
         }
       }
-
-      if (y2 >= 0 && y2 < kartta.length && x + 1 >= 0) {
-        Node node = new Node(x, dy, 1, dirV, distance);
-        //Node node = new Node(x + 1, y2, 1, dirV, distance + Math.sqrt(2));
-        node.setEtaisyys(distance + diagonalDist(node, goalNode));
-        jumpPoints.addNode(node);
+      if (y2 >= 0 && y2 < kartta.length && x + 1 < kartta[0].length) {
+        if (kartta[dy][x + 1] == '@' && kartta[y2][x + 1] != '@') {
+          Node node = new Node(x, dy, 1, dirV, distance);
+          //Node node = new Node(x + 1, y2, 1, dirV, distance + Math.sqrt(2));
+          node.setEtaisyys(distance + diagonalDist(node, goalNode));
+          jumpPoints.addNode(node);
+        }
       }
-      
       //dy += dirV;
     }
   }
