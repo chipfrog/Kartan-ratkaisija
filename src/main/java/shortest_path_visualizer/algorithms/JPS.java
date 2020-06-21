@@ -138,7 +138,7 @@ public class JPS {
           jumpPoints.addNode(node);
         }
 
-        if (kartta[y - 1][dx] == '@' && kartta[y + 1][x2] != '@') {
+        if (kartta[y + 1][dx] == '@' && kartta[y + 1][x2] != '@') {
           Node node = new Node(dx, y, dirH, 1, distance);
           node.setEtaisyys(distance + diagonalDist(node, goalNode));
           jumpPoints.addNode(node);
@@ -183,7 +183,7 @@ public class JPS {
           node.setEtaisyys(distance + diagonalDist(node, goalNode));
           jumpPoints.addNode(node);
         }
-        if (kartta[dy][x - 1] == '@' && kartta[y2][x + 1] != '@') {
+        if (kartta[dy][x + 1] == '@' && kartta[y2][x + 1] != '@') {
           Node node = new Node(x, dy, 1, dirV, distance);
           node.setEtaisyys(distance + diagonalDist(node, goalNode));
           jumpPoints.addNode(node);
@@ -225,14 +225,14 @@ public class JPS {
       newParent = new Node(xNext, yNext, 0, dirV, distance);
       verticalScan(newParent);
 
-      if (xNext - 1 >= 0) {
+      if (xNext - 1 >= 0 && xNext + 1 < kartta[0].length && yNext - 1 >= 0 && yNext + 1 < kartta.length) {
         if (kartta[yNext][xNext + (-1) * dirH] == '@' && kartta[yNext + dirV][xNext + (-1) * dirH] != '@') {
           Node node = new Node(xNext, yNext, -(dirH), dirV, distance);
           node.setEtaisyys(distance + diagonalDist(node, goalNode));
           jumpPoints.addNode(node);
         }
       }
-      if (yNext - 1 >= 0) {
+      if (yNext - 1 >= 0 && yNext + 1 < kartta.length && xNext - 1 >= 0 && xNext + 1 < kartta[0].length) {
         if (kartta[yNext + (-1) * dirV][xNext] == '@' && kartta[yNext + (-1) * dirV][xNext + dirH] != '@') {
           Node node = new Node(xNext, yNext, dirH, -(dirV), distance);
           node.setEtaisyys(distance + diagonalDist(node, goalNode));
