@@ -1,11 +1,8 @@
 package shortest_path_visualizer.algorithms;
 
-import java.sql.SQLOutput;
-import java.util.ArrayList;
 import shortest_path_visualizer.dataStructures.DynamicArray;
 import shortest_path_visualizer.dataStructures.Keko;
 import shortest_path_visualizer.utils.MathFunctions;
-import shortest_path_visualizer.utils.NeighbourFinder;
 import shortest_path_visualizer.utils.Node;
 
 public class JPS {
