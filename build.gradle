@@ -47,7 +47,7 @@ jacocoTestReport {
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.collect{
             fileTree(dir: it, excludes: ['**/Main.class',
-            'shortest_path_visualizer/ui'])
+            'shortest_path_visualizer/ui', "shortest_path_visualizer/performanceTesting"])
         }))
     }
 }

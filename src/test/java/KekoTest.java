@@ -47,4 +47,18 @@ public class KekoTest {
     assertTrue(n.getEtaisyys() == 2);
   }
 
+  @Test
+  public void kekoChangesRootWhenNodeIsPolled() {
+    Node n1 = new Node(1, 2, 2);
+    n1.setEtaisyys(1);
+    Node n2 = new Node(2, 2, 2);
+    n2.setEtaisyys(10);
+    Node n3 = new Node(3, 3,3);
+    n3.setEtaisyys(5);
+    keko.addNode(n1);
+    keko.addNode(n2);
+    keko.addNode(n3);
+    keko.pollNode();
+    assertTrue(keko.pollNode().getTunnus() == 3);
+  }
 }
