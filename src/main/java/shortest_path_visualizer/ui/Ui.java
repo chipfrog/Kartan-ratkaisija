@@ -263,7 +263,8 @@ public class Ui extends Application {
   public void solveMapUsingJPS() {
     generateCharArray();
     if (mapHasStartAndGoal()) {
-      this.jps = new JPS(mapArray);
+      this.jps = new JPS();
+      jps.setMap(mapArray);
       jps.runJPS();
       if (jps.getGoalNode() != null) {
         distToGoal.setText("Distance: " + jps.getGoalNode().getG_Matka());
@@ -393,12 +394,12 @@ public class Ui extends Application {
 
   @Override
   public void start(Stage primaryStage) throws Exception {
-    createGrid(15);
+    createGrid(20);
     /*MapReader mapReader = new MapReader(new MapReaderIO());
     mapReader.createMatrix(new File("src/main/resources/Berlin_0_256.txt"));
     char[][] kartta = mapReader.getMapArray();
-    kartta[79][52] = 'S';
-    kartta[242][238] = 'G';
+    kartta[255][32] = 'S';
+    kartta[6][243] = 'G';
     preMadeMap(kartta, 4);*/
 
     final ToggleGroup group = new ToggleGroup();
