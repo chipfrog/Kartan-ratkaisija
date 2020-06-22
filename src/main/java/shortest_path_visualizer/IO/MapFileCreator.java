@@ -8,10 +8,17 @@ import java.io.IOException;
 public class MapFileCreator {
   private final IO io;
 
+  /** Luokka, jolla tallennetaan UI:ssa piirretty kartta tiedostoksi
+   * @param io rajapinta io-toiminnoille
+   */
   public MapFileCreator(IO io) {
     this.io = io;
   }
 
+  /** Tallentaa luodun kartan tiedostoksi
+   * @param kartta kartta char-matriisina
+   * @param fileName luotavan tiedoston nimi
+   */
   public void WriteMapToFile(char[][] kartta, String fileName) {
     String dir = "src/main/resources";
     try {

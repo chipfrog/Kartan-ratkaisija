@@ -5,6 +5,9 @@ import shortest_path_visualizer.dataStructures.Keko;
 import shortest_path_visualizer.utils.MathFunctions;
 import shortest_path_visualizer.utils.Node;
 
+/**
+ * Luokka Jump Point Search -algoritmille
+ */
 public class JPS {
   private char[][] kartta;
   private Node[][] solmumatriisi;
@@ -19,6 +22,9 @@ public class JPS {
 
   }
 
+  /** Asettaa algoritmille tarkasteltavan kartan ja alustaa tarvittavat luokat ja muuttujat
+   * @param kartta tutkittava char-muotoinen kartta
+   */
   public void setMap(char[][] kartta) {
     this.kartta = kartta;
     this.solmumatriisi = new Node[kartta.length][kartta[0].length];
@@ -29,6 +35,9 @@ public class JPS {
     initSolmumatriisi();
   }
 
+  /**
+   * Suorittaa JPS-algoritmin
+   */
   public void runJPS() {
     int x = startingNode.getX();
     int y = startingNode.getY();
@@ -58,7 +67,6 @@ public class JPS {
         //System.out.println("Maali löytyi!");
         break;
       }
-      // Tämä voi olla ongelmallinen ehto!
       if (current.getDirH() != 0 && current.getDirV() != 0) {
         diagonalScan(current);
       } else if (current.getDirH() != 0 && current.getDirV() == 0) {
@@ -73,6 +81,10 @@ public class JPS {
       //System.out.println("Visited nodes: " + visitedNodes.size());
     }
   }
+
+  /** Palauttaa vieraillut solmut
+   * @return vieraillut solmut DynamicArray-taulukkona
+   */
   public DynamicArray getVisitedNodes() {
     return this.visitedNodes;
   }
@@ -81,6 +93,10 @@ public class JPS {
     return this.goalNode;
   }
 
+  /**
+   * Alustaa solmumatriisin. Luo jokaiselle char-muotoisen karttamatriisin solulle Node-olion ja asettaa sen alkuetäisyyksiksi "äärettömyyden".
+   * Hakee myös kartasta lähtö- ja maalisolmut ja tallentaa nämä muuttujiin startingNode ja goalNode talteen.
+   */
   public void initSolmumatriisi() {
     int solmutunnus = 0;
     for (int i = 0; i < kartta.length; i++) {
@@ -104,6 +120,10 @@ public class JPS {
     }
   }
 
+  /** Alkaa tutkia naapurisolmuja x-akselilla. Parametrina annettavasta solmun vanhemmasta saadaan tarvittavat koordinaatti- ja suuntatiedot.
+   * Jos vanhemman dirH on esimerkiksi -1, lähdetään tutkimaan viereisiä solmuja x-akselilla vasempaan suuntaan. Metodi hakee hyppypisteitä.
+   * @param parent Solmun vanhempi
+   */
   public void horizontalScan(Node parent) {
     int x = parent.getX();
     int y = parent.getY();
@@ -159,6 +179,9 @@ public class JPS {
     }
   }
 
+  /** Sama idea kuin metodissa horizontalScan, mutta nyt haetaan hyppypisteitä y-akselilta.
+   * @param parent Solmun vanhempi
+   */
   public void verticalScan(Node parent) {
     int x = parent.getX();
     int y = parent.getY();
@@ -213,6 +236,10 @@ public class JPS {
     }
   }
 
+  /** Hyppypisteiden hakeminen vinottain. Tähän tarvitaan sekä dirH, että dirV-arvot, eli tutkittavat suunnat x- ja y-akselilla.
+   * Jokaista yhtä diagonaalista askelta kohti suoritetaan horizontalScan ja verticalScan.
+   * @param parent Solmun vanhempi
+   */
   public void diagonalScan(Node parent) {
     int x = parent.getX();
     int y = parent.getY();
@@ -273,6 +300,11 @@ public class JPS {
     }
   }
 
+  /** Heuristiikka, joka laskee arvioidun etäisyyden tutkittavan solmun ja maalisolmun välille.
+   * @param n1 Ensimmäinen solmu
+   * @param n2 Toinen solmu
+   * @return Arvioitu etäisyys solmusta n1 solmuun n2
+   */
   public double diagonalDist(Node n1, Node n2) {
     double dx = math.getAbs(n1.getX() - n2.getX());
     double dy = math.getAbs(n1.getY() - n2.getY());
