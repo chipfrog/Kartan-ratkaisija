@@ -22,6 +22,9 @@ public class PerformanceTest {
   private double vastausJ;
   private int kierroksia;
 
+  /** Luokka algoritmien tehokkuustestaukseen
+   * @param kierroksia montako kierrosta kukin skenaario suoritetaan
+   */
   public PerformanceTest(int kierroksia) {
     this.kierroksia = kierroksia;
     this.io = new MapReaderIO();
@@ -34,6 +37,12 @@ public class PerformanceTest {
     return mapReader.getMapArray();
   }*/
 
+  /** Testaa dijkstran algoritmia. Suoritta saman reitinhaun muuttujassa "kierroksia" annetun lukumäärän ja tallentaa kunkin ajon keston taulukkoon.
+   * @param file Karttatiedosto
+   * @param start aloitussolmu
+   * @param goal maalisolmu
+   * @throws FileNotFoundException
+   */
   public void testDijkstra(File file, Node start, Node goal) throws FileNotFoundException {
     mapReader.createMatrix(file);
     this.map = mapReader.getMapArray();
@@ -53,6 +62,12 @@ public class PerformanceTest {
     }
   }
 
+  /** Testaa A*- algoritmia. Suoritta saman reitinhaun muuttujassa "kierroksia" annetun lukumäärän ja tallentaa kunkin ajon keston taulukkoon.
+   * @param file karttatiedosto
+   * @param start lähtösolmu
+   * @param goal maalisolmu
+   * @throws FileNotFoundException
+   */
   public void testAStar(File file, Node start, Node goal) throws FileNotFoundException {
     mapReader.createMatrix(file);
     this.map = mapReader.getMapArray();
@@ -72,6 +87,12 @@ public class PerformanceTest {
     }
   }
 
+  /** Testaa JPS-algoritmia. Suoritta saman reitinhaun muuttujassa "kierroksia" annetun lukumäärän ja tallentaa kunkin ajon keston taulukkoon.
+   * @param file karttatiedosto
+   * @param start aloitussolmu
+   * @param goal maalisolmu
+   * @throws FileNotFoundException
+   */
   public void testJPS(File file, Node start, Node goal) throws FileNotFoundException {
     mapReader.createMatrix(file);
     this.map = mapReader.getMapArray();
@@ -93,6 +114,9 @@ public class PerformanceTest {
 
   }
 
+  /** Laskee suoritettujen ajojen keston keskiarvon ja muuntaa sen millisekuneiksi.
+   * @return
+   */
   public double getAverage() {
     long totalTime = 0;
     long divider = 0;
@@ -103,18 +127,23 @@ public class PerformanceTest {
     return totalTime/1000000.0/divider;
   }
 
-  public boolean samaVastaus() {
-    return vastausA == vastausD;
-  }
-
+  /** Lyhimmän reitin pituus A*:n mukaan
+   * @return reitin pituus
+   */
   public double getVastausA() {
     return this.vastausA;
   }
 
+  /** Lyhimmän reitin pituus Dijkstran algoritmin mukaan
+   * @return reitin pituus
+   */
   public double getVastausD() {
     return this.vastausD;
   }
 
+  /** Lyhimmän reitin pituus JPS:n mukaan
+   * @return reitin pituus
+   */
   public double getVastausJ() {
     return this.vastausJ;
   }

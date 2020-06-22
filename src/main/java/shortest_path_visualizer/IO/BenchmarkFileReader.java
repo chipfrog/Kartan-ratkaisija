@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import shortest_path_visualizer.utils.Node;
 
+/**
+ * Luokka scen-tyyppisten tiedostojen lukemiseen.
+ */
 public class BenchmarkFileReader {
   private final IO io;
   private double[] optimalPath;
@@ -12,6 +15,11 @@ public class BenchmarkFileReader {
     this.io = io;
   }
 
+  /** Käy läpi scen-tiedoston ja tallentaa matriisiin kunkin skenaarion lähtö- ja maalipisteen, sekä taulukkoon lyhimmän reitin pituuden.
+   * @param file scen-tiedosto
+   * @return matriisi, jossa kunkin skenaarion aloitus- ja maalipiste.
+   * @throws FileNotFoundException virheilmoitus, jos tiedostoa ei löydy
+   */
   public Node[][] getScenarioCoordinates(File file) throws FileNotFoundException {
     io.setFile(file);
     int j = -1;
@@ -40,6 +48,9 @@ public class BenchmarkFileReader {
     return coordinates;
   }
 
+  /** Palauttaa taulukon lyhimmistä reiteistä
+   * @return taulukko lyhimmistä reiteistä
+   */
   public double[] getOptimalPath() {
     return this.optimalPath;
   }

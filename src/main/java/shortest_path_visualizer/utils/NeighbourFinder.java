@@ -5,6 +5,10 @@ public class NeighbourFinder {
   private Node[][] solmuMatriisi;
   private int iNaapurilista;
 
+  /** Luokka, jolla haetaan tarkasteltavalle solmulle sen naapurisolmut, eli solmut, joihin kyseisestä solmusta pääsee.
+   * @param karttamatriisi char-muotoinen kartta, tästä nähdään voiko solmuun kulkea
+   * @param solmuMatriisi Node-olioista muodostuva matriisi. Kulloinkin naapurisolmuksi lisättävä Node-olio haetaan tästä matriisista.
+   */
   public NeighbourFinder(char[][] karttamatriisi, Node[][] solmuMatriisi) {
     this.karttamatriisi = karttamatriisi;
     this.solmuMatriisi = solmuMatriisi;
@@ -103,6 +107,7 @@ public class NeighbourFinder {
    * @param currentX solmun sarake matriisissa
    * @param currentY solmun rivi matriisissa
    * @param naapurit lista, johon naapurisolmut lisätään
+   * @param indeksi kertoo mihin kohtaan naapuritaulukkoa uusi naapurisolmu ollaan lisäämässä
    */
 
   private void checkSouth(int currentX, int currentY, Node[] naapurit, int indeksi) {
@@ -118,6 +123,7 @@ public class NeighbourFinder {
    * @param currentX solmun sarake matriisissa
    * @param currentY solmun rivi matriisissa
    * @param naapurit lista, johon naapurisolmut lisätään
+   * @param indeksi kertoo mihin kohtaan naapuritaulukkoa uusi naapurisolmu ollaan lisäämässä
    */
 
   private void checkNorth(int currentX, int currentY, Node[] naapurit, int indeksi) {
@@ -127,6 +133,12 @@ public class NeighbourFinder {
     }
   }
 
+  /** Tarkistaa onko naapurisolmuja koilisessa
+   * @param currentX solmun sarake matriisissa
+   * @param currentY solmun rivi matriisissa
+   * @param naapurit lista, johon naapurisolmut lisätään
+   * @param indeksi kertoo mihin kohtaan naapuritaulukkoa uusi naapurisolmu ollaan lisäämässä
+   */
   private void checkNorthEast(int currentX, int currentY, Node[] naapurit, int indeksi) {
     if (karttamatriisi[currentY - 1][currentX + 1] != '@') {
     //&& (karttamatriisi[currentY - 1][currentX] != '@' && karttamatriisi[currentY][currentX + 1] != '@')) {
@@ -135,6 +147,12 @@ public class NeighbourFinder {
     }
   }
 
+  /** Tarkistaa onko naapurisolmuja luoteessa
+   * @param currentX solmun sarake matriisissa
+   * @param currentY solmun rivi matriisissa
+   * @param naapurit lista, johon naapurisolmut lisätään
+   * @param indeksi kertoo mihin kohtaan naapuritaulukkoa uusi naapurisolmu ollaan lisäämässä
+   */
   private void checkNorthWest(int currentX, int currentY, Node[] naapurit, int indeksi) {
     if (karttamatriisi[currentY - 1][currentX - 1] != '@') {
     //&& (karttamatriisi[currentY - 1][currentX] != '@' && karttamatriisi[currentY][currentX - 1] != '@')) {
@@ -149,6 +167,7 @@ public class NeighbourFinder {
    * @param currentX solmun sarake matriisissa
    * @param currentY solmun rivi matriisissa
    * @param naapurit lista, johon naapurisolmut lisätään
+   * @param indeksi kertoo mihin kohtaan naapuritaulukkoa uusi naapurisolmu ollaan lisäämässä
    */
 
   private void checkEast(int currentX, int currentY, Node[] naapurit, int indeksi) {
@@ -158,6 +177,12 @@ public class NeighbourFinder {
     }
   }
 
+  /** Tarkistaa onko naapurisolmuja kaakossa
+   * @param currentX solmun sarake matriisissa
+   * @param currentY solmun rivi matriisissa
+   * @param naapurit lista, johon naapurisolmut lisätään
+   * @param indeksi kertoo mihin kohtaan naapuritaulukkoa uusi naapurisolmu ollaan lisäämässä
+   */
   private void checkSouthEast(int currentX, int currentY, Node[] naapurit, int indeksi) {
     if (karttamatriisi[currentY + 1][currentX + 1] != '@') {
     //&& (karttamatriisi[currentY + 1][currentX] != '@' && karttamatriisi[currentY][currentX + 1] != '@')) {
@@ -172,6 +197,7 @@ public class NeighbourFinder {
    * @param currentX solmun sarake matriisissa
    * @param currentY solmun rivi matriisissa
    * @param naapurit lista, johon naapurisolmut lisätään
+   * @param indeksi kertoo mihin kohtaan naapuritaulukkoa uusi naapurisolmu ollaan lisäämässä
    */
 
   private void checkWest(int currentX, int currentY, Node[] naapurit, int indeksi) {
@@ -181,6 +207,12 @@ public class NeighbourFinder {
     }
   }
 
+  /** Tarkistaa onko naapurisolmuja lounaassa
+   * @param currentX solmun sarake matriisissa
+   * @param currentY solmun rivi matriisissa
+   * @param naapurit lista, johon naapurisolmut lisätään
+   * @param indeksi kertoo mihin kohtaan naapuritaulukkoa uusi naapurisolmu ollaan lisäämässä
+   */
   private void checkSouthWest(int currentX, int currentY, Node[] naapurit, int indeksi) {
     if (karttamatriisi[currentY + 1][currentX - 1] != '@') { //&&
         //(karttamatriisi[currentY + 1][currentX] != '@' && karttamatriisi[currentY][currentX - 1] != '@')) {

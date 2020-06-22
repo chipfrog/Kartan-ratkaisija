@@ -2,6 +2,9 @@ package shortest_path_visualizer.dataStructures;
 
 import shortest_path_visualizer.utils.Node;
 
+/**
+ * Kokoaan dynaamisesti kasvattava taulukko.
+ */
 public class DynamicArray {
   private Node[] array;
   private int index;
@@ -13,6 +16,9 @@ public class DynamicArray {
     this.size = 10;
   }
 
+  /** Lisää uuden Noden taulukkoon ja tuplaa taulukon koon, jos lisäyksen jälkeen taulukko on täysi.
+   * @param node Taulukkoon lisättävä Node
+   */
   public void add(Node node) {
     if (index == size) {
       increaseSize();
@@ -27,10 +33,17 @@ public class DynamicArray {
     }
   }
 
+  /** Palauttaa taulukon nykyisen koon. Koko = viimeksi lisätyn Noden indeksi + 1
+   * @return taulukon koko
+   */
   public int size() {
-    return this.index;
+    return this.index + 1;
   }
 
+  /** Hakee taulukosta Noden parametrina annetulla indeksillä.
+   * @param i Haettavan Noden indeksi
+   * @return taulukossa indeksillä i oleva Node tai null
+   */
   public Node get(int i) {
     if (i <= index) {
       return array[i];
@@ -38,6 +51,9 @@ public class DynamicArray {
     return null;
   }
 
+  /**
+   * Tuplaa taulukon koon.
+   */
   public void increaseSize() {
     Node[] temp = null;
     temp = new Node[size * 2];

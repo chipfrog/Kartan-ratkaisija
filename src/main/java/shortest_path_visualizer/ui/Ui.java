@@ -355,6 +355,7 @@ public class Ui extends Application {
    *
    * @param node Väritettävä solmu
    */
+
   public void paintSquare(Node node) {
     if (!node.isGoal() && !node.isStart()) {
       rectChar[node.getY()][node.getX()].setFill(Color.AQUA);

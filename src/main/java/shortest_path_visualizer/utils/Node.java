@@ -1,5 +1,9 @@
 package shortest_path_visualizer.utils;
 
+/**
+ * Luokka solmioliolle. Olio sisältää tiedon mm. sijainnista (x- ja y-koordinaatit), siitä onko solmussa vierailtu ja algoritmista riippuen erilaisia etäisyyksiä. Esim
+ * arvioitu etäisyys maalisolmuun ja etäisyys lähtösolmusta.
+ */
 public class Node {
   private int tunnus;
   private double etaisyys;
@@ -13,6 +17,11 @@ public class Node {
   private int dirH;
   private int dirV;
 
+  /** Solmuolion ensimmäinen konstruktori
+   * @param tunnus solmun uniikki tunnus
+   * @param xCoor solmun x-koordinaatti
+   * @param yCoor solmun y-koordinaatti
+   */
   public Node(int tunnus, int xCoor, int yCoor) {
     this.tunnus = tunnus;
     this.vierailtu = false;
@@ -22,6 +31,13 @@ public class Node {
     this.y = yCoor;
   }
 
+  /** Solmuolion toinen konstruktori, käytetään JPS-algoritmin kanssa
+   * @param x solmun x-koordinaatti
+   * @param y solmun y-koordinaatti
+   * @param dirH solmusta käsin tutkittava suunta x-akselilla, arvona 0, 1 tai -1
+   * @param dirV solmusta käsin tutkittava suunta y-akselilla, arvona 0, 1, tai -1
+   * @param distance etäisyys lähtösolmusta kyseiseen solmuun
+   */
   public Node(int x, int y, int dirH, int dirV, double distance) {
     this.x = x;
     this.y = y;
@@ -54,10 +70,16 @@ public class Node {
     return parent;
   }
 
+  /** Asettaa solmun g-matkan, eli etäisyyden lähtösolmusta kyseiseen solmuun
+   * @param g etäisyys lähtösolmusta
+   */
   public void setG_Matka(double g) {
     this.g_Matka = g;
   }
 
+  /** Palauttaa g-matkan
+   * @return g-matka; etäisyys lähtösolmusta kyseiseen solmuun
+   */
   public double getG_Matka() {
     return this.g_Matka;
   }
@@ -98,6 +120,9 @@ public class Node {
     return this.tunnus;
   }
 
+  /** Dijkst
+   * @param uusiEtaisyys
+   */
   public void setEtaisyys(double uusiEtaisyys) {
     this.etaisyys = uusiEtaisyys;
   }
