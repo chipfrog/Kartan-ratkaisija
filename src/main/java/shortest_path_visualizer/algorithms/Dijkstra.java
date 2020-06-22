@@ -98,6 +98,10 @@ public class Dijkstra {
     while (!currentNode.isStart()) {
       Node naapuri = pieninNaapuri(currentNode);
       currentNode = naapuri;
+      if (currentNode.getEtaisyys() == 1) {
+        karttamatriisi[currentNode.getY()][currentNode.getX()] = 'X';
+        break;
+      }
       if (!naapuri.isStart()) {
         karttamatriisi[currentNode.getY()][currentNode.getX()] = 'X';
       }

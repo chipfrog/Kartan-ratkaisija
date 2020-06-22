@@ -26,6 +26,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.w3c.dom.css.Rect;
@@ -58,6 +62,7 @@ public class Ui extends Application {
   private int nodeToPaint;
   private Label numOfVisitedNodes;
   private Label distToGoal;
+  private Text errorMessage;
   private boolean runClicked;
   private int animationSpeed;
   private MapFileCreator mapFileCreator;
@@ -76,6 +81,7 @@ public class Ui extends Application {
     this.nodeToPaint = 0;
     this.numOfVisitedNodes = new Label("Nodes: " + 0);
     this.distToGoal = new Label("Distance: " + 0);
+    this.errorMessage = new Text();
     this.runClicked = false;
     this.animationSpeed = 5;
     this.mapFileCreator = new MapFileCreator(new MapReaderIO());
@@ -253,10 +259,12 @@ public class Ui extends Application {
         DynamicArray visitedNodes = dijkstra.getVisitedOrder();
         animateDijkstra(visitedNodes);
       } else {
-        System.out.println("Goal node unreachable!");
+        errorMessage.setText("Goal node unreachable!");
+        runClicked = false;
       }
     } else {
-      System.out.println("You must add start and goal!");
+      errorMessage.setText("You must add start and goal!");
+      runClicked = false;
     }
   }
 
@@ -271,10 +279,12 @@ public class Ui extends Application {
         DynamicArray visitedNodes = jps.getVisitedNodes();
         animateJPS(visitedNodes);
       } else {
-        System.out.println("Goal node unreachable!");
+        errorMessage.setText("Goal node unreachable!");
+        runClicked = false;
       }
     } else {
-      System.out.println("You must add start and goal!");
+      errorMessage.setText("You must add start and goal!");
+      runClicked = false;
     }
   }
 
@@ -289,10 +299,12 @@ public class Ui extends Application {
         DynamicArray visitedNodes = aStar.getVisitedOrder();
         animateAStar(visitedNodes);
       } else {
-        System.out.println("Goal node unreachable!");
+        errorMessage.setText("Goal node unreachable!");
+        runClicked = false;
       }
     } else {
-      System.out.println("You must add start and goal!");
+      errorMessage.setText("You must add start and goal!");
+      runClicked = false;
     }
   }
 
@@ -305,9 +317,12 @@ public class Ui extends Application {
     Timeline timeline = new Timeline(new KeyFrame(
         Duration.millis(animationSpeed),
         event -> {
-          paintSquare(visitedNodes.get(nodeToPaint));
-          numOfVisitedNodes.setText("Nodes: " + nodeToPaint);
-          nodeToPaint++;
+          Node node = visitedNodes.get(nodeToPaint);
+          if (node != null) {
+            paintSquare(visitedNodes.get(nodeToPaint));
+            numOfVisitedNodes.setText("Nodes: " + nodeToPaint + 1);
+            nodeToPaint++;
+          }
         }
     ));
     timeline.setCycleCount(visitedNodes.size() - 1);
@@ -323,9 +338,12 @@ public class Ui extends Application {
       Timeline timeline = new Timeline(new KeyFrame(
           Duration.millis(animationSpeed),
           event -> {
-            paintSquare(visitedNodes.get(nodeToPaint));
-            numOfVisitedNodes.setText("Nodes: " + nodeToPaint);
-            nodeToPaint++;
+            Node node = visitedNodes.get(nodeToPaint);
+            if (node != null) {
+              paintSquare(visitedNodes.get(nodeToPaint));
+              numOfVisitedNodes.setText("Nodes: " + nodeToPaint + 1);
+              nodeToPaint++;
+            }
           }
       ));
       timeline.setCycleCount(visitedNodes.size() - 1);
@@ -337,9 +355,12 @@ public class Ui extends Application {
     Timeline timeline = new Timeline(new KeyFrame(
         Duration.millis(animationSpeed),
         event -> {
-          paintSquare(visitedNodes.get(nodeToPaint));
-          numOfVisitedNodes.setText("Nodes: " + nodeToPaint);
-          nodeToPaint++;
+          Node node = visitedNodes.get(nodeToPaint);
+          if (node != null) {
+            paintSquare(visitedNodes.get(nodeToPaint));
+            numOfVisitedNodes.setText("Nodes: " + nodeToPaint + 1);
+            nodeToPaint++;
+          }
         }
     ));
     timeline.setCycleCount(visitedNodes.size() - 1);
@@ -395,7 +416,7 @@ public class Ui extends Application {
 
   @Override
   public void start(Stage primaryStage) throws Exception {
-    createGrid(20);
+    createGrid(15);
     /*MapReader mapReader = new MapReader(new MapReaderIO());
     mapReader.createMatrix(new File("src/main/resources/Berlin_0_256.txt"));
     char[][] kartta = mapReader.getMapArray();
@@ -422,9 +443,10 @@ public class Ui extends Application {
 
     Button run = new Button("Run");
     run.setOnAction(e -> {
+      errorMessage.setText("");
       if (!runClicked) {
         if (comboBox.getValue() == null) {
-          System.out.println("Valitse algoritmi!");
+          errorMessage.setText("Valitse algoritmi!");
         }
         else if (comboBox.getValue().equals("Dijkstra")) {
           runClicked = true;
@@ -444,12 +466,14 @@ public class Ui extends Application {
 
     Button tryAgain = new Button("Erase solution");
     tryAgain.setOnAction(e -> {
+      errorMessage.setText("");
       resetSolution();
       runClicked = false;
     });
 
     Button clear = new Button("Clear");
     clear.setOnAction(e -> {
+      errorMessage.setText("");
       try {
         runClicked = false;
         resetMap(primaryStage);
@@ -472,12 +496,12 @@ public class Ui extends Application {
     mapSaving.getChildren().addAll(saveMap, nameField, save);
     mapSaving.setSpacing(10);
 
-    Label speedSlider = new Label("Animation speed: ");
+    Label speedSlider = new Label("Animation delay: ");
 
     Slider slider = new Slider();
     slider.setMin(1);
     slider.setMax(50);
-    slider.setValue(5);
+    slider.setValue(1);
     slider.setBlockIncrement(5);
     slider.setMinorTickCount(5);
     slider.setShowTickLabels(true);
@@ -532,12 +556,21 @@ public class Ui extends Application {
     controls.setSpacing(40);
     controls.getChildren().addAll(drawChoice, configurations, otherOptions, mapSaving, runTest, avgA, distA, avgD, distD);
 
+    VBox layout = new VBox();
+    layout.setSpacing(20);
+    layout.setPadding(new Insets(20));
+
     HBox hB = new HBox(20);
     hB.getChildren().addAll(controls, pane);
     hB.setSpacing(30);
     hB.setPadding(new Insets(20));
 
-    Scene scene = new Scene(hB);
+    errorMessage.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
+    errorMessage.setFill(Color.RED);
+
+    layout.getChildren().addAll(hB, errorMessage);
+
+    Scene scene = new Scene(layout);
     primaryStage.setScene(scene);
     primaryStage.show();
   }
