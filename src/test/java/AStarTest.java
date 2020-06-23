@@ -47,7 +47,7 @@ public class AStarTest {
     double resultA = a.getEtaisyysMaaliin();
     System.out.println(resultA);
     System.out.println(resultD);
-    assertTrue(resultA == resultD);
+    assertTrue(resultA - resultD < 0.000001);
   }
 
 }
