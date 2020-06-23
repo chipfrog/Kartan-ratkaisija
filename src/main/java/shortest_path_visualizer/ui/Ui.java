@@ -12,6 +12,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
@@ -32,7 +33,6 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.w3c.dom.css.Rect;
 import shortest_path_visualizer.IO.MapFileCreator;
 import shortest_path_visualizer.IO.MapReader;
 import shortest_path_visualizer.algorithms.AStar;
@@ -62,11 +62,14 @@ public class Ui extends Application {
   private int nodeToPaint;
   private Label numOfVisitedNodes;
   private Label distToGoal;
+  private Label runTime;
   private Text errorMessage;
   private boolean runClicked;
   private int animationSpeed;
   private MapFileCreator mapFileCreator;
   private String fileName;
+  private long[] runtimes;
+  private CheckBox noAnimation;
 
 
   public Ui() {
@@ -81,11 +84,15 @@ public class Ui extends Application {
     this.nodeToPaint = 0;
     this.numOfVisitedNodes = new Label("Nodes: " + 0);
     this.distToGoal = new Label("Distance: " + 0);
+    this.runTime = new Label("Time: ");
     this.errorMessage = new Text();
     this.runClicked = false;
     this.animationSpeed = 5;
     this.mapFileCreator = new MapFileCreator(new MapReaderIO());
     this.fileName = "";
+    this.runtimes = new long[101];
+    this.noAnimation = new CheckBox();
+
   }
 
   /**
@@ -245,6 +252,14 @@ public class Ui extends Application {
     return (startAdded && goalAdded);
   }
 
+  public double averageRunTime() {
+    long totalTime = 0;
+    for (int i = 1; i < runtimes.length; i ++) {
+      totalTime += runtimes[i];
+    }
+    return totalTime/(runtimes.length - 1.0)/1000000;
+  }
+
   /**
    * Käyttää dijkstran algoritmia ja suorittaa ruudukon värittämismetodit.
    */
@@ -253,11 +268,20 @@ public class Ui extends Application {
     if (mapHasStartAndGoal()) {
       this.dijkstra = new Dijkstra(new MapReaderIO());
       dijkstra.setMap(mapArray);
+      long t1 = System.nanoTime();
       dijkstra.runDijkstra();
+      long t2 = System.nanoTime();
+
       if (dijkstra.getGoalNode() != null) {
         distToGoal.setText("Distance: " + dijkstra.getEtaisyysMaaliin());
+        runTime.setText("Time: " + (t2 - t1)/1000000.0 + "ms");
         DynamicArray visitedNodes = dijkstra.getVisitedOrder();
-        animateDijkstra(visitedNodes);
+        if (noAnimation.isSelected()) {
+          drawVisitedNodes(visitedNodes);
+          drawShortestPath(dijkstra.getSolvedMap());
+        } else {
+          animateDijkstra(visitedNodes);
+        }
       } else {
         errorMessage.setText("Goal node unreachable!");
         runClicked = false;
@@ -273,11 +297,20 @@ public class Ui extends Application {
     if (mapHasStartAndGoal()) {
       this.jps = new JPS();
       jps.setMap(mapArray);
+
+      long t1 = System.nanoTime();
       jps.runJPS();
+      long t2 = System.nanoTime();
+
       if (jps.getGoalNode() != null) {
         distToGoal.setText("Distance: " + jps.getGoalNode().getG_Matka());
+        runTime.setText("Time: " + (t2 - t1)/1000000.0  + "ms");
         DynamicArray visitedNodes = jps.getVisitedNodes();
-        animateJPS(visitedNodes);
+        if (noAnimation.isSelected()) {
+          drawVisitedNodes(visitedNodes);
+        } else {
+          animateJPS(visitedNodes);
+        }
       } else {
         errorMessage.setText("Goal node unreachable!");
         runClicked = false;
@@ -293,11 +326,21 @@ public class Ui extends Application {
     if (mapHasStartAndGoal()) {
       this.aStar = new AStar(new MapReaderIO());
       aStar.setMap(mapArray);
+      long t1 = System.nanoTime();
       aStar.runAStar();
+      long t2 = System.nanoTime();
+
       if (aStar.goalWasFound()) {
         distToGoal.setText("Dist: " + aStar.getEtaisyysMaaliin());
+        runTime.setText("Time: " + (t2 - t1)/1000000.0  + "ms");
         DynamicArray visitedNodes = aStar.getVisitedOrder();
-        animateAStar(visitedNodes);
+
+        if (noAnimation.isSelected()) {
+          drawVisitedNodes(visitedNodes);
+          drawShortestPath(aStar.getReitti());
+        } else {
+          animateAStar(visitedNodes);
+        }
       } else {
         errorMessage.setText("Goal node unreachable!");
         runClicked = false;
@@ -313,6 +356,7 @@ public class Ui extends Application {
    *
    * @param visitedNodes Vieraillut solmut.
    */
+
   public void animateAStar(DynamicArray visitedNodes) {
     Timeline timeline = new Timeline(new KeyFrame(
         Duration.millis(animationSpeed),
@@ -396,6 +440,17 @@ public class Ui extends Application {
         }
       }
     }
+  }
+
+  public void drawVisitedNodes(DynamicArray visitedNodes) {
+    for (int i = 0; i < visitedNodes.size(); i ++) {
+      Node node = visitedNodes.get(i);
+      if (node != null) {
+        paintSquare(node);
+        nodeToPaint ++;
+      }
+    }
+    numOfVisitedNodes.setText("Nodes: " + nodeToPaint + 1);
   }
 
   private void resetSolution() {
@@ -516,6 +571,9 @@ public class Ui extends Application {
       }
     });
 
+    noAnimation.setText("No animation");
+    noAnimation.setSelected(false);
+
     VBox drawChoice = new VBox();
     Label draw = new Label("Draw:");
     drawChoice.getChildren().addAll(draw, startPoint, goal, obstacle);
@@ -523,11 +581,11 @@ public class Ui extends Application {
 
     VBox configurations = new VBox();
     Label algo = new Label("Algorithm:");
-    configurations.getChildren().addAll(algo, comboBox, speedSlider, slider);
+    configurations.getChildren().addAll(algo, comboBox, speedSlider, slider, noAnimation);
     configurations.setSpacing(10);
 
     VBox otherOptions = new VBox();
-    otherOptions.getChildren().addAll(run, tryAgain, clear, numOfVisitedNodes, distToGoal);
+    otherOptions.getChildren().addAll(run, tryAgain, clear, numOfVisitedNodes, distToGoal, runTime);
     otherOptions.setSpacing(10);
 
     Label avgD = new Label();

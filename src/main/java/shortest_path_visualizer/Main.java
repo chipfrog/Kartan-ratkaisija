@@ -20,7 +20,7 @@ public class Main {
     double totalTimeA = 0;
     double totalTimeJ = 0;
 
-    PerformanceTest test = new PerformanceTest(20);
+    PerformanceTest test = new PerformanceTest(5);
     for (int i = 0; i < startAndGoal.length; i++) {
 
       test.testDijkstra(new File("src/main/resources/Berlin_0_256.txt"), startAndGoal[i][0], startAndGoal[i][1]);
