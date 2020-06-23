@@ -364,7 +364,7 @@ public class Ui extends Application {
           Node node = visitedNodes.get(nodeToPaint);
           if (node != null) {
             paintSquare(visitedNodes.get(nodeToPaint));
-            numOfVisitedNodes.setText("Nodes: " + nodeToPaint + 1);
+            numOfVisitedNodes.setText("Nodes: " + (nodeToPaint + 1));
             nodeToPaint++;
           }
         }
@@ -385,7 +385,7 @@ public class Ui extends Application {
             Node node = visitedNodes.get(nodeToPaint);
             if (node != null) {
               paintSquare(visitedNodes.get(nodeToPaint));
-              numOfVisitedNodes.setText("Nodes: " + nodeToPaint + 1);
+              numOfVisitedNodes.setText("Nodes: " + (nodeToPaint + 1));
               nodeToPaint++;
             }
           }
@@ -402,7 +402,7 @@ public class Ui extends Application {
           Node node = visitedNodes.get(nodeToPaint);
           if (node != null) {
             paintSquare(visitedNodes.get(nodeToPaint));
-            numOfVisitedNodes.setText("Nodes: " + nodeToPaint + 1);
+            numOfVisitedNodes.setText("Nodes: " + (nodeToPaint + 1));
             nodeToPaint++;
           }
         }
@@ -450,7 +450,7 @@ public class Ui extends Application {
         nodeToPaint ++;
       }
     }
-    numOfVisitedNodes.setText("Nodes: " + nodeToPaint + 1);
+    numOfVisitedNodes.setText("Nodes: " + nodeToPaint);
   }
 
   private void resetSolution() {
