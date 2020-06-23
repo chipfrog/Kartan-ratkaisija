@@ -254,10 +254,12 @@ public class Ui extends Application {
 
   public double averageRunTime() {
     long totalTime = 0;
+    int divider = 0;
     for (int i = 1; i < runtimes.length; i ++) {
       totalTime += runtimes[i];
+      divider ++;
     }
-    return totalTime/(runtimes.length - 1.0)/1000000;
+    return totalTime/1000000.0/divider;
   }
 
   /**
@@ -267,14 +269,16 @@ public class Ui extends Application {
     generateCharArray();
     if (mapHasStartAndGoal()) {
       this.dijkstra = new Dijkstra(new MapReaderIO());
-      dijkstra.setMap(mapArray);
-      long t1 = System.nanoTime();
-      dijkstra.runDijkstra();
-      long t2 = System.nanoTime();
-
+      for (int i = 0; i < runtimes.length;  i++) {
+        dijkstra.setMap(mapArray);
+        long t1 = System.nanoTime();
+        dijkstra.runDijkstra();
+        long t2 = System.nanoTime();
+        runtimes[i] = t2 - t1;
+      }
       if (dijkstra.getGoalNode() != null) {
         distToGoal.setText("Distance: " + dijkstra.getEtaisyysMaaliin());
-        runTime.setText("Time: " + (t2 - t1)/1000000.0 + "ms");
+        runTime.setText("Time: " + averageRunTime() + "ms");
         DynamicArray visitedNodes = dijkstra.getVisitedOrder();
         if (noAnimation.isSelected()) {
           drawVisitedNodes(visitedNodes);
@@ -296,15 +300,18 @@ public class Ui extends Application {
     generateCharArray();
     if (mapHasStartAndGoal()) {
       this.jps = new JPS();
-      jps.setMap(mapArray);
 
-      long t1 = System.nanoTime();
-      jps.runJPS();
-      long t2 = System.nanoTime();
+      for (int i = 0; i < runtimes.length; i ++) {
+        jps.setMap(mapArray);
+        long t1 = System.nanoTime();
+        jps.runJPS();
+        long t2 = System.nanoTime();
+        runtimes[i] = t2 - t1;
+      }
 
       if (jps.getGoalNode() != null) {
         distToGoal.setText("Distance: " + jps.getGoalNode().getG_Matka());
-        runTime.setText("Time: " + (t2 - t1)/1000000.0  + "ms");
+        runTime.setText("Time: " + averageRunTime() + "ms");
         DynamicArray visitedNodes = jps.getVisitedNodes();
         if (noAnimation.isSelected()) {
           drawVisitedNodes(visitedNodes);
@@ -325,14 +332,18 @@ public class Ui extends Application {
     generateCharArray();
     if (mapHasStartAndGoal()) {
       this.aStar = new AStar(new MapReaderIO());
-      aStar.setMap(mapArray);
-      long t1 = System.nanoTime();
-      aStar.runAStar();
-      long t2 = System.nanoTime();
+
+      for (int i = 0; i < runtimes.length; i ++) {
+        aStar.setMap(mapArray);
+        long t1 = System.nanoTime();
+        aStar.runAStar();
+        long t2 = System.nanoTime();
+        runtimes[i] = t2 - t1;
+      }
 
       if (aStar.goalWasFound()) {
         distToGoal.setText("Dist: " + aStar.getEtaisyysMaaliin());
-        runTime.setText("Time: " + (t2 - t1)/1000000.0  + "ms");
+        runTime.setText("Time: " + averageRunTime() + "ms");
         DynamicArray visitedNodes = aStar.getVisitedOrder();
 
         if (noAnimation.isSelected()) {
