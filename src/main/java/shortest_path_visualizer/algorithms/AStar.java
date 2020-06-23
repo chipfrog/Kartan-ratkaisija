@@ -66,8 +66,10 @@ public class AStar {
         if (naapuri != null) {
           double uusiGMatka = current.getG_Matka() + neighbourDist(current, naapuri);
 
-          if (etaisyys[naapuri.getTunnus()] == Integer.MAX_VALUE || uusiGMatka < naapuri.getG_Matka()) {
-            etaisyys[naapuri.getTunnus()] = uusiGMatka;
+          if (!inClosedList[naapuri.getTunnus()] || uusiGMatka < naapuri.getG_Matka()) {
+          //if (etaisyys[naapuri.getTunnus()] == Integer.MAX_VALUE || uusiGMatka < naapuri.getG_Matka()) {
+            //etaisyys[naapuri.getTunnus()] = uusiGMatka;
+            inClosedList[naapuri.getTunnus()] = true;
             naapuri.setParent(current);
             naapuri.setG_Matka(uusiGMatka);
             double h = diagonalDist(naapuri, goalNode) * 1.001;
@@ -124,6 +126,9 @@ public class AStar {
     double dx = math.getAbs(n1.getX() - n2.getX());
     double dy = math.getAbs(n1.getY() - n2.getY());
     return (dx + dy) + (Math.sqrt(2) - 2) * math.getMin(dx, dy);
+    /*double dMax = Math.max(math.getAbs(n1.getX() - n2.getX()), math.getAbs(n1.getY() - n2.getY()));
+    double dMin = math.getMin(math.getAbs(n1.getX() - n2.getY()), math.getAbs(n1.getY() - n2.getY()))
+    return Math.sqrt(2) + (dMax -dMin);*/
   }
 
   public double neighbourDist(Node n1, Node n2) {

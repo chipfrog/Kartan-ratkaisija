@@ -1,5 +1,6 @@
 package shortest_path_visualizer.algorithms;
 
+import com.sun.security.jgss.GSSUtil;
 import shortest_path_visualizer.dataStructures.DynamicArray;
 import shortest_path_visualizer.dataStructures.Keko;
 import shortest_path_visualizer.utils.MathFunctions;
@@ -57,14 +58,11 @@ public class JPS {
     }
     while (!jumpPoints.isEmpty()) {
       Node current = jumpPoints.pollNode();
-      //System.out.println("X: " + current.getX() + "Y: " + current.getY());
-      //System.out.println("DirH: " + current.getDirH() + ", DirV: " + current.getDirV());
       if (!current.isStart()) {
         visitedNodes.add(current);
       }
 
       if (goalFound) {
-        //System.out.println("Maali löytyi!");
         break;
       }
       if (current.getDirH() != 0 && current.getDirV() != 0) {
@@ -75,11 +73,6 @@ public class JPS {
         verticalScan(current);
       }
     }
-    //System.out.println(visitedNodes.size());
-    if (!goalFound) {
-      //System.out.println("Ei löytynyt");
-      //System.out.println("Visited nodes: " + visitedNodes.size());
-    }
   }
 
   /** Palauttaa vieraillut solmut
@@ -87,6 +80,20 @@ public class JPS {
    */
   public DynamicArray getVisitedNodes() {
     return this.visitedNodes;
+  }
+
+  public boolean goalWasFound() {
+    return this.goalFound;
+  }
+
+  public char[][] getReitti() {
+    Node takaisin = goalNode.getParent();
+    System.out.println("kerran");
+    while (!takaisin.isStart()) {
+      kartta[takaisin.getY()][takaisin.getX()] = 'X';
+      takaisin = takaisin.getParent();
+    }
+    return kartta;
   }
 
   public Node getGoalNode() {
@@ -149,7 +156,7 @@ public class JPS {
 
       if (kartta[y][dx] == 'G') {
         goalFound = true;
-        //System.out.println("Maalietäisyys: " + distance);
+        goalNode.setParent(parent);
         goalNode.setG_Matka(distance);
         break;
       }
@@ -162,6 +169,7 @@ public class JPS {
             //Node node = new Node(x2, y - 1, dirH, -1, distance + Math.sqrt(2));
             node.setEtaisyys(distance + diagonalDist(node, goalNode));
             node.vieraile();
+            node.setParent(parent);
             solmumatriisi[y][dx] = node;
             jumpPoints.addNode(node);
           }
@@ -171,6 +179,7 @@ public class JPS {
           if (kartta[y + 1][dx] == '@' && kartta[y + 1][x2] != '@') {
             node = new Node(dx, y, dirH, 1, distance);
             //Node node = new Node(x2, y + 1, dirH, 1, distance + Math.sqrt(2));
+            node.setParent(parent);
             node.setEtaisyys(distance + diagonalDist(node, goalNode));
             jumpPoints.addNode(node);
           }
@@ -205,7 +214,7 @@ public class JPS {
 
       if (kartta[dy][x] == 'G') {
         goalFound = true;
-        //System.out.println("Maalietäisyys: " + distance);
+        goalNode.setParent(parent);
         goalNode.setG_Matka(distance);
         break;
       }
@@ -217,6 +226,7 @@ public class JPS {
             //Node node = new Node(x - 1, y2, -1, dirV, distance + Math.sqrt(2));
             node.setEtaisyys(distance + diagonalDist(node, goalNode));
             node.vieraile();
+            node.setParent(parent);
             solmumatriisi[dy][x] = node;
             jumpPoints.addNode(node);
           }
@@ -227,6 +237,7 @@ public class JPS {
             //Node node = new Node(x + 1, y2, 1, dirV, distance + Math.sqrt(2));
             node.setEtaisyys(distance + diagonalDist(node, goalNode));
             node.vieraile();
+            node.setParent(parent);
             solmumatriisi[dy][x] = node;
             jumpPoints.addNode(node);
           }
@@ -263,13 +274,15 @@ public class JPS {
       if(kartta[yNext][xNext] == 'G') {
         goalFound = true;
         goalNode.setG_Matka(distance);
-        //System.out.println("Maalietäisyys: " + distance);
+        goalNode.setParent(parent);
         break;
       }
 
       Node newParent = new Node(xNext, yNext, dirH, 0, distance);
+      newParent.setParent(parent);
       horizontalScan(newParent);
       newParent = new Node(xNext, yNext, 0, dirV, distance);
+      newParent.setParent(parent);
       verticalScan(newParent);
 
       /*xNext += dirH;
@@ -283,6 +296,7 @@ public class JPS {
             node = new Node(xNext, yNext, -(dirH), dirV, distance);
             node.setEtaisyys(distance + diagonalDist(node, goalNode));
             node.vieraile();
+            node.setParent(parent);
             solmumatriisi[yNext][xNext] = node;
             jumpPoints.addNode(node);
           }
@@ -292,6 +306,7 @@ public class JPS {
             node = new Node(xNext, yNext, dirH, -(dirV), distance);
             node.setEtaisyys(distance + diagonalDist(node, goalNode));
             node.vieraile();
+            node.setParent(parent);
             solmumatriisi[yNext][xNext] = node;
             jumpPoints.addNode(node);
           }

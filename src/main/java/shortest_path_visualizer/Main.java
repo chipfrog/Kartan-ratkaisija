@@ -26,7 +26,7 @@ public class Main {
       test.testDijkstra(new File("src/main/resources/Berlin_0_256.txt"), startAndGoal[i][0], startAndGoal[i][1]);
       totalTimeD += test.getAverage();
       double d = test.getVastausD();
-     /* if (d - optimalPath[i] > 0.001) {
+      /*if (d - optimalPath[i] > 0.001) {
         System.out.println(i);
         System.out.println(d + " vs. " + optimalPath[i]);
       }*/

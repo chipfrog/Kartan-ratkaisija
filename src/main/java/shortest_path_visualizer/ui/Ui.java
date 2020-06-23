@@ -324,12 +324,13 @@ public class Ui extends Application {
         runtimes[i] = t2 - t1;
       }
 
-      if (jps.getGoalNode() != null) {
+      if (jps.goalWasFound()) {
         distToGoal.setText("Distance: " + jps.getGoalNode().getG_Matka());
         runTime.setText("Time: " + averageRunTime() + "ms");
         DynamicArray visitedNodes = jps.getVisitedNodes();
         if (noAnimation.isSelected()) {
           drawVisitedNodes(visitedNodes);
+          drawShortestPath(jps.getReitti());
         } else {
           animateJPS(visitedNodes);
         }
@@ -418,6 +419,10 @@ public class Ui extends Application {
       ));
       timeline.setCycleCount(visitedNodes.size() - 1);
       timeline.play();
+
+      timeline.setOnFinished(e -> {
+        drawShortestPath(jps.getReitti());
+      });
     }
   }
 
