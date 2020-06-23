@@ -26,6 +26,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
@@ -34,6 +35,7 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.w3c.dom.css.Rect;
 import shortest_path_visualizer.IO.MapFileCreator;
 import shortest_path_visualizer.IO.MapReader;
 import shortest_path_visualizer.algorithms.AStar;
@@ -73,6 +75,7 @@ public class Ui extends Application {
   private CheckBox noAnimation;
   private FileChooser fileChooser;
   private MapReader mapReader;
+  private ArrayList<Line> lines;
 
 
   public Ui() {
@@ -98,6 +101,7 @@ public class Ui extends Application {
     this.fileChooser = new FileChooser();
     fileChooser.setInitialDirectory(new File("src/main/resources/maps"));
     this.mapReader = new MapReader(new MapReaderIO());
+    this.lines = new ArrayList<>();
 
   }
 
@@ -330,7 +334,7 @@ public class Ui extends Application {
         DynamicArray visitedNodes = jps.getVisitedNodes();
         if (noAnimation.isSelected()) {
           drawVisitedNodes(visitedNodes);
-          drawShortestPath(jps.getReitti());
+          drawJPSPath(jps.getReitti());
         } else {
           animateJPS(visitedNodes);
         }
@@ -358,7 +362,7 @@ public class Ui extends Application {
       }
 
       if (aStar.goalWasFound()) {
-        distToGoal.setText("Dist: " + aStar.getEtaisyysMaaliin());
+        distToGoal.setText("Distance: " + aStar.getEtaisyysMaaliin());
         runTime.setText("Time: " + averageRunTime() + "ms");
         DynamicArray visitedNodes = aStar.getVisitedOrder();
 
@@ -421,7 +425,7 @@ public class Ui extends Application {
       timeline.play();
 
       timeline.setOnFinished(e -> {
-        drawShortestPath(jps.getReitti());
+        drawJPSPath(jps.getReitti());
       });
     }
   }
@@ -473,6 +477,27 @@ public class Ui extends Application {
     }
   }
 
+  public void drawJPSPath(ArrayList<Node> jumpPoints) {
+    for (int i = 0; i < jumpPoints.size() - 1; i ++) {
+      Node n1 = jumpPoints.get(i);
+      Node n2 = jumpPoints.get(i + 1);
+
+      Rectangle r1 = rectChar[n1.getY()][n1.getX()];
+      Rectangle r2 = rectChar[n2.getY()][n2.getX()];
+
+      if (!n1.isStart() && !n1.isGoal()) {
+        rectChar[n1.getY()][n1.getX()].setFill(Color.YELLOW);
+      }
+      if (!n2.isStart() && !n2.isGoal()) {
+        rectChar[n2.getY()][n2.getX()].setFill(Color.YELLOW);
+      }
+
+      Line line = new Line(r1.getLayoutX() + r1.getWidth()/2, r1.getLayoutY() + r1.getHeight()/2, r2.getLayoutX() + r2.getWidth()/2, r2.getLayoutY() + r2.getHeight()/2);
+      lines.add(line);
+      pane.getChildren().add(line);
+    }
+  }
+
   public void drawVisitedNodes(DynamicArray visitedNodes) {
     for (int i = 0; i < visitedNodes.size(); i ++) {
       Node node = visitedNodes.get(i);
@@ -491,6 +516,9 @@ public class Ui extends Application {
           rectChar[i][j].setFill(Color.WHITE);
         }
       }
+    }
+    for (Line line : lines) {
+      pane.getChildren().remove(line);
     }
     numOfVisitedNodes.setText("Nodes: " + 0);
     distToGoal.setText("Distance: " + 0);
