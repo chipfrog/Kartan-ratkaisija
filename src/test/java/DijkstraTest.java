@@ -53,7 +53,7 @@ public class DijkstraTest {
   @Test
   public void tracesShortestPathBackToNodeClosestToStartingNode() {
     d.runDijkstra();
-    assertTrue(d.haeReitti().getEtaisyys() == 0);
+    assertTrue(d.haeReitti().getEtaisyys() == 1);
   }
 
   @Test
@@ -68,6 +68,6 @@ public class DijkstraTest {
     d.setMap(initDijkstraWithNewMap(specialCaseMap));
     d.runDijkstra();
     assertTrue(d.getEtaisyysMaaliin() == 10);
-    assertTrue(d.haeReitti().getEtaisyys() == 0);
+    assertTrue(d.haeReitti().getEtaisyys() == 1);
   }
 }
