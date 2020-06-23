@@ -14,7 +14,8 @@ public class AStar {
   private Keko openList;
   private Node[][] verkko;
   private double[] etaisyys;
-  private boolean[][] addedToOpenList;
+  private boolean[] inOpenList;
+  private boolean[] inClosedList;
   private Node startingNode;
   private Node goalNode;
   private double etaisyysMaaliin;
@@ -31,7 +32,8 @@ public class AStar {
   public void setMap(char[][] kartta) {
     this.karttamatriisi = kartta;
     this.solmumatriisi = new Node[karttamatriisi.length][karttamatriisi[0].length];
-    this.addedToOpenList = new boolean[karttamatriisi.length][karttamatriisi[0].length];
+    this.inOpenList = new boolean[karttamatriisi.length * karttamatriisi[0].length];
+    this.inClosedList = new boolean[karttamatriisi.length * karttamatriisi[0].length];
     this.etaisyysMaaliin = Integer.MAX_VALUE;
     this.goalFound = false;
     this.finder = new NeighbourFinder(karttamatriisi, solmumatriisi);
@@ -68,7 +70,7 @@ public class AStar {
             etaisyys[naapuri.getTunnus()] = uusiGMatka;
             naapuri.setParent(current);
             naapuri.setG_Matka(uusiGMatka);
-            double h = diagonalDist(naapuri, goalNode); //* 1.001;
+            double h = diagonalDist(naapuri, goalNode) * 1.001;
             naapuri.setEtaisyys(uusiGMatka + h);
             openList.addNode(naapuri);
 

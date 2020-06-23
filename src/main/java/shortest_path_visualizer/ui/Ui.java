@@ -73,7 +73,6 @@ public class Ui extends Application {
   private CheckBox noAnimation;
   private FileChooser fileChooser;
   private MapReader mapReader;
-  private char[][] selectedMap;
 
 
   public Ui() {
@@ -506,12 +505,6 @@ public class Ui extends Application {
   public void start(Stage primaryStage) throws Exception {
     resetMapMatrixAndRectangleMatrix();
     createGrid(15);
-    /*MapReader mapReader = new MapReader(new MapReaderIO());
-    mapReader.createMatrix(new File("src/main/resources/Berlin_0_256.txt"));
-    char[][] kartta = mapReader.getMapArray();
-    kartta[255][32] = 'S';
-    kartta[6][243] = 'G';
-    preMadeMap(kartta, 4);*/
 
     final ToggleGroup group = new ToggleGroup();
     RadioButton startPoint = new RadioButton("Start point");
