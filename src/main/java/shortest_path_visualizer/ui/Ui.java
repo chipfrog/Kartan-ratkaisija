@@ -31,6 +31,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import shortest_path_visualizer.IO.MapFileCreator;
@@ -70,6 +71,9 @@ public class Ui extends Application {
   private String fileName;
   private long[] runtimes;
   private CheckBox noAnimation;
+  private FileChooser fileChooser;
+  private MapReader mapReader;
+  private char[][] selectedMap;
 
 
   public Ui() {
@@ -92,6 +96,9 @@ public class Ui extends Application {
     this.fileName = "";
     this.runtimes = new long[101];
     this.noAnimation = new CheckBox();
+    this.fileChooser = new FileChooser();
+    fileChooser.setInitialDirectory(new File("src/main/resources/maps"));
+    this.mapReader = new MapReader(new MapReaderIO());
 
   }
 
@@ -195,6 +202,15 @@ public class Ui extends Application {
         pane.getChildren().add(rectangle);
       }
     }
+  }
+
+  public void resetMapMatrixAndRectangleMatrix() {
+    this.rectChar = new Rectangle[rows][cols];
+    this.mapArray = new char[rows][cols];
+  }
+
+  public void erasePreMadeMap() {
+    this.pane = new Pane();
   }
 
 
@@ -480,8 +496,15 @@ public class Ui extends Application {
   private void runBenchmark() throws FileNotFoundException {
   }
 
+  private void chooseMap(Stage primaryStage) throws FileNotFoundException {
+    File selectedFile = fileChooser.showOpenDialog(primaryStage);
+    mapReader.createMatrix(selectedFile);
+    mapArray = mapReader.getMapArray();
+  }
+
   @Override
   public void start(Stage primaryStage) throws Exception {
+    resetMapMatrixAndRectangleMatrix();
     createGrid(15);
     /*MapReader mapReader = new MapReader(new MapReaderIO());
     mapReader.createMatrix(new File("src/main/resources/Berlin_0_256.txt"));
@@ -542,14 +565,27 @@ public class Ui extends Application {
       errorMessage.setText("");
       try {
         runClicked = false;
+        erasePreMadeMap();
         resetMap(primaryStage);
       } catch (Exception exception) {
         exception.printStackTrace();
       }
     });
 
+
+
     Label saveMap = new Label("Save map");
     TextField nameField = new TextField();
+
+    Button selectMap = new Button("Select map");
+    selectMap.setOnAction(e -> {
+      try {
+        chooseMap(primaryStage);
+        rectChar = new Rectangle[mapArray.length][mapArray.length];
+        preMadeMap(mapArray, 4);
+      } catch (FileNotFoundException exception) {
+      }
+    });
 
     Button save = new Button("Save Map");
     save.setOnAction(e -> {
@@ -559,7 +595,7 @@ public class Ui extends Application {
     });
 
     VBox mapSaving = new VBox();
-    mapSaving.getChildren().addAll(saveMap, nameField, save);
+    mapSaving.getChildren().addAll(saveMap, nameField, save, selectMap);
     mapSaving.setSpacing(10);
 
     Label speedSlider = new Label("Animation delay: ");
