@@ -20,7 +20,7 @@ public class MapFileCreator {
    * @param fileName luotavan tiedoston nimi
    */
   public void WriteMapToFile(char[][] kartta, String fileName) {
-    String dir = "src/main/resources";
+    String dir = "src/main/resources/ownMaps";
     try {
       FileWriter fileWriter = new FileWriter(new File(dir, fileName));
       for (int i = 0; i < kartta.length; i ++) {
