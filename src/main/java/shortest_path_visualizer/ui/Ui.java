@@ -35,7 +35,7 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.w3c.dom.css.Rect;
+import shortest_path_visualizer.IO.BenchmarkFileReader;
 import shortest_path_visualizer.IO.MapFileCreator;
 import shortest_path_visualizer.IO.MapReader;
 import shortest_path_visualizer.algorithms.AStar;
@@ -74,6 +74,7 @@ public class Ui extends Application {
   private long[] runtimes;
   private CheckBox noAnimation;
   private FileChooser fileChooser;
+  private FileChooser fileChooserOwnMaps;
   private MapReader mapReader;
   private ArrayList<Line> lines;
 
@@ -100,6 +101,10 @@ public class Ui extends Application {
     this.noAnimation = new CheckBox();
     this.fileChooser = new FileChooser();
     fileChooser.setInitialDirectory(new File("src/main/resources/maps"));
+
+    this.fileChooserOwnMaps = new FileChooser();
+    fileChooserOwnMaps.setInitialDirectory(new File("src/main/resources/ownMaps"));
+
     this.mapReader = new MapReader(new MapReaderIO());
     this.lines = new ArrayList<>();
 
@@ -203,6 +208,23 @@ public class Ui extends Application {
         rectangle.setLayoutY(yPikselit);
         rectChar[y][x] = rectangle;
         pane.getChildren().add(rectangle);
+      }
+    }
+  }
+
+  public void generatePreviouslyMadeMap(char[][] kartta) {
+    for (int i = 0; i < rectChar.length; i ++) {
+      for (int j = 0; j < rectChar[0].length; j ++) {
+        if (kartta[i][j] == '@') {
+          rectChar[i][j].setFill(Color.BLACK);
+        }
+        else if (kartta[i][j] == 'S') {
+          rectChar[i][j].setFill(Color.GREEN);
+        } else if (kartta[i][j] == 'G') {
+          rectChar[i][j].setFill(Color.RED);
+        } else {
+          rectChar[i][j].setFill(Color.WHITE);
+        }
       }
     }
   }
@@ -534,6 +556,12 @@ public class Ui extends Application {
     mapArray = mapReader.getMapArray();
   }
 
+  private void chooseOwnMap(Stage primaryStage) throws FileNotFoundException {
+    File selectedFile = fileChooserOwnMaps.showOpenDialog(primaryStage);
+    mapReader.createMatrix(selectedFile);
+    mapArray = mapReader.getMapArray();
+  }
+
   @Override
   public void start(Stage primaryStage) throws Exception {
     resetMapMatrixAndRectangleMatrix();
@@ -620,8 +648,21 @@ public class Ui extends Application {
       nameField.setText("");
     });
 
+    Button openUserMadeMap = new Button("Select saved map");
+    openUserMadeMap.setOnAction(e -> {
+      try {
+        erasePreMadeMap();
+        resetMap(primaryStage);
+        createGrid(15);
+        chooseOwnMap(primaryStage);
+        generatePreviouslyMadeMap(mapArray);
+      } catch (Exception exception) {
+      }
+
+    });
+
     VBox mapSaving = new VBox();
-    mapSaving.getChildren().addAll(saveMap, nameField, save, selectMap);
+    mapSaving.getChildren().addAll(saveMap, nameField, save, selectMap, openUserMadeMap);
     mapSaving.setSpacing(10);
 
     Label speedSlider = new Label("Animation delay: ");
@@ -663,29 +704,43 @@ public class Ui extends Application {
 
     Label avgD = new Label();
     Label avgA = new Label();
+    Label avgJ = new Label();
     Label distA = new Label();
     Label distD = new Label();
 
     Button runTest = new Button("Benchmark");
     runTest.setOnAction(e -> {
-      /*try {
-        PerformanceTest test = new PerformanceTest();
+      try {
+        BenchmarkFileReader b = new BenchmarkFileReader(new MapReaderIO());
+        Node[][] startAndGoal = b.getScenarioCoordinates(new File("src/main/resources/Berlin_0_256.scen.txt"));
 
-        test.testAStar(new File("src/test/resources/kartat/Brushfire.txt"));
-        avgA.setText("A* average: " + test.getAverage() + "ms");
-        distA.setText("Path length: " + test.getVastausA());
+        double totalTimeD = 0;
+        double totalTimeA = 0;
+        double totalTimeJ = 0;
 
-        test.testDijkstra(new File("src/test/resources/kartat/Brushfire.txt"));
-        avgD.setText("Dijkstra average: " + test.getAverage() + "ms");
-        distD.setText("Path length: " + test.getVastausD());
+        PerformanceTest test = new PerformanceTest(5);
+        for (int i = 0; i < startAndGoal.length; i++) {
+          test.testDijkstra(new File("src/main/resources/Berlin_0_256.txt"), startAndGoal[i][0], startAndGoal[i][1]);
+          totalTimeD += test.getAverage();
 
-      } catch (FileNotFoundException exception) {
-      }*/
+          test.testAStar(new File("src/main/resources/Berlin_0_256.txt"), startAndGoal[i][0], startAndGoal[i][1]);
+          totalTimeA += test.getAverage();
+
+          test.testJPS(new File("src/main/resources/Berlin_0_256.txt"), startAndGoal[i][0], startAndGoal[i][1]);
+          totalTimeJ += test.getAverage();
+        }
+
+        avgD.setText("Dijkstra: " + totalTimeD + " ms");
+        avgA.setText("A*: " + totalTimeA + " ms");
+        avgJ.setText("JPS: " + totalTimeJ + " ms");
+
+      } catch (Exception exception) {
+      }
     });
 
     VBox controls = new VBox();
     controls.setSpacing(40);
-    controls.getChildren().addAll(drawChoice, configurations, otherOptions, mapSaving, runTest, avgA, distA, avgD, distD);
+    controls.getChildren().addAll(drawChoice, configurations, otherOptions, mapSaving, runTest, avgD, avgA, avgJ);
 
     VBox layout = new VBox();
     layout.setSpacing(20);

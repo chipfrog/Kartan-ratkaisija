@@ -40,6 +40,7 @@ public class AStar {
     this.etaisyys = new double[karttamatriisi.length * karttamatriisi[0].length];
     this.visitedNodes = new DynamicArray();
     this.math = new MathFunctions();
+    this.openList = new Keko();
     initVerkko();
     initEtaisyydet();
   }
@@ -48,7 +49,6 @@ public class AStar {
    * Suorittaa A*-algoritmin.
    */
   public void runAStar() {
-    this.openList = new Keko();
     startingNode.setG_Matka(0);
     startingNode.setEtaisyys(diagonalDist(startingNode, goalNode));
     openList.addNode(startingNode);
@@ -61,18 +61,15 @@ public class AStar {
         etaisyysMaaliin = current.getG_Matka();
         break;
       }
-      //current.vieraile();
       for (Node naapuri : haeNaapurisolmut(current.getX(), current.getY())) {
         if (naapuri != null) {
           double uusiGMatka = current.getG_Matka() + neighbourDist(current, naapuri);
 
           if (!inClosedList[naapuri.getTunnus()] || uusiGMatka < naapuri.getG_Matka()) {
-          //if (etaisyys[naapuri.getTunnus()] == Integer.MAX_VALUE || uusiGMatka < naapuri.getG_Matka()) {
-            //etaisyys[naapuri.getTunnus()] = uusiGMatka;
             inClosedList[naapuri.getTunnus()] = true;
             naapuri.setParent(current);
             naapuri.setG_Matka(uusiGMatka);
-            double h = diagonalDist(naapuri, goalNode) * 1.001;
+            double h = diagonalDist(naapuri, goalNode); //* 1.001;
             naapuri.setEtaisyys(uusiGMatka + h);
             openList.addNode(naapuri);
 
@@ -127,7 +124,7 @@ public class AStar {
     double dy = math.getAbs(n1.getY() - n2.getY());
     return (dx + dy) + (Math.sqrt(2) - 2) * math.getMin(dx, dy);
     /*double dMax = Math.max(math.getAbs(n1.getX() - n2.getX()), math.getAbs(n1.getY() - n2.getY()));
-    double dMin = math.getMin(math.getAbs(n1.getX() - n2.getY()), math.getAbs(n1.getY() - n2.getY()))
+    double dMin = math.getMin(math.getAbs(n1.getX() - n2.getY()), math.getAbs(n1.getY() - n2.getY()));
     return Math.sqrt(2) + (dMax -dMin);*/
   }
 
@@ -149,16 +146,21 @@ public class AStar {
     for (int i = 0; i < karttamatriisi.length; i++) {
       for (int j = 0; j < karttamatriisi[0].length; j++) {
         Node node = new Node(solmutunnus, j, i);
-        node.setG_Matka(Integer.MAX_VALUE);
-        node.setEtaisyys(Integer.MAX_VALUE);
+        if (karttamatriisi[i][j] == '@') {
+          node = null;
+        }
+        else {
+          node.setG_Matka(Integer.MAX_VALUE);
+          node.setEtaisyys(Integer.MAX_VALUE);
 
-        if (karttamatriisi[i][j] == 'G') {
-          node.setAsGoalNode();
-          this.goalNode = node;
-        } else if (karttamatriisi[i][j] == 'S') {
-          node.setAsStartNode();
-          //node.setG_Matka(0);
-          this.startingNode = node;
+          if (karttamatriisi[i][j] == 'G') {
+            node.setAsGoalNode();
+            this.goalNode = node;
+          } else if (karttamatriisi[i][j] == 'S') {
+            node.setAsStartNode();
+            //node.setG_Matka(0);
+            this.startingNode = node;
+          }
         }
         solmumatriisi[i][j] = node;
         solmutunnus++;
