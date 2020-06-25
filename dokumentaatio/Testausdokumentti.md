@@ -14,3 +14,16 @@ Minimikeon toteuttavaa Keko-luokkaa on testattu varmistamalla, että keko on alu
 
 ### Algoritmit
 Algoritmien perustoiminta testattiin keskenään lähes identtisellä tavalla, joten en erittele tähän jokaisen algoritmin JUnit-testejä. Algoritmeille annettiin eri tilanteita kuvaavia char[][]-muotoisia testikarttoja ja varmistettiin algoritmien toimivuus näissä tilanteissa. Karttoihin oli sijoitettuna valmiiksi lähtö- ja maalisolmu. Etäisyys pisteiden välillä laskettiin selkeissä tilanteissa (esim. 5 ruutua suoraan eteenpäin x-akselilla) manuaalisesti ja katsottiin, että algoritmi saa saman tuloksen. Vastaavasti solmut, jotka algoritmin tulisi avata, laskettiin manuaalisesti ja katsottiin, että algoritmi ilmoittaa saman solmujen lukumäärän. Testejä toki rajoitti se, ettei kovin monumtkaisia tilanteita voinut testata, sillä reitin kasvaessa manuaalisesti laskettavien solmujen määrästä tulee suuri. Osa kartoista oli erikoistapauksia, kuten tilanne, jossa maalisolmua ympäröi esteet joka puolella, ja algoritmin tuli tällöin ilmoittaa ettei maaliin pääsee sen sijaan, että ohjelma kaatuisi. Hieman monmimutkaisemmassa reitissä  A*:n ja JPS:n testikartassa saamaa etäisyyttä verrattiin Dijkstran saamaan etäisyyteen, sillä Dijkstran toiminta on todettu luotettavaksi [Berlin_0_256.map](https://www.movingai.com/benchmarks/street/index.html) -kartan skenaarioissa (Dijkstra sai mallivastauksen jokaisessa skenaarion testissä). Ohjelmani ei kuitenkaan enää noudata samanlaisia liikkumissääntöjä, joten en ole käyttänyt itse skenaarioita varsinaisessa testauksessa enää muiden algoritmien kohdalla.
+
+## Suorituskykytestit
+Algoritmien tehokkuutta voi testata kevyesti jo ohjelman tavallisen käytön aikana. Kun käyttäjä esimerkiksi piirtää kartan tai valitsee jonkun valmista kartoista ja ajaa halutun algoritmin, ohjelma suorittaa reitinhaun 100 kertaa ja tallentaa kuhunkin ajoon kuluneen ajan System.nanoTime():n avulla seuraavasti:
+
+```
+aStar.setMap(mapArray);
+long t1 = System.nanoTime();
+aStar.runAStar();
+long t2 = System.nanoTime();
+ ```
+Algoritmin muuttujien, taulukoiden yms. alustustoimenpiteet on jätetty ajanoton ulkopuolelle (tässä tapauksessa metodiin `aStar.setMap(mapArray))` ja ainoastaan reitinhakuun kuluva aika mitataan. Mitatut ajat tallennetaan taulukkoon, ensimmäinen aika jätetään huomioimatta ja muista lasketaan keskiarvo. Aika muutetaan millisekuneiksi ja ilmoitetaan käyttöliittymässä käyttäjälle. Tavallinen ajo ilmoittaa myös löydetyn reitin pituuden ja avattujen solmujen määrän. Pyyhkimällä vastauksen ja ajamalla reitinhaun jollain toisella algoritmilla, voi verrata saatuja tuloksia.
+
+Raskaampi suorituskykytesti voidaan tehdä aiemmin mainitulle [Berlin_0_256](https://www.movingai.com/benchmarks/street/index.html) -kartalle. Testauksessa käytetään karttaan liittyvää Berlin_0_256.scen-tiedostoa, joka sisältää 930 erilaista skenaariota, eli tilannetta, joissa jokaisessa on eri lähtö- ja maalisolmu. Sovellus ajaa kunkin skenaarion jokaisella algoritmilla (Dijkstra, A*, JPS) 10 kertaa ja tallentaa ajoaikojen keskiarvon ylös yllä kuvatulla tavalla. Ensimmäistä ajoa 10:stä ei tässäkään huomioida. Lopulta ohjelma laskee yhteen kullekin algoritmille jokaisen skenaarion keskiarvoaikojen summan, eli kuinka kauan algoritmilla meni keskimäärin yhteensä kaikkien skenaarioiden läpikäymiseen. 
