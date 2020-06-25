@@ -690,6 +690,8 @@ public class Ui extends Application {
       try {
         chooseMap(primaryStage);
         rectChar = new Rectangle[mapArray.length][mapArray.length];
+        startDrawn = false;
+        goalDrawn = false;
         preMadeMap(mapArray, 4);
       } catch (FileNotFoundException exception) {
       }
