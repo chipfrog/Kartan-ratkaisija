@@ -1,12 +1,29 @@
 # Testaus
 
 ## Yleisesti
-Ohjelmassa käytetään pääasiassa JUnit-yksikkötestejä luokkien ja metodien toiminnan testaukseen. 
-Käyttöliittymä testataan vain manuaalisesti, eikä sille tehdä erillisiä automatisoituja testejä.
-Algoritmien toimintaa testataan / tullaan testaamaan valmiilla char-muotoisilla kartoilla, jollaisia ohjelma tavallisenkin toiminnan
-aikana käsittelee. Valmiiksi tehdyistä kartoista tiedetään ennakkoon lyhimmät reitit kahden pisteen välillä ja voidaan katsoa
-löytääkö algoritmi oikean vastauksen. Testikartoista pyritään tekemään monipuolisia ja sellaisia, joissa ilmeiset rajatapaukset
-käydään läpi. Algoritmit voidaan testata samoilla kartoilla, jolloin nähdään mahdolliset erot suoritusajassa
-ja läpikäytyjen solmujen määrissä. Testit voidaan ajaa komentoriviltä. 
+Projektin luokkien ja metodien testit toteutettiin JUnit-yksikkötesteillä. Automaattisten testien ulkopuolelle jätettiin käyttöliittymän testaus, eli kansion _ui_ -sisältö. Käyttöliittymän toimintaa on kuitenkin testattu manuaalisesti ja pyritty löytämään mahdolliset virhetilanteita aiheuttavat skenaariot. Testikattavuutta voi tarkastella [codecovissa](https://codecov.io/gh/chipfrog/Shortest-path-visualizer) tai generoimalla jacocon testikattavuusraportin [käyttöohjeissa](https://github.com/chipfrog/Shortest-path-visualizer/blob/master/dokumentaatio/manual.md) kuvatulla tavalla. Algoritmien suorituskykyä mittaava PerformanceTest-luokka ei myöskään kuulu testikattavuuteen ja on erillinen JUnit-testeistä.
 
-Suorituskykytestien tekeminen on nyt aloitettu. Suurikokoisesta kartasta haetaan reitti kahden pisteen välillä samalla algoritmilla 100 kertaa. Ensimmäistä ajoa ei huomioida ja jäljellä olevista ajoista lasketaan suoritusaikojen keskiarvo.
+## Yksikkötestaus
+JUnit-yksikkötesteillä pyrittiin varmistamaan yksittäisten luokkien ja metodien oikeanlainen toiminta. Testeissä on pyritty testaamaan, että luokat toimivat oikein ainakin ns. "normaalitilanteissa" ja yleisimmissä rajatapaustilanteissa. 
+
+### Utility-luokat
+Esimerkiksi naapurisolmujen hakemisesta vastaavan luokan NeighbourFinder toimintaa on testattu syöttämällä sille char[][]-mutoinen testikartta, jossa sille on annettu erilaisia koordinaatteja, ja luokan on osattava kertoa, kuinka monta naapurisolmua kyseisellä koordinaatin pisteellä on. Eräs annettu piste on kartan rajalla, jolloin luokka ei saa etsiä naapurisolmuja kartan rajojen ulkopuolelta ja toinen annettu piste on este, jolloin sillä ei saa olla yhtään naapuria. Testeissä on myös tilanteita, jossa pisteellä on muutamalla puolella esteitä ja tilanne, jossa esteitä ei ole ympärillä ollenkaan. Oikeat vastaukset on laskettu kartasta manuaalisesti ja katsottu, että testit antavat samat vastaukset. Matemaattisista funktioista vastaava MathFunctions luokkaa on myös testattu laskemalla muutamaan tapaukseen itse oikeat vastaukset ja katsomalla, että luokka vastaa samoin.
+
+### Minimikeko
+Minimikeon toteuttavaa Keko-luokkaa on testattu varmistamalla, että keko on aluksi tyhjä ja muuttuu ei-tyhjäksi ensimmäisen solmun lisäyksen myötä. Keolle on syöytetty etäisyydeltään eriarvoisia solmuja ja tarkistettu, että ensimmäisenä ulos otettavalla solmulla todella on pienin arvo. Keon järjestyksen muuttuminen vastavaasti varmistettiin poistamalla toinenkin solmu, jolloin nähtiin, että se oli arvoltaan toisiksi pienin. Solmut annettiin keolle (pseudo)satunnaisessa järjestyksessä, jolloin voitiin varmistua, ettei keko anna solmuja oikeassa järjestyksessä vain tietyn syöttöjärjestyksen takia (esim. solmut valmiiksi pienimmästä suurimpaan).
+
+### Algoritmit
+Algoritmien perustoiminta testattiin keskenään lähes identtisellä tavalla, joten en erittele tähän jokaisen algoritmin JUnit-testejä. Algoritmeille annettiin eri tilanteita kuvaavia char[][]-muotoisia testikarttoja ja varmistettiin algoritmien toimivuus näissä tilanteissa. Karttoihin oli sijoitettuna valmiiksi lähtö- ja maalisolmu. Etäisyys pisteiden välillä laskettiin selkeissä tilanteissa (esim. 5 ruutua suoraan eteenpäin x-akselilla) manuaalisesti ja katsottiin, että algoritmi saa saman tuloksen. Vastaavasti solmut, jotka algoritmin tulisi avata, laskettiin manuaalisesti ja katsottiin, että algoritmi ilmoittaa saman solmujen lukumäärän. Testejä toki rajoitti se, ettei kovin monumtkaisia tilanteita voinut testata, sillä reitin kasvaessa manuaalisesti laskettavien solmujen määrästä tulee suuri. Osa kartoista oli erikoistapauksia, kuten tilanne, jossa maalisolmua ympäröi esteet joka puolella, ja algoritmin tuli tällöin ilmoittaa ettei maaliin pääsee sen sijaan, että ohjelma kaatuisi. Hieman monmimutkaisemmassa reitissä  A*:n ja JPS:n testikartassa saamaa etäisyyttä verrattiin Dijkstran saamaan etäisyyteen, sillä Dijkstran toiminta on todettu luotettavaksi [Berlin_0_256.map](https://www.movingai.com/benchmarks/street/index.html) -kartan skenaarioissa (Dijkstra sai mallivastauksen jokaisessa skenaarion testissä). Ohjelmani ei kuitenkaan enää noudata samanlaisia liikkumissääntöjä, joten en ole käyttänyt itse skenaarioita varsinaisessa testauksessa enää muiden algoritmien kohdalla.
+
+## Suorituskykytestit
+Algoritmien tehokkuutta voi testata kevyesti jo ohjelman tavallisen käytön aikana. Kun käyttäjä esimerkiksi piirtää kartan tai valitsee jonkun valmista kartoista ja ajaa halutun algoritmin, ohjelma suorittaa reitinhaun 100 kertaa ja tallentaa kuhunkin ajoon kuluneen ajan System.nanoTime():n avulla seuraavasti:
+
+```
+aStar.setMap(mapArray);
+long t1 = System.nanoTime();
+aStar.runAStar();
+long t2 = System.nanoTime();
+ ```
+Algoritmin muuttujien, taulukoiden yms. alustustoimenpiteet on jätetty ajanoton ulkopuolelle (tässä tapauksessa metodiin `aStar.setMap(mapArray))` ja ainoastaan reitinhakuun kuluva aika mitataan. Mitatut ajat tallennetaan taulukkoon, ensimmäinen aika jätetään huomioimatta ja muista lasketaan keskiarvo. Aika muutetaan millisekuneiksi ja ilmoitetaan käyttöliittymässä käyttäjälle. Tavallinen ajo ilmoittaa myös löydetyn reitin pituuden ja avattujen solmujen määrän. Pyyhkimällä vastauksen ja ajamalla reitinhaun jollain toisella algoritmilla, voi verrata saatuja tuloksia.
+
+Raskaampi suorituskykytesti voidaan tehdä aiemmin mainitulle [Berlin_0_256](https://www.movingai.com/benchmarks/street/index.html) -kartalle. Testauksessa käytetään karttaan liittyvää Berlin_0_256.scen-tiedostoa, joka sisältää 930 erilaista skenaariota, eli tilannetta, joissa jokaisessa on eri lähtö- ja maalisolmu. Sovellus ajaa kunkin skenaarion jokaisella algoritmilla (Dijkstra, A*, JPS) 10 kertaa ja tallentaa ajoaikojen keskiarvon ylös yllä kuvatulla tavalla. Ensimmäistä ajoa 10:stä ei tässäkään huomioida. Lopulta ohjelma laskee yhteen kullekin algoritmille jokaisen skenaarion keskiarvoaikojen summan, eli kuinka kauan algoritmilla meni keskimäärin yhteensä kaikkien skenaarioiden läpikäymiseen. Suorituskykytesti ajetaan _Benchmark_-napista ja se saattaa viedä joitakin minuutteja käytettävän koneen tehosta riippuen.
