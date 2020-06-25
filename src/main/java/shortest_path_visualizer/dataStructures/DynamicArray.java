@@ -1,7 +1,5 @@
 package shortest_path_visualizer.dataStructures;
 
-import shortest_path_visualizer.utils.Node;
-
 /**
  * Kokoaan dynaamisesti kasvattava taulukko.
  */

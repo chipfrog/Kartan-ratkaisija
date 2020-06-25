@@ -1,4 +1,4 @@
-package shortest_path_visualizer.utils;
+package shortest_path_visualizer.dataStructures;
 
 /**
  * Luokka solmioliolle. Olio sisältää tiedon mm. sijainnista (x- ja y-koordinaatit), siitä onko solmussa vierailtu ja algoritmista riippuen erilaisia etäisyyksiä. Esim

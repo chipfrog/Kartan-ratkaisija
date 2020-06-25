@@ -44,7 +44,7 @@ import shortest_path_visualizer.IO.MapReaderIO;
 import shortest_path_visualizer.algorithms.JPS;
 import shortest_path_visualizer.dataStructures.DynamicArray;
 import shortest_path_visualizer.performanceTesting.PerformanceTest;
-import shortest_path_visualizer.utils.Node;
+import shortest_path_visualizer.dataStructures.Node;
 
 /**
  * JavaFX-toteutus karttojen luomiseen.
@@ -325,6 +325,7 @@ public class Ui extends Application {
           drawVisitedNodes(visitedNodes);
           drawShortestPath(dijkstra.getSolvedMap());
         } else {
+          drawVisitedNodes(visitedNodes);
           animateDijkstra(visitedNodes);
         }
       } else {
@@ -358,6 +359,7 @@ public class Ui extends Application {
           drawVisitedNodes(visitedNodes);
           drawJPSPath(jps.getReitti());
         } else {
+          drawVisitedNodes(visitedNodes);
           animateJPS(visitedNodes);
         }
       } else {
@@ -392,6 +394,7 @@ public class Ui extends Application {
           drawVisitedNodes(visitedNodes);
           drawShortestPath(aStar.getReitti());
         } else {
+          drawVisitedNodes(visitedNodes);
           animateAStar(visitedNodes);
         }
       } else {
@@ -417,7 +420,6 @@ public class Ui extends Application {
           Node node = visitedNodes.get(nodeToPaint);
           if (node != null) {
             paintSquare(visitedNodes.get(nodeToPaint));
-            numOfVisitedNodes.setText("Nodes: " + (nodeToPaint + 1));
             nodeToPaint++;
           }
         }
@@ -438,7 +440,6 @@ public class Ui extends Application {
             Node node = visitedNodes.get(nodeToPaint);
             if (node != null) {
               paintSquare(visitedNodes.get(nodeToPaint));
-              numOfVisitedNodes.setText("Nodes: " + (nodeToPaint + 1));
               nodeToPaint++;
             }
           }
@@ -459,7 +460,6 @@ public class Ui extends Application {
           Node node = visitedNodes.get(nodeToPaint);
           if (node != null) {
             paintSquare(visitedNodes.get(nodeToPaint));
-            numOfVisitedNodes.setText("Nodes: " + (nodeToPaint + 1));
             nodeToPaint++;
           }
         }

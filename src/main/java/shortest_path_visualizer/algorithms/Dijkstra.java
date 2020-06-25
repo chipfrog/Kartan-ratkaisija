@@ -4,7 +4,7 @@ import shortest_path_visualizer.IO.IO;
 import shortest_path_visualizer.dataStructures.DynamicArray;
 import shortest_path_visualizer.dataStructures.Keko;
 import shortest_path_visualizer.utils.NeighbourFinder;
-import shortest_path_visualizer.utils.Node;
+import shortest_path_visualizer.dataStructures.Node;
 
 /**
  * Luokka, jossa toteutetaan Dijkstran algoritmi.

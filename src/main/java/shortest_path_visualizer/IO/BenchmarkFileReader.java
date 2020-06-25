@@ -2,7 +2,7 @@ package shortest_path_visualizer.IO;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import shortest_path_visualizer.utils.Node;
+import shortest_path_visualizer.dataStructures.Node;
 
 /**
  * Luokka scen-tyyppisten tiedostojen lukemiseen.

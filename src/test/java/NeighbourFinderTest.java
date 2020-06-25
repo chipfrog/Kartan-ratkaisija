@@ -7,7 +7,7 @@ import org.junit.Test;
 import shortest_path_visualizer.IO.MapReader;
 import shortest_path_visualizer.algorithms.Dijkstra;
 import shortest_path_visualizer.utils.NeighbourFinder;
-import shortest_path_visualizer.utils.Node;
+import shortest_path_visualizer.dataStructures.Node;
 
 public class NeighbourFinderTest {
   NeighbourFinder finder;

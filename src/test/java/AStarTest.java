@@ -31,7 +31,7 @@ public class AStarTest {
   }
 
   @Test
-  public void returnsShortetsDistanceInBasicSituation() {
+  public void returnsShortetsDistanceInBasicSituationWithoutObstacles() {
     a.runAStar();
     assertTrue(a.getEtaisyysMaaliin() == 5);
   }

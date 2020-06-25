@@ -1,12 +1,10 @@
 package shortest_path_visualizer.algorithms;
 
-import com.sun.security.jgss.GSSUtil;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import shortest_path_visualizer.dataStructures.DynamicArray;
 import shortest_path_visualizer.dataStructures.Keko;
 import shortest_path_visualizer.utils.MathFunctions;
-import shortest_path_visualizer.utils.Node;
+import shortest_path_visualizer.dataStructures.Node;
 
 /**
  * Luokka Jump Point Search -algoritmille
@@ -60,7 +58,7 @@ public class JPS {
     }
     while (!jumpPoints.isEmpty()) {
       Node current = jumpPoints.pollNode();
-      if (!current.isStart()) {
+      if (!current.isStart() && !current.isGoal()) {
         visitedNodes.add(current);
       }
 
@@ -93,7 +91,6 @@ public class JPS {
     Node takaisin = goalNode.getParent();
     warpPoints.add(goalNode);
     warpPoints.add(takaisin);
-    System.out.println("kerran");
     while (!takaisin.isStart()) {
       kartta[takaisin.getY()][takaisin.getX()] = 'X';
       warpPoints.add(takaisin);
@@ -173,7 +170,6 @@ public class JPS {
         if (x2 >= 0 && x2 < kartta[0].length && y - 1 >= 0) {
           if (kartta[y - 1][dx] == '@' && kartta[y - 1][x2] != '@') {
             node = new Node(dx, y, dirH, -1, distance);
-            //Node node = new Node(x2, y - 1, dirH, -1, distance + Math.sqrt(2));
             node.setEtaisyys(distance + diagonalDist(node, goalNode));
             node.vieraile();
             node.setParent(parent);
@@ -185,9 +181,10 @@ public class JPS {
         if (x2 >= 0 && x2 < kartta[0].length && y + 1 < kartta.length) {
           if (kartta[y + 1][dx] == '@' && kartta[y + 1][x2] != '@') {
             node = new Node(dx, y, dirH, 1, distance);
-            //Node node = new Node(x2, y + 1, dirH, 1, distance + Math.sqrt(2));
             node.setParent(parent);
             node.setEtaisyys(distance + diagonalDist(node, goalNode));
+            node.vieraile();
+            solmumatriisi[y][dx] = node;
             jumpPoints.addNode(node);
           }
         }
@@ -230,7 +227,6 @@ public class JPS {
         if (y2 >= 0 && y2 < kartta.length && x - 1 >= 0) {
           if (kartta[dy][x - 1] == '@' && kartta[y2][x - 1] != '@') {
             node = new Node(x, dy, -1, dirV, distance);
-            //Node node = new Node(x - 1, y2, -1, dirV, distance + Math.sqrt(2));
             node.setEtaisyys(distance + diagonalDist(node, goalNode));
             node.vieraile();
             node.setParent(parent);
@@ -241,7 +237,6 @@ public class JPS {
         if (y2 >= 0 && y2 < kartta.length && x + 1 < kartta[0].length) {
           if (kartta[dy][x + 1] == '@' && kartta[y2][x + 1] != '@') {
             node = new Node(x, dy, 1, dirV, distance);
-            //Node node = new Node(x + 1, y2, 1, dirV, distance + Math.sqrt(2));
             node.setEtaisyys(distance + diagonalDist(node, goalNode));
             node.vieraile();
             node.setParent(parent);
@@ -250,7 +245,6 @@ public class JPS {
           }
         }
       }
-      //dy += dirV;
     }
   }
 
@@ -292,10 +286,6 @@ public class JPS {
       newParent.setParent(parent);
       verticalScan(newParent);
 
-      /*xNext += dirH;
-      yNext += dirV;
-      distance += Math.sqrt(2);*/
-
       Node node = solmumatriisi[yNext][xNext];
       if (!node.onVierailtu() || node.getG_Matka() > distance) {
         if (xNext - 1 >= 0 && xNext + 1 < kartta[0].length && yNext - 1 >= 0 && yNext + 1 < kartta.length) {
@@ -331,6 +321,12 @@ public class JPS {
     double dx = math.getAbs(n1.getX() - n2.getX());
     double dy = math.getAbs(n1.getY() - n2.getY());
     return (dx + dy) + (Math.sqrt(2) - 2) * math.getMin(dx, dy);
+  }
+
+  public double euclideanDist(Node n1, Node n2) {
+    double dx = math.getAbs(n1.getX() - n2.getX());
+    double dy = math.getAbs(n1.getY() - n2.getY());
+    return Math.sqrt(dx * dx + dy * dy);
   }
 
 }

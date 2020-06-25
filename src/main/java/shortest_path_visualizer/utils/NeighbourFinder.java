@@ -1,5 +1,7 @@
 package shortest_path_visualizer.utils;
 
+import shortest_path_visualizer.dataStructures.Node;
+
 public class NeighbourFinder {
   private char[][] karttamatriisi;
   private Node[][] solmuMatriisi;

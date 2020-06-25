@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import shortest_path_visualizer.algorithms.Dijkstra;
 import shortest_path_visualizer.IO.MapReader;
-import shortest_path_visualizer.utils.Node;
+import shortest_path_visualizer.dataStructures.Node;
 
 public class DijkstraTest {
   File testMap = new File("src/test/resources/kartat/testikartta.txt");

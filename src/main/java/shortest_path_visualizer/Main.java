@@ -1,13 +1,8 @@
 package shortest_path_visualizer;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import javafx.application.Application;
-import shortest_path_visualizer.IO.BenchmarkFileReader;
-import shortest_path_visualizer.IO.MapReaderIO;
-import shortest_path_visualizer.performanceTesting.PerformanceTest;
 import shortest_path_visualizer.ui.Ui;
-import shortest_path_visualizer.utils.Node;
 
 public class Main {
   public static void main(String[] args) throws FileNotFoundException {
@@ -26,7 +21,8 @@ public class Main {
       test.testDijkstra(new File("src/main/resources/Berlin_0_256.txt"), startAndGoal[i][0], startAndGoal[i][1]);
       totalTimeD += test.getAverage();
       double d = test.getVastausD();
-      *//*if (d - optimalPath[i] > 0.001) {
+      *//*if (Math.abs(d - optimalPath[i]) > 0.001) {
+        System.out.println("Ongelma Dijkstrassa");
         System.out.println(i);
         System.out.println(d + " vs. " + optimalPath[i]);
       }*//*
@@ -34,7 +30,8 @@ public class Main {
       test.testAStar(new File("src/main/resources/Berlin_0_256.txt"), startAndGoal[i][0], startAndGoal[i][1]);
       totalTimeA += test.getAverage();
       double a = test.getVastausA();
-      *//*if (a - optimalPath[i] > 0.001) {
+      *//*if (Math.abs(a - optimalPath[i]) > 0.001) {
+        System.out.println("Ongelma A*:ssä");
         System.out.println(i);
         System.out.println(a + " vs. " + optimalPath[i]);
       }*//*
@@ -42,6 +39,12 @@ public class Main {
       test.testJPS(new File("src/main/resources/Berlin_0_256.txt"), startAndGoal[i][0], startAndGoal[i][1]);
       totalTimeJ += test.getAverage();
       double j = test.getVastausJ();
+      *//*if (Math.abs(j - optimalPath[i]) > 0.001) {
+        System.out.println("Ongelma JPS:ssä");
+        System.out.println(i);
+        System.out.println(a + " vs. " + optimalPath[i]);
+      }*//*
+
 
       if (Math.abs(d - j) > 0.0001) {
         System.out.println("J antaa väärän vastauksen");

@@ -7,7 +7,7 @@ import shortest_path_visualizer.IO.MapReaderIO;
 import shortest_path_visualizer.algorithms.AStar;
 import shortest_path_visualizer.algorithms.Dijkstra;
 import shortest_path_visualizer.algorithms.JPS;
-import shortest_path_visualizer.utils.Node;
+import shortest_path_visualizer.dataStructures.Node;
 
 public class PerformanceTest {
   MapReaderIO io;

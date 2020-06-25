@@ -5,7 +5,7 @@ import shortest_path_visualizer.dataStructures.DynamicArray;
 import shortest_path_visualizer.dataStructures.Keko;
 import shortest_path_visualizer.utils.MathFunctions;
 import shortest_path_visualizer.utils.NeighbourFinder;
-import shortest_path_visualizer.utils.Node;
+import shortest_path_visualizer.dataStructures.Node;
 
 public class AStar {
   private final IO io;
@@ -69,7 +69,7 @@ public class AStar {
             inClosedList[naapuri.getTunnus()] = true;
             naapuri.setParent(current);
             naapuri.setG_Matka(uusiGMatka);
-            double h = diagonalDist(naapuri, goalNode); //* 1.001;
+            double h = diagonalDist(naapuri, goalNode) * 1.001;
             naapuri.setEtaisyys(uusiGMatka + h);
             openList.addNode(naapuri);
 
@@ -123,9 +123,12 @@ public class AStar {
     double dx = math.getAbs(n1.getX() - n2.getX());
     double dy = math.getAbs(n1.getY() - n2.getY());
     return (dx + dy) + (Math.sqrt(2) - 2) * math.getMin(dx, dy);
-    /*double dMax = Math.max(math.getAbs(n1.getX() - n2.getX()), math.getAbs(n1.getY() - n2.getY()));
-    double dMin = math.getMin(math.getAbs(n1.getX() - n2.getY()), math.getAbs(n1.getY() - n2.getY()));
-    return Math.sqrt(2) + (dMax -dMin);*/
+  }
+
+  public double euclideanDist(Node n1, Node n2) {
+    double dx = math.getAbs(n1.getX() - n2.getX());
+    double dy = math.getAbs(n1.getY() - n2.getY());
+    return Math.sqrt(dx * dx + dy * dy);
   }
 
   public double neighbourDist(Node n1, Node n2) {
@@ -158,7 +161,6 @@ public class AStar {
             this.goalNode = node;
           } else if (karttamatriisi[i][j] == 'S') {
             node.setAsStartNode();
-            //node.setG_Matka(0);
             this.startingNode = node;
           }
         }
