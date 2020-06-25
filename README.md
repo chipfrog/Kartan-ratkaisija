@@ -3,7 +3,6 @@
 [![codecov](https://codecov.io/gh/chipfrog/Shortest-path-visualizer/branch/master/graph/badge.svg)](https://codecov.io/gh/chipfrog/Shortest-path-visualizer)
 
 ### Huomioita
-* Benchmark-nappi ei tällä hetkellä tee mitään
 * Jos reitinhakuanimaation aikana painaa _Reset solution_- tai _Clear_ -nappia, animaatio alkaa alusta. Animaation kannattaa siis antaa mennä loppuun asti tai käynnistää sovellus uudestaan. 
 * Jos tarpeeksi temppuilee aloitus- ja lähtöruudun paikan vaihtamisella, reitinhakujen ajamisella jne. on mahdollista että sovellus ei anna asettaa uutta aloitusruutua tai käynnistä reitinhakua. Tällöin _Reset solution_-nappi korjaa tilanteen.
 
