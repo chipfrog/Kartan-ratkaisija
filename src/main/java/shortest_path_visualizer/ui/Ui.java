@@ -90,6 +90,9 @@ public class Ui extends Application {
   private Label nodesJ;
   private Label timeJ;
 
+  private File benchmarkFile;
+  private File benchmarkMapFile;
+
 
   public Ui() {
     this.cols = 60;
@@ -635,6 +638,28 @@ public class Ui extends Application {
     goal.setToggleGroup(group);
     goal.setOnAction(e -> this.type = DrawType.GOAL);
 
+    final ToggleGroup benchmarks = new ToggleGroup();
+    RadioButton berlin = new RadioButton("Berlin");
+    berlin.setSelected(true);
+    berlin.setToggleGroup(benchmarks);
+    berlin.setOnAction(e -> {
+      this.benchmarkFile = new File("src/main/resources/BenchmarkScenarios/Berlin_0_256.scen.txt");
+      this.benchmarkMapFile = new File("src/main/resources/BenchmarkMaps/Berlin_0_256.txt");
+    });
+
+    RadioButton moscow = new RadioButton("Moscow");
+    moscow.setToggleGroup(benchmarks);
+    moscow.setOnAction(e -> {
+      this.benchmarkFile = new File("src/main/resources/BenchmarkScenarios/Moscow_1_256.map.scen.txt");
+      this.benchmarkMapFile = new File("src/main/resources/BenchmarkMaps/Moscow_1_256.map.txt");
+    });
+
+    RadioButton newYork = new RadioButton("New York");
+    newYork.setToggleGroup(benchmarks);
+    newYork.setOnAction(e -> {
+
+    });
+
     ComboBox <String> comboBox = new ComboBox();
     comboBox.getItems().addAll("Dijkstra", "A*", "JPS");
 
@@ -749,6 +774,10 @@ public class Ui extends Application {
     drawChoice.getChildren().addAll(draw, startPoint, goal, obstacle);
     drawChoice.setSpacing(10);
 
+    HBox benchmarkChoice = new HBox();
+    benchmarkChoice.getChildren().addAll(berlin, moscow);
+    benchmarkChoice.setSpacing(5);
+
     VBox configurations = new VBox();
     Label algo = new Label("Algorithm:");
     configurations.getChildren().addAll(algo, comboBox, speedSlider, slider, noAnimation);
@@ -766,22 +795,34 @@ public class Ui extends Application {
     runTest.setOnAction(e -> {
       try {
         BenchmarkFileReader b = new BenchmarkFileReader(new MapReaderIO());
-        Node[][] startAndGoal = b.getScenarioCoordinates(new File("src/main/resources/Berlin_0_256.scen.txt"));
+        Node[][] startAndGoal = b.getScenarioCoordinates(benchmarkFile);
 
         double totalTimeD = 0;
         double totalTimeA = 0;
         double totalTimeJ = 0;
 
+
         PerformanceTest test = new PerformanceTest(5);
         for (int i = 0; i < startAndGoal.length; i++) {
-          test.testDijkstra(new File("src/main/resources/Berlin_0_256.txt"), startAndGoal[i][0], startAndGoal[i][1]);
+          test.testDijkstra(benchmarkMapFile, startAndGoal[i][0], startAndGoal[i][1]);
           totalTimeD += test.getAverage();
+          double D = test.getVastausD();
 
-          test.testAStar(new File("src/main/resources/Berlin_0_256.txt"), startAndGoal[i][0], startAndGoal[i][1]);
+          test.testAStar(benchmarkMapFile, startAndGoal[i][0], startAndGoal[i][1]);
           totalTimeA += test.getAverage();
+          double A = test.getVastausA();
 
-          test.testJPS(new File("src/main/resources/Berlin_0_256.txt"), startAndGoal[i][0], startAndGoal[i][1]);
+          test.testJPS(benchmarkMapFile, startAndGoal[i][0], startAndGoal[i][1]);
           totalTimeJ += test.getAverage();
+          double J = test.getVastausJ();
+
+          if (Math.abs(D - A) > 0.0001) {
+            System.out.println("D: " + D + ", A: " + A);
+          }
+          if (Math.abs(D - J) > 0.0001) {
+            System.out.println("D: " + D + ", J: " + J);
+          }
+
         }
 
         avgD.setText("Dijkstra: " + totalTimeD + " ms");
@@ -812,7 +853,7 @@ public class Ui extends Application {
 
     VBox controls = new VBox();
     controls.setSpacing(40);
-    controls.getChildren().addAll(drawChoice, configurations, otherOptions, mapSaving, runTest, avgD, avgA, avgJ);
+    controls.getChildren().addAll(drawChoice, configurations, otherOptions, mapSaving, runTest, benchmarkChoice, avgD, avgA, avgJ);
 
     VBox layout = new VBox();
     layout.setSpacing(20);
