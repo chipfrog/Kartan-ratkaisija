@@ -10,10 +10,21 @@ import shortest_path_visualizer.dataStructures.Node;
  * Luokka Jump Point Search -algoritmille
  */
 public class JPS {
+  /**
+   * Algoritmin käyttämä kartta ascii-merkkeinä matriisimuodossa.
+   */
   private char[][] kartta;
+  /**
+   * Sama kartta, mutta koostuu ascii-merkkien sijaan Node-olioista. Mahdollistaa pääsyn Node-olioihin ja
+   * niihin tallennettuun tietoon, kuten etäisyyksiin (g-matka), sekä tiedon tallentamisen Node-olioihin (uudet
+   * etäisyydet, onko vierailtu solmussa jne.)
+   */
   private Node[][] solmumatriisi;
   private Node goalNode;
   private Node startingNode;
+  /**
+   * Minimikeko, johon lisätään A*:stä ja Dijkstrasta poiketen ainoastaan ns. Jump pointit.
+   */
   private Keko jumpPoints;
   private MathFunctions math;
   private boolean goalFound;
@@ -23,7 +34,8 @@ public class JPS {
 
   }
 
-  /** Asettaa algoritmille tarkasteltavan kartan ja alustaa tarvittavat luokat ja muuttujat
+  /** Asettaa algoritmille tarkasteltavan kartan ja alustaa tarvittavat luokat ja muuttujat. käytetään myös tutkittavan
+   * kartan vaihtamiseen.
    * @param kartta tutkittava char-muotoinen kartta
    */
   public void setMap(char[][] kartta) {
@@ -56,15 +68,16 @@ public class JPS {
         }
       }
     }
+    // Dijkstran ja A*:n tapaan hakua jatketaan niin kauan kun keko ei ole tyhjä tai maalisolmua ei ole löytynyt.
     while (!jumpPoints.isEmpty()) {
       Node current = jumpPoints.pollNode();
       if (!current.isStart() && !current.isGoal()) {
         visitedNodes.add(current);
       }
-
       if (goalFound) {
         break;
       }
+      // Tarkistetaan keosta nostetun Noden hakusuunnat dirH ja dirV. Näiden perusteella valitaan oikea hakusuunta/hakumetodi.
       if (current.getDirH() != 0 && current.getDirV() != 0) {
         diagonalScan(current);
       } else if (current.getDirH() != 0 && current.getDirV() == 0) {
@@ -86,6 +99,9 @@ public class JPS {
     return this.goalFound;
   }
 
+  /** Jäljittää reitin maalisolmusta takaisin lähtösolmuun.
+   * @return lista erään lyhimmän reitin käyttämistä jump point-solmuista.
+   */
   public ArrayList<Node> getReitti() {
     ArrayList<Node> warpPoints = new ArrayList<>();
     Node takaisin = goalNode.getParent();
@@ -132,13 +148,13 @@ public class JPS {
   }
 
   /** Alkaa tutkia naapurisolmuja x-akselilla. Parametrina annettavasta solmun vanhemmasta saadaan tarvittavat koordinaatti- ja suuntatiedot.
-   * Jos vanhemman dirH on esimerkiksi -1, lähdetään tutkimaan viereisiä solmuja x-akselilla vasempaan suuntaan. Metodi hakee hyppypisteitä.
+   * Jos vanhemman dirH on esimerkiksi -1, lähdetään tutkimaan viereisiä solmuja x-akselilla vasempaan suuntaan.
+   * Haku jatkuu niin kauan dirH suuntaan, kunnes tulee vastaan este, kartan raja tai maalisolmu. Löydetyt jump pointit lisätään kekoon.
    * @param parent Solmun vanhempi
    */
   public void horizontalScan(Node parent) {
     int x = parent.getX();
     int y = parent.getY();
-
     int dirH = parent.getDirH();
     double distance = parent.getG_Matka();
     int dx = x;
@@ -164,10 +180,12 @@ public class JPS {
         goalNode.setG_Matka(distance);
         break;
       }
-
       Node node = solmumatriisi[y][dx];
+      // Tarkistaa onko tarvetta päivittää solmun g-matkaa paremmaksi
       if (!node.onVierailtu() || node.getG_Matka() > distance) {
+        // Varmistaa ettei kartan raja ylity
         if (x2 >= 0 && x2 < kartta[0].length && y - 1 >= 0) {
+          // Katsoo onko solmu sijainnissa (dx, y) Jump Point. Jos on se lisätään kekoon.
           if (kartta[y - 1][dx] == '@' && kartta[y - 1][x2] != '@') {
             node = new Node(dx, y, dirH, -1, distance);
             node.setEtaisyys(distance + diagonalDist(node, goalNode));
@@ -177,8 +195,10 @@ public class JPS {
             jumpPoints.addNode(node);
           }
         }
-
+        // Varmistaa ettei kartan raja ylity
         if (x2 >= 0 && x2 < kartta[0].length && y + 1 < kartta.length) {
+          // Katsoo onko solmu sijainnissa (dx, y) Jump Point. Tarkistus tehdään tässä siis tavallaan "uudestaan", sillä
+          // yllä oleva tarkistus tarkisti solmun ympäriltä eri solmut kuin tämä jälkimmäinen tarkistus.
           if (kartta[y + 1][dx] == '@' && kartta[y + 1][x2] != '@') {
             node = new Node(dx, y, dirH, 1, distance);
             node.setParent(parent);
@@ -222,6 +242,8 @@ public class JPS {
         goalNode.setG_Matka(distance);
         break;
       }
+
+      // Vastaavat tarkastukset Jump Pointtien varalta, kuten horizontalScnnissa, mutta nyt vertikaalisessa suunnassa.
       Node node = solmumatriisi[dy][x];
       if (!node.onVierailtu() || node.getG_Matka() > distance) {
         if (y2 >= 0 && y2 < kartta.length && x - 1 >= 0) {
@@ -248,8 +270,9 @@ public class JPS {
     }
   }
 
-  /** Hyppypisteiden hakeminen vinottain. Tähän tarvitaan sekä dirH, että dirV-arvot, eli tutkittavat suunnat x- ja y-akselilla.
-   * Jokaista yhtä diagonaalista askelta kohti suoritetaan horizontalScan ja verticalScan.
+  /** Jump pointtien hakeminen vinottain. Tähän tarvitaan sekä dirH, että dirV-arvot, eli tutkittavat suunnat x- ja y-akselilla.
+   * Jokaista yhtä diagonaalista askelta kohti suoritetaan horizontalScan ja verticalScan. Tämän jälkeen edetään taas yksi askel diagonaalisesti.
+   * Etenemistä jatketaan taas kunnes vastaan tulee este, kartan raja tai maalisolmu.
    * @param parent Solmun vanhempi
    */
   public void diagonalScan(Node parent) {
@@ -278,14 +301,17 @@ public class JPS {
         goalNode.setParent(parent);
         break;
       }
-
+      // Luo uuden Node-olion vanhemmaksi horizontalScannia varten. Uusi olio siksi, että sille saadaan päivitettyä tarvittavat arvot, kuten matka, suunta jne.
       Node newParent = new Node(xNext, yNext, dirH, 0, distance);
       newParent.setParent(parent);
       horizontalScan(newParent);
+
+      // Luo uuden Node olion vanhemmaksi verticalScannia varten.
       newParent = new Node(xNext, yNext, 0, dirV, distance);
       newParent.setParent(parent);
       verticalScan(newParent);
 
+      // Vastaavat tarkistukset Jump Pointien varalle, kuin horizontalScan ja verticalScan-metodeissa, mutta diagonaalisessa suunnassa.
       Node node = solmumatriisi[yNext][xNext];
       if (!node.onVierailtu() || node.getG_Matka() > distance) {
         if (xNext - 1 >= 0 && xNext + 1 < kartta[0].length && yNext - 1 >= 0 && yNext + 1 < kartta.length) {
@@ -312,10 +338,11 @@ public class JPS {
     }
   }
 
-  /** Heuristiikka, joka laskee arvioidun etäisyyden tutkittavan solmun ja maalisolmun välille.
+  /** Heuristiikka, joka laskee arvioidun etäisyyden tutkittavan solmun ja maalisolmun välille, kun ruudukko sallii liikkumisen
+   * vinoittain ruutujen välillä.
    * @param n1 Ensimmäinen solmu
    * @param n2 Toinen solmu
-   * @return Arvioitu etäisyys solmusta n1 solmuun n2
+   * @return Arvioitu etäisyys solmusta n1 solmuun n2, solmu n2 aina maalisolmu.
    */
   public double diagonalDist(Node n1, Node n2) {
     double dx = math.getAbs(n1.getX() - n2.getX());
