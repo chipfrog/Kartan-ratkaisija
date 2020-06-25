@@ -63,9 +63,6 @@ public class Ui extends Application {
   private AStar aStar;
   private JPS jps;
   private int nodeToPaint;
-  private Label numOfVisitedNodes;
-  private Label distToGoal;
-  private Label runTime;
   private Text errorMessage;
   private boolean runClicked;
   private int animationSpeed;
@@ -78,6 +75,21 @@ public class Ui extends Application {
   private MapReader mapReader;
   private ArrayList<Line> lines;
 
+  private Label labelD;
+  private Label distD;
+  private Label nodesD;
+  private Label timeD;
+
+  private Label labelA;
+  private Label distA;
+  private Label nodesA;
+  private Label timeA;
+
+  private Label labelJ;
+  private Label distJ;
+  private Label nodesJ;
+  private Label timeJ;
+
 
   public Ui() {
     this.cols = 60;
@@ -89,9 +101,6 @@ public class Ui extends Application {
     this.goalDrawn = false;
     this.pane = new Pane();
     this.nodeToPaint = 0;
-    this.numOfVisitedNodes = new Label("Nodes: " + 0);
-    this.distToGoal = new Label("Distance: " + 0);
-    this.runTime = new Label("Time: ");
     this.errorMessage = new Text();
     this.runClicked = false;
     this.animationSpeed = 5;
@@ -107,6 +116,21 @@ public class Ui extends Application {
 
     this.mapReader = new MapReader(new MapReaderIO());
     this.lines = new ArrayList<>();
+
+    this.labelA = new Label("A*:");
+    this.nodesA = new Label("Nodes: ");
+    this.timeA = new Label("Time: ");
+    this.distA = new Label("Distance: ");
+
+    this.labelD = new Label("Dijkstra:");
+    this.nodesD = new Label("Nodes: ");
+    this.timeD = new Label("Time: ");
+    this.distD = new Label("Distance: ");
+
+    this.labelJ = new Label("JPS:");
+    this.nodesJ = new Label("Nodes: ");
+    this.timeJ = new Label("Time: ");
+    this.distJ = new Label("Distance: ");
 
   }
 
@@ -250,8 +274,18 @@ public class Ui extends Application {
     startDrawn = false;
     goalDrawn = false;
     nodeToPaint = 0;
-    numOfVisitedNodes.setText("Nodes: " + 0);
-    distToGoal.setText("Distance: " + 0);
+
+    distD.setText("Distance: ");
+    distA.setText("Distance: ");
+    distJ.setText("Distance: ");
+
+    nodesD.setText("Nodes: ");
+    nodesA.setText("Nodes: ");
+    nodesJ.setText("Nodes: ");
+
+    timeD.setText("Time: ");
+    timeA.setText("Time: ");
+    timeJ.setText("Time: ");
     start(stage);
   }
 
@@ -318,14 +352,13 @@ public class Ui extends Application {
         runtimes[i] = t2 - t1;
       }
       if (dijkstra.getGoalNode() != null) {
-        distToGoal.setText("Distance: " + dijkstra.getEtaisyysMaaliin());
-        runTime.setText("Time: " + averageRunTime() + "ms");
+        distD.setText("Distance: " + dijkstra.getEtaisyysMaaliin());
+        timeD.setText("Time: " + averageRunTime() + " ms");
         DynamicArray visitedNodes = dijkstra.getVisitedOrder();
         if (noAnimation.isSelected()) {
-          drawVisitedNodes(visitedNodes);
+          drawVisitedNodes(visitedNodes, nodesD);
           drawShortestPath(dijkstra.getSolvedMap());
         } else {
-          drawVisitedNodes(visitedNodes);
           animateDijkstra(visitedNodes);
         }
       } else {
@@ -352,14 +385,13 @@ public class Ui extends Application {
       }
 
       if (jps.goalWasFound()) {
-        distToGoal.setText("Distance: " + jps.getGoalNode().getG_Matka());
-        runTime.setText("Time: " + averageRunTime() + "ms");
+        distJ.setText("Distance: " + jps.getGoalNode().getG_Matka());
+        timeJ.setText("Time: " + averageRunTime() + " ms");
         DynamicArray visitedNodes = jps.getVisitedNodes();
         if (noAnimation.isSelected()) {
-          drawVisitedNodes(visitedNodes);
+          drawVisitedNodes(visitedNodes, nodesJ);
           drawJPSPath(jps.getReitti());
         } else {
-          drawVisitedNodes(visitedNodes);
           animateJPS(visitedNodes);
         }
       } else {
@@ -386,15 +418,14 @@ public class Ui extends Application {
       }
 
       if (aStar.goalWasFound()) {
-        distToGoal.setText("Distance: " + aStar.getEtaisyysMaaliin());
-        runTime.setText("Time: " + averageRunTime() + "ms");
+        distA.setText("Distance: " + aStar.getEtaisyysMaaliin());
+        timeA.setText("Time: " + averageRunTime() + " ms");
         DynamicArray visitedNodes = aStar.getVisitedOrder();
 
         if (noAnimation.isSelected()) {
-          drawVisitedNodes(visitedNodes);
+          drawVisitedNodes(visitedNodes, nodesA);
           drawShortestPath(aStar.getReitti());
         } else {
-          drawVisitedNodes(visitedNodes);
           animateAStar(visitedNodes);
         }
       } else {
@@ -421,6 +452,8 @@ public class Ui extends Application {
           if (node != null) {
             paintSquare(visitedNodes.get(nodeToPaint));
             nodeToPaint++;
+            nodesA.setText("Nodes: " + nodeToPaint);
+            nodesA.setText("Nodes: " + nodeToPaint);
           }
         }
     ));
@@ -441,6 +474,7 @@ public class Ui extends Application {
             if (node != null) {
               paintSquare(visitedNodes.get(nodeToPaint));
               nodeToPaint++;
+              nodesJ.setText("Nodes: " + nodeToPaint);
             }
           }
       ));
@@ -450,6 +484,8 @@ public class Ui extends Application {
       timeline.setOnFinished(e -> {
         drawJPSPath(jps.getReitti());
       });
+    } else {
+      drawJPSPath(jps.getReitti());
     }
   }
 
@@ -461,6 +497,7 @@ public class Ui extends Application {
           if (node != null) {
             paintSquare(visitedNodes.get(nodeToPaint));
             nodeToPaint++;
+            nodesD.setText("Nodes: " + nodeToPaint);
           }
         }
     ));
@@ -520,7 +557,7 @@ public class Ui extends Application {
     }
   }
 
-  public void drawVisitedNodes(DynamicArray visitedNodes) {
+  public void drawVisitedNodes(DynamicArray visitedNodes, Label label) {
     for (int i = 0; i < visitedNodes.size(); i ++) {
       Node node = visitedNodes.get(i);
       if (node != null) {
@@ -528,7 +565,7 @@ public class Ui extends Application {
         nodeToPaint ++;
       }
     }
-    numOfVisitedNodes.setText("Nodes: " + nodeToPaint);
+    label.setText("Nodes: " + nodeToPaint);
   }
 
   private void resetSolution() {
@@ -542,8 +579,6 @@ public class Ui extends Application {
     for (Line line : lines) {
       pane.getChildren().remove(line);
     }
-    numOfVisitedNodes.setText("Nodes: " + 0);
-    distToGoal.setText("Distance: " + 0);
     nodeToPaint = 0;
   }
 
@@ -699,14 +734,12 @@ public class Ui extends Application {
     configurations.setSpacing(10);
 
     VBox otherOptions = new VBox();
-    otherOptions.getChildren().addAll(run, tryAgain, clear, numOfVisitedNodes, distToGoal, runTime);
+    otherOptions.getChildren().addAll(run, tryAgain, clear);
     otherOptions.setSpacing(10);
 
     Label avgD = new Label();
     Label avgA = new Label();
     Label avgJ = new Label();
-    Label distA = new Label();
-    Label distD = new Label();
 
     Button runTest = new Button("Benchmark");
     runTest.setOnAction(e -> {
@@ -738,6 +771,24 @@ public class Ui extends Application {
       }
     });
 
+    VBox allResults = new VBox();
+    allResults.setSpacing(20);
+    allResults.setPadding(new Insets(20));
+
+    VBox resultsD = new VBox();
+    resultsD.getChildren().addAll(labelD, distD, nodesD, timeD);
+    resultsD.setSpacing(10);
+
+    VBox resultsA = new VBox();
+    resultsA.getChildren().addAll(labelA, distA, nodesA, timeA);
+    resultsA.setSpacing(10);
+
+    VBox resultsJ = new VBox();
+    resultsJ.getChildren().addAll(labelJ, distJ, nodesJ, timeJ);
+    resultsJ.setSpacing(10);
+
+    allResults.getChildren().addAll(resultsD, resultsA, resultsJ);
+
     VBox controls = new VBox();
     controls.setSpacing(40);
     controls.getChildren().addAll(drawChoice, configurations, otherOptions, mapSaving, runTest, avgD, avgA, avgJ);
@@ -747,9 +798,11 @@ public class Ui extends Application {
     layout.setPadding(new Insets(20));
 
     HBox hB = new HBox(20);
-    hB.getChildren().addAll(controls, pane);
+    hB.getChildren().addAll(controls, pane, allResults);
     hB.setSpacing(30);
     hB.setPadding(new Insets(20));
+    primaryStage.setHeight(1000);
+    primaryStage.setWidth(1600);
 
     errorMessage.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
     errorMessage.setFill(Color.RED);
