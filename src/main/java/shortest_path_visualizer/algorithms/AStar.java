@@ -10,11 +10,13 @@ import shortest_path_visualizer.dataStructures.Node;
 public class AStar {
   private final IO io;
   /**
-   * Algoritmin käyttämä kartta ascii-merkkeinä
+   * Algoritmin käyttämä kartta ascii-merkkeinä matriisimuodossa.
    */
   private char[][] karttamatriisi;
   /**
-   * Sama kartta, mutta koostuu Node-olioista
+   * Sama kartta, mutta koostuu Node-olioista. Tarvitaan NeighbourFinderia varten. Kun solmumatriisin avulla
+   * haetaan naapurisolmuja, päästään käsiksi Node-olioihin tallennettuihin tietoihin, kuten eri etäisyyksiin (f ja g), sekä
+   * tietoon onko solmussa vierailtu jne.
    */
   private Node[][] solmumatriisi;
   /**
@@ -91,6 +93,7 @@ public class AStar {
             naapuri.setEtaisyys(uusiGMatka + h);
             openList.addNode(naapuri);
 
+            // Tallentaa muistiin vieraillut solmut.
             if (!naapuri.onVierailtu()) {
               visitedNodes.add(naapuri);
               naapuri.vieraile();
