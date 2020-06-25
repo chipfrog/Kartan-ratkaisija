@@ -1,7 +1,7 @@
 # Testaus
 
 ## Yleisesti
-Projektin luokkien ja metodien testit toteutettiin JUnit-yksikkötesteillä. Automaattisten testien ulkopuolelle jätettiin käyttöliittymän testaus, eli kansion _ui_ -sisältö. Käyttöliittymän toimintaa on kuitenkin testattu manuaalisesti ja pyritty löytämään mahdolliset virhetilanteita aiheuttavat skenaariot. Testikattavuutta voi tarkastella [codecovissa](https://codecov.io/gh/chipfrog/Shortest-path-visualizer) tai generoimalla jacocon testikattavuusraportin [käyttöohjeissa](https://github.com/chipfrog/Shortest-path-visualizer/blob/master/dokumentaatio/manual.md) kuvatulla tavalla. Algoritmien suorituskykyä mittaava PerformanceTest-luokka ei myöskään kuulu testikattavuuteen.
+Projektin luokkien ja metodien testit toteutettiin JUnit-yksikkötesteillä. Automaattisten testien ulkopuolelle jätettiin käyttöliittymän testaus, eli kansion _ui_ -sisältö. Käyttöliittymän toimintaa on kuitenkin testattu manuaalisesti ja pyritty löytämään mahdolliset virhetilanteita aiheuttavat skenaariot. Testikattavuutta voi tarkastella [codecovissa](https://codecov.io/gh/chipfrog/Shortest-path-visualizer) tai generoimalla jacocon testikattavuusraportin [käyttöohjeissa](https://github.com/chipfrog/Shortest-path-visualizer/blob/master/dokumentaatio/manual.md) kuvatulla tavalla. Algoritmien suorituskykyä mittaava PerformanceTest-luokka ei myöskään kuulu testikattavuuteen ja on erillinen JUnit-testeistä.
 
 ## Yksikkötestaus
 JUnit-yksikkötesteillä pyrittiin varmistamaan yksittäisten luokkien ja metodien oikeanlainen toiminta. Testeissä on pyritty testaamaan, että luokat toimivat oikein ainakin ns. "normaalitilanteissa" ja yleisimmissä rajatapaustilanteissa. 
