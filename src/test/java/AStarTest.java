@@ -7,6 +7,7 @@ import org.junit.Test;
 import shortest_path_visualizer.algorithms.AStar;
 import shortest_path_visualizer.IO.MapReader;
 import shortest_path_visualizer.algorithms.Dijkstra;
+import shortest_path_visualizer.dataStructures.DynamicArray;
 
 public class AStarTest {
   File testMap = new File("src/test/resources/kartat/testikartta.txt");
@@ -48,6 +49,18 @@ public class AStarTest {
     System.out.println(resultA);
     System.out.println(resultD);
     assertTrue(resultA - resultD < 0.000001);
+  }
+
+  @Test
+  public void visitRightNumberOfNodes() throws FileNotFoundException {
+    a.runAStar();
+    DynamicArray nodes = a.getVisitedOrder();
+    int visitedNodes = 0;
+    for (int i = 0; i < nodes.size(); i ++) {
+      if (nodes.get(i) != null)
+      visitedNodes ++;
+    }
+    assertTrue(visitedNodes == 21);
   }
 
 }

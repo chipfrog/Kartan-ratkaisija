@@ -10,7 +10,7 @@ public class DynamicArray {
 
   public DynamicArray() {
     this.array = new Node[10];
-    this.index = 0;
+    this.index = -1;
     this.size = 10;
   }
 
@@ -18,11 +18,11 @@ public class DynamicArray {
    * @param node Taulukkoon lisättävä Node
    */
   public void add(Node node) {
+    index ++;
     if (index == size) {
       increaseSize();
     }
     array[index] = node;
-    index ++;
   }
 
   public void addToIndex(int i, Node node) {
@@ -35,7 +35,10 @@ public class DynamicArray {
    * @return taulukon koko
    */
   public int size() {
-    return this.index + 1;
+    if (index == -1) {
+      return 0;
+    }
+    return index + 1;
   }
 
   /** Hakee taulukosta Noden parametrina annetulla indeksillä.
@@ -60,6 +63,10 @@ public class DynamicArray {
     }
     array = temp;
     size *= 2;
+  }
+
+  public int getAvailableSize() {
+    return this.size;
   }
 
 }

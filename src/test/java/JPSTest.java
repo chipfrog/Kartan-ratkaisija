@@ -45,13 +45,13 @@ public class JPSTest {
   }
 
   @Test
-  public void visitsOneNodesWhenGoalOnTheSameLineAsStart() throws FileNotFoundException {
+  public void visitsZeroNodesWhenGoalOnTheSameLineAsStart() throws FileNotFoundException {
     mapReader.createMatrix(emptyMap);
     kartta = mapReader.getMapArray();
     jps.setMap(kartta);
     jps.runJPS();
     DynamicArray nodes = jps.getVisitedNodes();
-    assertTrue(jps.getVisitedNodes().size() == 1);
+    assertTrue(jps.getVisitedNodes().size() == 0);
   }
 
   @Test
