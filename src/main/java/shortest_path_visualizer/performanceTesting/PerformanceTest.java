@@ -32,11 +32,6 @@ public class PerformanceTest {
     this.times = new long[kierroksia];
   }
 
-  /*public char[][] initMap() throws FileNotFoundException {
-    mapReader.createMatrix(file);
-    return mapReader.getMapArray();
-  }*/
-
   /** Testaa dijkstran algoritmia. Suoritta saman reitinhaun muuttujassa "kierroksia" annetun lukumäärän ja tallentaa kunkin ajon keston taulukkoon.
    * @param file Karttatiedosto
    * @param start aloitussolmu
@@ -55,6 +50,7 @@ public class PerformanceTest {
 
     for (int i = 0; i < kierroksia; i ++) {
       dijkstra.setMap(map);
+      // Mittaa varsinaiseen reitinhakuun kuluvan ajan
       long t1 = System.nanoTime();
       dijkstra.runDijkstra();
       long t2 = System.nanoTime();
@@ -80,6 +76,7 @@ public class PerformanceTest {
 
     for (int i = 0; i < kierroksia; i ++) {
       aStar.setMap(map);
+      // Mittaa varsinaiseen reitinhakuun kuluvan ajan
       long t1 = System.nanoTime();
       aStar.runAStar();
       long t2 = System.nanoTime();
@@ -106,6 +103,7 @@ public class PerformanceTest {
     for (int i = 0; i < kierroksia; i ++) {
       JPS jps = new JPS();
       jps.setMap(map);
+      // Mittaa varsinaiseen reitinhakuun kuluvan ajan
       long t1 = System.nanoTime();
       jps.runJPS();
       long t2 = System.nanoTime();
@@ -114,8 +112,9 @@ public class PerformanceTest {
 
   }
 
-  /** Laskee suoritettujen ajojen keston keskiarvon ja muuntaa sen millisekuneiksi.
-   * @return
+  /** Laskee suoritettujen ajojen keston keskiarvon ja muuntaa sen millisekuneiksi. Indeksi i alkaa numerosta 1, sillä indeksissä 0 oleva aika jätetään huomiotta, koska ensimmäinen
+   * ajo usein vääristää hitautensa vuoksi tulosta
+   * @return Yhden reitinhakuskenaarion ajojen keskiarvo
    */
   public double getAverage() {
     long totalTime = 0;

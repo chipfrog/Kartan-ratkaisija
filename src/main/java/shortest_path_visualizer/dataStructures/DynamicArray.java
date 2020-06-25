@@ -5,6 +5,10 @@ package shortest_path_visualizer.dataStructures;
  */
 public class DynamicArray {
   private Node[] array;
+  /**
+   * Taulukon indeksi. Kertoo missä kohtaa taulukkoa ollaan menossa. Aluksi -1. Kasvaa jokaisen lisäyksen myötä.
+   * Käytetään myös katsomaan milloin taulukko tulee täyteen vertaamalla size-muuttujaan.
+   */
   private int index;
   private int size;
 
@@ -15,6 +19,7 @@ public class DynamicArray {
   }
 
   /** Lisää uuden Noden taulukkoon ja tuplaa taulukon koon, jos lisäyksen jälkeen taulukko on täysi.
+   * Kasvattaa indeksin arvoa yhdellä.
    * @param node Taulukkoon lisättävä Node
    */
   public void add(Node node) {

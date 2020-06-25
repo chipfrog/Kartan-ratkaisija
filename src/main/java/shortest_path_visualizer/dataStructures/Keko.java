@@ -7,7 +7,8 @@ public class Keko {
   private int juuri = 1;
 
   /**
-   * Minimikeon toteutus. Pitää yllä hakupuuta, jonka juurena solmu, jonka etäisyys maalisolmuun pienin.
+   * Minimikeon toteutus. Pitää yllä hakupuuta, jonka juurena solmu, jonka etäisyys Dijkstran tapauksessa maalisolmuun pienin. A*:n ja JPS:n tapauksessa
+   * juuressa solmu jonka f-arvo pienin.
    */
   public Keko() {
     this.keko = new Node[1000000];
@@ -36,7 +37,7 @@ public class Keko {
     return nodeToReturn;
   }
 
-  /** Päivittää kekoa ja etsii sille uuden juurisolmun.
+  /** Päivittää kekoa ja etsii sille rekursiivisesti uuden juurisolmun.
    * @param currentPos Nykyinen sijainti puussa.
    */
   private void findNewRootNode(int currentPos) {

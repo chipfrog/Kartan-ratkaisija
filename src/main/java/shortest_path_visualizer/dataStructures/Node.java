@@ -2,10 +2,16 @@ package shortest_path_visualizer.dataStructures;
 
 /**
  * Luokka solmioliolle. Olio sisältää tiedon mm. sijainnista (x- ja y-koordinaatit), siitä onko solmussa vierailtu ja algoritmista riippuen erilaisia etäisyyksiä. Esim
- * arvioitu etäisyys maalisolmuun ja etäisyys lähtösolmusta.
+ * etäisyys lähtösolmusta ja f-arvo.
  */
 public class Node {
+  /**
+   * Solmuolion uniikki tunnus.
+   */
   private int tunnus;
+  /**
+   * Dijkstran algoritmissa etäisyys maalisolmusta. A*:n ja JPS:n tapauksessa f-matka, eli g-matka (etäisyys lähtösolmusta) + h-matka (heuristinen etäisyys maalisolmuun).
+   */
   private double etaisyys;
   private boolean vierailtu;
   private boolean start;
@@ -13,8 +19,17 @@ public class Node {
   private int x;
   private int y;
   private Node parent;
+  /**
+   * Etäisyys lähtösolmusta kyseiseen solmuun
+   */
   private double g_Matka;
+  /**
+   * Solmusta käsin tutkittava suunta x-akselilla JPS-algoritmissa. 0, 1, tai -1
+   */
   private int dirH;
+  /**
+   * Solmusta käsin tutkittava suunta y-akselilla JPS-algoritmissa. 0, 1, tai -1
+   */
   private int dirV;
 
   /** Solmuolion ensimmäinen konstruktori
@@ -70,16 +85,10 @@ public class Node {
     return parent;
   }
 
-  /** Asettaa solmun g-matkan, eli etäisyyden lähtösolmusta kyseiseen solmuun
-   * @param g etäisyys lähtösolmusta
-   */
   public void setG_Matka(double g) {
     this.g_Matka = g;
   }
 
-  /** Palauttaa g-matkan
-   * @return g-matka; etäisyys lähtösolmusta kyseiseen solmuun
-   */
   public double getG_Matka() {
     return this.g_Matka;
   }
@@ -120,9 +129,6 @@ public class Node {
     return this.tunnus;
   }
 
-  /** Dijkst
-   * @param uusiEtaisyys
-   */
   public void setEtaisyys(double uusiEtaisyys) {
     this.etaisyys = uusiEtaisyys;
   }
