@@ -214,13 +214,32 @@ public class Ui extends Application {
     for (int y = 0; y < kartta.length; y++) {
       for (int x = 0; x < kartta[0].length; x++) {
         Rectangle rectangle = new Rectangle(sivu, sivu, Color.WHITE);
+        rectangle.setOnMouseClicked(new EventHandler<MouseEvent>() {
+          @Override
+          public void handle(MouseEvent event) {
+            if (event.getButton().equals(MouseButton.PRIMARY)) {
+              if (type == DrawType.OBSTACLE && rectangle.getFill() != Color.GREEN) {
+                rectangle.setFill(Color.BLACK);
+              } else if (type == DrawType.START && !startDrawn && rectangle.getFill() != Color.RED) {
+                rectangle.setFill(Color.GREEN);
+                startDrawn = true;
+              } else if (type == DrawType.GOAL && !goalDrawn && rectangle.getFill() != Color.GREEN) {
+                rectangle.setFill(Color.RED);
+                goalDrawn = true;
+              }
+            } else if (event.getButton().equals(MouseButton.SECONDARY)) {
+              if (rectangle.getFill() == Color.GREEN) {
+                startDrawn = false;
+              } else if (rectangle.getFill() == Color.RED) {
+                goalDrawn = false;
+              }
+              rectangle.setFill(Color.WHITE);
+            }
+          }
+        });
+
         if (kartta[y][x] == '@') {
           rectangle.setFill(Color.BLACK);
-        }
-        else if (kartta[y][x] == 'S') {
-          rectangle.setFill(Color.GREEN);
-        } else if (kartta[y][x] == 'G') {
-          rectangle.setFill(Color.RED);
         }
         if (x == 0) {
           xPikselit = 0;
