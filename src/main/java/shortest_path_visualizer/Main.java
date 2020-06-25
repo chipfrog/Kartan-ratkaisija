@@ -1,7 +1,12 @@
 package shortest_path_visualizer;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import javafx.application.Application;
+import shortest_path_visualizer.IO.BenchmarkFileReader;
+import shortest_path_visualizer.IO.MapReaderIO;
+import shortest_path_visualizer.dataStructures.Node;
+import shortest_path_visualizer.performanceTesting.PerformanceTest;
 import shortest_path_visualizer.ui.Ui;
 
 public class Main {

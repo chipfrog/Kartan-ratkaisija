@@ -1,3 +1,4 @@
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -11,6 +12,7 @@ import shortest_path_visualizer.dataStructures.DynamicArray;
 
 public class AStarTest {
   File testMap = new File("src/test/resources/kartat/testikartta.txt");
+  File unreachableGoal = new File("src/test/resources/kartat/saavuttamatonmaali.txt");
   IOStub ioStub = new IOStub();
   MapReader mapReader = new MapReader(ioStub);
   char[][] mapMatrix;
@@ -61,6 +63,13 @@ public class AStarTest {
       visitedNodes ++;
     }
     assertTrue(visitedNodes == 21);
+  }
+
+  @Test
+  public void doesNotCrashWhenGoalCannotBeReached() throws FileNotFoundException {
+    changeMap(unreachableGoal);
+    a.runAStar();
+    assertFalse(a.goalWasFound());
   }
 
 }

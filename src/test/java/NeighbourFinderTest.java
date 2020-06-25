@@ -53,18 +53,6 @@ public class NeighbourFinderTest {
   }
 
   @Test
-  public void cellHasNoNeighbourIfItIsWall() {
-    Node[]  neighbours = dijkstra.haeNaapurisolmut(0,0);
-    int nodes = 0;
-    for (int i = 0; i < neighbours.length; i ++) {
-      if (neighbours[i] != null) {
-        nodes ++;
-      }
-    }
-    assertTrue(nodes == 0);
-  }
-
-  @Test
   public void cellHasTSixNeighboursIfTwoSidesAreBlocked() {
     Node[]  neighbours = dijkstra.haeNaapurisolmut(18,2);
     int nodes = 0;
@@ -75,6 +63,26 @@ public class NeighbourFinderTest {
     }
     assertTrue(nodes == 6);
   }
+
+  @Test
+  public void spaceBeyondMapAreaIsNotCountedAsNeighbours() throws FileNotFoundException {
+    this.dijkstra = new Dijkstra(io);
+    this.testMap = new File("src/test/resources/kartat/emptymap.txt");
+    mapReader.createMatrix(testMap);
+    char[][] map = mapReader.getMapArray();
+    dijkstra.setMap(map);
+    this.finder = new NeighbourFinder(map, dijkstra.getSolmuMatriisi());
+    Node[]  neighbours = dijkstra.haeNaapurisolmut(0,0);
+    int nodes = 0;
+    for (int i = 0; i < neighbours.length; i ++) {
+      if (neighbours[i] != null) {
+        nodes ++;
+      }
+    }
+    assertTrue(nodes == 3);
+  }
+
+
 
 
 

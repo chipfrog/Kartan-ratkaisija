@@ -3,31 +3,23 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.security.spec.RSAOtherPrimeInfo;
-import java.util.ArrayList;
-import org.junit.Before;
 import org.junit.Test;
 import shortest_path_visualizer.IO.MapReader;
 import shortest_path_visualizer.algorithms.Dijkstra;
 import shortest_path_visualizer.algorithms.JPS;
 import shortest_path_visualizer.dataStructures.DynamicArray;
-import shortest_path_visualizer.dataStructures.Node;
+
 
 public class JPSTest {
   File testMap1 = new File("src/test/resources/kartat/testikartta.txt");
   File unreachableGoalMap = new File("src/test/resources/kartat/saavuttamatonmaali.txt");
   File obstacleInWayMap = new File("src/test/resources/kartat/testikartta2.txt");
   File emptyMap = new File("src/test/resources/kartat/emptymap.txt");
-
+  File diagonalMap = new File("src/test/resources/kartat/diagonalPathMap.txt");
   IOStub ioStub = new IOStub();
   MapReader mapReader = new MapReader(ioStub);
   char[][] kartta;
   JPS jps = new JPS();
-
-  /*@Before
-  public void init() {
-    this.jps = new JPS();
-  }*/
 
   private void changeMap(File file) throws FileNotFoundException {
     mapReader.createMatrix(testMap1);
@@ -86,9 +78,13 @@ public class JPSTest {
     assertTrue(resultD == resultJ);
   }
 
-
-
-
-
+  @Test
+  public void findsGoalWithDiagonalScan() throws FileNotFoundException {
+    mapReader.createMatrix(diagonalMap);
+    kartta = mapReader.getMapArray();
+    jps.setMap(kartta);
+    jps.runJPS();
+    assertTrue(jps.goalWasFound());
+  }
 
 }

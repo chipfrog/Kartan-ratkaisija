@@ -6,12 +6,14 @@ import org.junit.Before;
 import org.junit.Test;
 import shortest_path_visualizer.algorithms.Dijkstra;
 import shortest_path_visualizer.IO.MapReader;
+import shortest_path_visualizer.dataStructures.DynamicArray;
 import shortest_path_visualizer.dataStructures.Node;
 
 public class DijkstraTest {
   File testMap = new File("src/test/resources/kartat/testikartta.txt");
   File specialCaseMap = new File("src/test/resources/kartat/erikoistapaus1.txt");
   File unreachableGoalMap = new File ("src/test/resources/kartat/saavuttamatonmaali.txt");
+  File easyMap = new File("src/test/resources/kartat/helppokartta.txt");
 
   IOStub ioStub = new IOStub();
   MapReader mapReader = new MapReader(ioStub);
@@ -46,7 +48,6 @@ public class DijkstraTest {
   @Test
   public void returnsShortestDistanceInBasicSituation() {
     d.runDijkstra();
-    System.out.println(d.getEtaisyysMaaliin());
     assertTrue(d.getEtaisyysMaaliin() == 5);
   }
 
@@ -70,4 +71,20 @@ public class DijkstraTest {
     assertTrue(d.getEtaisyysMaaliin() == 10);
     assertTrue(d.haeReitti().getEtaisyys() == 1);
   }
+
+  @Test
+  public void visitsRightNumberOfNodes() throws FileNotFoundException {
+    d.setMap(initDijkstraWithNewMap(easyMap));
+    d.runDijkstra();
+    DynamicArray list = d.getVisitedOrder();
+    int nodes = 0;
+    for (int i = 0; i < list.size(); i ++) {
+      if (list.get(i) != null) {
+        nodes ++;
+      }
+    }
+    assertTrue(d.getVisitedOrder().size() == nodes);
+  }
+
+
 }
