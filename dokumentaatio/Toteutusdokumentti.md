@@ -63,3 +63,94 @@ add start to minHeap
 ```
 
 ### Jump point search
+```
+for each node in Graph
+  set distance to infinity
+  
+func JPS()
+  
+  
+func horizontalScan(parent)
+  while true
+    x_step += parent.diretion_x
+    
+    if map[parent.y][x_step] = OBSTACLE
+      end
+    
+    distance_travelled = parent.distance + 1
+    x_next_step = x_step + parent.direction_x
+    
+    if map[parent.y][x_step] = goal
+      end
+    
+    node = map[parent.y][x_step]
+    if node has not been visited or node.g_distance > distance_travelled
+      if node is JumpPoint relative to direction -y
+        node.parent = parent
+        node.direction_y = -1
+        node.distance = distance_travelled
+        add node to minHeap
+    
+    if node has not been visited or node.g_distance > distance_travelled
+      if node is JumpPoint relative to direction +y
+        node.parent = parent
+        node.direction_y = 1
+        node.distance = distance_travelled
+        add node to minHeap
+        
+func verticalScan(parent)
+  while true
+  
+    y_step += parent.diretion_y
+    
+    if map[y_step][parent.x] = OBSTACLE
+      end
+    
+    distance_travelled = parent.distance + 1
+    y_next_step = y_step + parent.direction_y
+    
+    if map[y_next_step][parent.x] = goal
+      end
+    
+    node = map[y_next_step][parent.x]
+    if node has not been visited or node.g_distance > distance_travelled
+      if node is JumpPoint relative to direction -x
+        node.parent = parent
+        node.direction_x = -1
+        node.distance = distance_travelled
+        add node to minHeap
+    
+    if node has not been visited or node.g_distance > distance_travelled
+      if node is JumpPoint relative to direction +x
+        node.parent = parent
+        node.direction_x = 1
+        node.distance = distance_travelled
+        add node to minHeap
+        
+func diagonalScan(paren)
+  while true
+    similar checks like in horizontalScan and verticlScan
+    distance_travelled += parent.distance + sqrt(2)
+    
+    do horizontalScan(parent, direction_x = 0)
+    do verticalScan(parent, direction_y = 0)
+    
+    diagonal_step += 1
+    
+    if node has not been visited or node.g_distance > distance_travelled
+      if node is JumpPoint relative to direction (-1) * x
+        node.parent = parent
+        node.direction_x = (-1) * x
+        node.distance = distance_travelled
+        add node to minHeap
+        
+    if node has not been visited or node.g_distance > distance_travelled
+      if node is JumpPoint relative to direction (-1) * y
+        node.parent = parent
+        node.direction_y = (-1) * x
+        node.distance = distance_travelled
+        add node to minHeap    
+  
+    
+    
+```
