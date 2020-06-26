@@ -2,7 +2,7 @@
 [![CircleCI](https://circleci.com/gh/chipfrog/Shortest-path-visualizer.svg?style=svg)](https://circleci.com/gh/chipfrog/Shortest-path-visualizer)
 [![codecov](https://codecov.io/gh/chipfrog/Shortest-path-visualizer/branch/master/graph/badge.svg)](https://codecov.io/gh/chipfrog/Shortest-path-visualizer)
 
-Projekti on Helsingin yliopiston Tietorakenteet ja algoritmit harjoitustyö-kurssia varten tehty sovellus. Sovellus hakee 2d-ruudukkokartoista lyhimpiä reittejä kahden pisteen välillä käyttäen algoritmeinaan Dijkstraa, A*:ä ja Jump point searchia. Ruudukossa saa liikkua kahdeksaan suuntaan. Yksi askel x- tai y-suuntaan on hinnaltaan 1 ja vinottain liikkuminen sqrt(2). Sovelluksessa voi käyttää myös "oikeita" karttoja, mutta lyhimmän reitin hakemisessa noudatetaan silti yllä kuvattuja liikkumissääntöjä. 
+Projekti on Helsingin yliopiston Tietorakenteet ja algoritmit harjoitustyö-kurssia varten tehty sovellus. Sovellus hakee 2d-ruudukkokartoista lyhimpiä reittejä kahden pisteen välillä käyttäen algoritmeinaan Dijkstraa, A*:ä ja Jump point searchia. Ruudukossa saa liikkua kahdeksaan suuntaan. Yksi askel x- tai y-suuntaan on hinnaltaan 1 ja vinottain liikkuminen sqrt(2). Sovelluksessa voi käyttää myös "oikeita" karttoja, mutta lyhimmän reitin hakemisessa noudatetaan silti yllä kuvattuja liikkumissääntöjä. Sovellus visualisoi löydetyn lyhimmän reitin ja läpikäydyt solmut. Sovelluksen avulla voi verrata algoritmien nopeuseroja ja läpikäytyjen solmujen määrää.
 
 ## Viikkoraportit
 
