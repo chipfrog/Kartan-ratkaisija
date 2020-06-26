@@ -2,9 +2,7 @@
 [![CircleCI](https://circleci.com/gh/chipfrog/Shortest-path-visualizer.svg?style=svg)](https://circleci.com/gh/chipfrog/Shortest-path-visualizer)
 [![codecov](https://codecov.io/gh/chipfrog/Shortest-path-visualizer/branch/master/graph/badge.svg)](https://codecov.io/gh/chipfrog/Shortest-path-visualizer)
 
-### Huomioita
-* Jos reitinhakuanimaation aikana painaa _Reset solution_- tai _Clear_ -nappia, animaatio alkaa alusta. Animaation kannattaa siis antaa mennä loppuun asti tai käynnistää sovellus uudestaan. 
-* Jos tarpeeksi temppuilee aloitus- ja lähtöruudun paikan vaihtamisella, reitinhakujen ajamisella jne. on mahdollista että sovellus ei anna asettaa uutta aloitusruutua tai käynnistä reitinhakua. Tällöin _Reset solution_-nappi korjaa tilanteen.
+Projekti on Helsingin yliopiston Tietorakenteet ja algoritmit harjoitustyö-kurssia varten tehty sovellus. Sovellus hakee 2d-ruudukkokartoista lyhimpiä reittejä kahden pisteen välillä käyttäen algoritmeinaan Dijkstraa, A*:ä ja Jump point searchia. Ruudukossa saa liikkua kahdeksaan suuntaan. Yksi askel x- tai y-suuntaan on hinnaltaan 1 ja vinottain liikkuminen sqrt(2). Sovelluksessa voi käyttää myös "oikeita" karttoja, mutta lyhimmän reitin hakemisessa noudatetaan silti yllä kuvattuja liikkumissääntöjä. 
 
 ## Viikkoraportit
 
