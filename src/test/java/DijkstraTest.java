@@ -24,7 +24,7 @@ public class DijkstraTest {
   public void initMatrix() throws FileNotFoundException {
     mapReader.createMatrix(testMap);
     mapMatrix = mapReader.getMapArray();
-    d = new Dijkstra(ioStub);
+    d = new Dijkstra();
     d.setMap(mapMatrix);
 
   }

@@ -8,7 +8,6 @@ import shortest_path_visualizer.utils.NeighbourFinder;
 import shortest_path_visualizer.dataStructures.Node;
 
 public class AStar {
-  private final IO io;
   /**
    * Algoritmin käyttämä kartta ascii-merkkeinä matriisimuodossa.
    */
@@ -42,8 +41,7 @@ public class AStar {
   private DynamicArray visitedNodes;
   private MathFunctions math;
 
-  public AStar(IO io) {
-    this.io = io;
+  public AStar() {
   }
 
   /** Alustaa A*:n tarvitsemat rakenteet, kuten keon ja muuttujat. Käytetään myös kartan vaihtamiseen.

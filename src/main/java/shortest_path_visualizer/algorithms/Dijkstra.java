@@ -11,7 +11,6 @@ import shortest_path_visualizer.dataStructures.Node;
  */
 
 public class Dijkstra {
-  private final IO io;
   /**
    * Algoritmin käyttämä kartta ascii-merkkeinä matriisimuodossa.
    */
@@ -35,8 +34,7 @@ public class Dijkstra {
   private NeighbourFinder finder;
   private DynamicArray visitedNodes;
 
-  public Dijkstra (IO io) {
-    this.io = io;
+  public Dijkstra () {
   }
 
   /** Alustaa Dijkstran tarvitsemat rakenteet, kuten keon ja muuttujat. Käytetään myös kartan vaihtamiseen.

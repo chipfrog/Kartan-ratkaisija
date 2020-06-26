@@ -19,7 +19,7 @@ public class NeighbourFinderTest {
 
   @Before
   public void init() throws FileNotFoundException {
-    this.dijkstra = new Dijkstra(io);
+    this.dijkstra = new Dijkstra();
     this.testMap = new File("src/test/resources/kartat/testikartta.txt");
     mapReader.createMatrix(testMap);
     char[][] map = mapReader.getMapArray();
@@ -66,7 +66,7 @@ public class NeighbourFinderTest {
 
   @Test
   public void spaceBeyondMapAreaIsNotCountedAsNeighbours() throws FileNotFoundException {
-    this.dijkstra = new Dijkstra(io);
+    this.dijkstra = new Dijkstra();
     this.testMap = new File("src/test/resources/kartat/emptymap.txt");
     mapReader.createMatrix(testMap);
     char[][] map = mapReader.getMapArray();

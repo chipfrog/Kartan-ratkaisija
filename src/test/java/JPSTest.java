@@ -68,7 +68,7 @@ public class JPSTest {
   public void getsSameResultAsDijkstraWhenObstaclesInWay() throws FileNotFoundException {
     mapReader.createMatrix(obstacleInWayMap);
     kartta = mapReader.getMapArray();
-    Dijkstra dijkstra = new Dijkstra(ioStub);
+    Dijkstra dijkstra = new Dijkstra();
     dijkstra.setMap(kartta);
     dijkstra.runDijkstra();
     double resultD = dijkstra.getEtaisyysMaaliin();

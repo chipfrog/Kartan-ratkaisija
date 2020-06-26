@@ -36,14 +36,14 @@ public class PerformanceTest {
    * @param file Karttatiedosto
    * @param start aloitussolmu
    * @param goal maalisolmu
-   * @throws FileNotFoundException
+   * @throws FileNotFoundException exception
    */
   public void testDijkstra(File file, Node start, Node goal) throws FileNotFoundException {
     mapReader.createMatrix(file);
     this.map = mapReader.getMapArray();
     this.map[start.getY()][start.getX()] = 'S';
     this.map[goal.getY()][goal.getX()] = 'G';
-    this.dijkstra = new Dijkstra(new MapReaderIO());
+    this.dijkstra = new Dijkstra();
     dijkstra.setMap(this.map);
     dijkstra.runDijkstra();
     this.vastausD = dijkstra.getEtaisyysMaaliin();
@@ -69,7 +69,7 @@ public class PerformanceTest {
     this.map = mapReader.getMapArray();
     this.map[start.getY()][start.getX()] = 'S';
     this.map[goal.getY()][goal.getX()] = 'G';
-    this.aStar = new AStar(new MapReaderIO());
+    this.aStar = new AStar();
     aStar.setMap(map);
     aStar.runAStar();
     this.vastausA = aStar.getEtaisyysMaaliin();

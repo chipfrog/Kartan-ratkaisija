@@ -93,10 +93,15 @@ public class Ui extends Application {
   private File benchmarkFile;
   private File benchmarkMapFile;
 
+  private int testNumber;
+
+  private MapReaderIO io;
+
 
   public Ui() {
     this.cols = 60;
     this.rows = 60;
+    this.io = new MapReaderIO();
     this.mapArray = new char[rows][cols];
     this.rectChar = new Rectangle[rows][cols];
     this.type = DrawType.START;
@@ -107,7 +112,7 @@ public class Ui extends Application {
     this.errorMessage = new Text();
     this.runClicked = false;
     this.animationSpeed = 5;
-    this.mapFileCreator = new MapFileCreator(new MapReaderIO());
+    this.mapFileCreator = new MapFileCreator(io);
     this.fileName = "";
     this.runtimes = new long[101];
     this.noAnimation = new CheckBox();
@@ -120,7 +125,7 @@ public class Ui extends Application {
     this.benchmarkFile = new File("src/main/resources/BenchmarkScenarios/Berlin_0_256.scen.txt");
     this.benchmarkMapFile = new File("src/main/resources/BenchmarkMaps/Berlin_0_256.txt");
 
-    this.mapReader = new MapReader(new MapReaderIO());
+    this.mapReader = new MapReader(io);
     this.lines = new ArrayList<>();
 
     this.labelA = new Label("A*:");
@@ -137,6 +142,8 @@ public class Ui extends Application {
     this.nodesJ = new Label("Nodes: ");
     this.timeJ = new Label("Time: ");
     this.distJ = new Label("Distance: ");
+
+    this.testNumber = 0;
 
   }
 
@@ -368,7 +375,7 @@ public class Ui extends Application {
   public void solveMapUsingDijkstra() {
     generateCharArray();
     if (mapHasStartAndGoal()) {
-      this.dijkstra = new Dijkstra(new MapReaderIO());
+      this.dijkstra = new Dijkstra();
       for (int i = 0; i < runtimes.length;  i++) {
         dijkstra.setMap(mapArray);
         long t1 = System.nanoTime();
@@ -432,7 +439,7 @@ public class Ui extends Application {
   public void solveMapUsingAStar() {
     generateCharArray();
     if (mapHasStartAndGoal()) {
-      this.aStar = new AStar(new MapReaderIO());
+      this.aStar = new AStar();
 
       for (int i = 0; i < runtimes.length; i ++) {
         aStar.setMap(mapArray);
@@ -561,7 +568,7 @@ public class Ui extends Application {
     }
   }
 
-  public void drawJPSPath(ArrayList<Node> jumpPoints) {
+  public void drawJPSPath(DynamicArray jumpPoints) {
     for (int i = 0; i < jumpPoints.size() - 1; i ++) {
       Node n1 = jumpPoints.get(i);
       Node n2 = jumpPoints.get(i + 1);
@@ -792,35 +799,25 @@ public class Ui extends Application {
     runTest.setOnAction(e -> {
       System.out.println("Benchmark started!");
       try {
-        BenchmarkFileReader b = new BenchmarkFileReader(new MapReaderIO());
+        BenchmarkFileReader b = new BenchmarkFileReader(io);
         Node[][] startAndGoal = b.getScenarioCoordinates(benchmarkFile);
 
         double totalTimeD = 0;
         double totalTimeA = 0;
         double totalTimeJ = 0;
 
-
         PerformanceTest test = new PerformanceTest(5);
         for (int i = 0; i < startAndGoal.length; i++) {
           test.testDijkstra(benchmarkMapFile, startAndGoal[i][0], startAndGoal[i][1]);
           totalTimeD += test.getAverage();
-          double D = test.getVastausD();
 
           test.testAStar(benchmarkMapFile, startAndGoal[i][0], startAndGoal[i][1]);
           totalTimeA += test.getAverage();
-          double A = test.getVastausA();
 
           test.testJPS(benchmarkMapFile, startAndGoal[i][0], startAndGoal[i][1]);
           totalTimeJ += test.getAverage();
-          double J = test.getVastausJ();
 
-          if (Math.abs(D - A) > 0.0001) {
-            System.out.println("D: " + D + ", A: " + A);
-          }
-          if (Math.abs(D - J) > 0.0001) {
-            System.out.println("D: " + D + ", J: " + J);
-          }
-
+          System.out.println("Scenario " + i);
         }
 
         avgD.setText("Dijkstra: " + totalTimeD + " ms");
@@ -830,6 +827,7 @@ public class Ui extends Application {
       } catch (Exception exception) {
       }
     });
+
 
     VBox allResults = new VBox();
     allResults.setSpacing(20);

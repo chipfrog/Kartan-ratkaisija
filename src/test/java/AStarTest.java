@@ -22,14 +22,14 @@ public class AStarTest {
   public void initMatrix() throws FileNotFoundException {
     mapReader.createMatrix(testMap);
     mapMatrix = mapReader.getMapArray();
-    a = new AStar(ioStub);
+    a = new AStar();
     a.setMap(mapMatrix);
   }
 
   private void changeMap(File file) throws FileNotFoundException {
     mapReader.createMatrix(file);
     mapMatrix = mapReader.getMapArray();
-    a = new AStar(ioStub);
+    a = new AStar();
     a.setMap(mapMatrix);
   }
 
@@ -42,7 +42,7 @@ public class AStarTest {
   @Test
   public void getsSameResultAsDijkstra() throws FileNotFoundException {
     changeMap(new File("src/test/resources/kartat/virhe.txt"));
-    Dijkstra dijkstra = new Dijkstra(ioStub);
+    Dijkstra dijkstra = new Dijkstra();
     dijkstra.setMap(mapMatrix);
     dijkstra.runDijkstra();
     double resultD = dijkstra.getEtaisyysMaaliin();

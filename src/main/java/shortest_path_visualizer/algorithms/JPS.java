@@ -102,8 +102,8 @@ public class JPS {
   /** Jäljittää reitin maalisolmusta takaisin lähtösolmuun.
    * @return lista erään lyhimmän reitin käyttämistä jump point-solmuista.
    */
-  public ArrayList<Node> getReitti() {
-    ArrayList<Node> warpPoints = new ArrayList<>();
+  public DynamicArray getReitti() {
+    DynamicArray warpPoints = new DynamicArray();
     Node takaisin = goalNode.getParent();
     warpPoints.add(goalNode);
     warpPoints.add(takaisin);
@@ -115,6 +115,20 @@ public class JPS {
     warpPoints.add(startingNode);
     return warpPoints;
   }
+
+  /*public ArrayList<Node> getReitti() {
+    ArrayList<Node> warpPoints = new ArrayList<>();
+    Node takaisin = goalNode.getParent();
+    warpPoints.add(goalNode);
+    warpPoints.add(takaisin);
+    while (!takaisin.isStart()) {
+      kartta[takaisin.getY()][takaisin.getX()] = 'X';
+      warpPoints.add(takaisin);
+      takaisin = takaisin.getParent();
+    }
+    warpPoints.add(startingNode);
+    return warpPoints;
+  }*/
 
   public Node getGoalNode() {
     return this.goalNode;
