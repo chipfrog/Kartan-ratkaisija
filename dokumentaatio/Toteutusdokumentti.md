@@ -1,9 +1,8 @@
 # Toteutus
 
 Ohjelmaa käytetään visuaalisella käyttöliittymällä, jonka toiminta on erotettu sovelluksen varinaisesta toimintalogiikasta.
-Algoritmeille ja karttojen käsittelylle on omat luokkansa, ja joitakin algoritmien yhteisiä toimintoja, kuten naapurisolmujen
-hakeminen on eriytetty omaksi luokakseen luokakseen. Konsoliin tulostamiselle ja tiedostojen lukemiselle
-on oma rajapintansa IO, jota sitä tarvitsevat luokat (kuten MapReaderIO) toteuttavat. Vain MapReaderIO:lla on pääsy javan Scanner-olioon ja MapReaderIO injektoidaan kaikille sitä tarvitseville luokille. Lopullisessa sovelluksessa konsoliin tulostamista ei kuitenkaan enää käytetä ja sen funktioksi jää lähinnä sovelluksen testaaminen kehityksen aikana. Scanneria kuitenkin tarvitaan esimerkiksi .txt-muotoisten karttatiedostojen lukemiseen.
+Kullekin algoritmille ja karttojen käsittelylle on omat luokkansa, ja joitakin algoritmien yhteisiä toimintoja, kuten naapurisolmujen
+hakeminen (NeighbourFinder) ja jotkin matemaattiset funktiot (MathFunctions) on eriytetty omiksi luokikseen. Konsoliin tulostamiselle ja tiedostojen lukemiselle on oma rajapintansa IO, jota kuten MapReaderIO toteuttaaa. Vain MapReaderIO:lla on pääsy javan Scanner-olioon ja MapReaderIO injektoidaan kaikille sitä tarvitseville luokille, kuten BenchmarkFileReaderille. Lopullisessa sovelluksessa konsoliin tulostamista ei enää juuri käytetä ja sen funktioksi jää lähinnä sovelluksen testaaminen kehityksen aikana. MapReaderIO:n mukana injektoituvaa Scanneria kuitenkin tarvitaan esimerkiksi .txt-muotoisten karttatiedostojen ja karttaskenaariotiedostojen (scen) lukemiseen. Omina tietorakenteina on toteutettu dynaamisesti kokoaan kasvattava taulukko (DynamicArray) ja minimikeko (Keko). 
 
 ## Pseudokoodit
 
@@ -149,8 +148,8 @@ func diagonalScan(paren)
         node.parent = parent
         node.direction_y = (-1) * x
         node.distance = distance_travelled
-        add node to minHeap    
-  
-    
-    
+        add node to minHeap       
 ```
+
+## Puutteet
+Sovellus ei ole toiminnaltaan aivan niin viimeistelty kuin voisi toivoa. Reitinhaun animaatiota ei voi esimerkiksi keskeytää, vaan sen on pakko antaa mennä loppuun tai käynnistää sovellus uudestaan, ennen kuin muita toimintoja voi käyttää. Algoritmit eivät myöskään aina anna täysin samoja tuloksia reitinhaussa. Erityisesti A* antaa joissakin spesifeissä tilanteissa hieman Dijkstraa ja JPS:ää suurempia tuloksia. Erot ovat kuitenkin olleet minimaalisia, pahimmillaan muutaman desimaalin luokkaa. Koodi sisältää myös jonkin verran toisteisuutta algoritmien osalta. Näille voisi olla jokin yhteinen yläluokka, joka sisältäisi yhteisiä metodeja, kuten esimerkiksi heuristisen etäisyyden laskeminen, maalisolmun hakeminen ja kartan alustaminen.
