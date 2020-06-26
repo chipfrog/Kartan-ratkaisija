@@ -36,3 +36,30 @@ add start to minHeap
         add neighbour to minHeap
     
 ```
+
+### A*
+```
+for each node in Graph
+  set distance to infinity
+
+set distance of start to 0
+add start to minHeap
+
+  while minHeap is not empty
+    current = node with smallest distance in minHeap
+    remove current from minHeap
+  
+  if current is goal
+    end
+  
+  for each neighbour of current
+    newGDistance = current.g_distance
+    
+    if neighbour not in closedList or newGDistance < neighbour.g_distance
+      add neighbour to closedList
+      set neighbour.f_distance to newGDistance + heuristic_distance
+      add neighbour to minHeap
+
+```
+
+### Jump point search
