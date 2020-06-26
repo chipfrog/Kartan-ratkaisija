@@ -45,7 +45,7 @@ set distance of start to 0
 add start to minHeap
 
   while minHeap is not empty
-    current = node with smallest distance in minHeap
+    current = node with smallest f_distance in minHeap
     remove current from minHeap
   
   if current is goal
@@ -67,9 +67,25 @@ for each node in Graph
   set distance to infinity
   
 func JPS()
+  create 8 start_nodes with different scan directions
+  add start_nodes to minHeap
   
+  while minHeap is not empty
+    current = node with smallest f_distance
+    remove current from minHeap
+    
+    if goal is found
+      end
+    
+    if current.direction_x == 0 and current.direction_y == 0
+      diagonalScan(current)
+    else if current.direction_x is not 0 and current.direction_y is 0
+      horizontalScan(current)
+    else if current.direction_y is not 0 and current.direction_x is 0
+      verticalScan(current)
+      
   
-func horizontalScan(parent)
+  func horizontalScan(parent)
   while true
     x_step += parent.diretion_x
     
