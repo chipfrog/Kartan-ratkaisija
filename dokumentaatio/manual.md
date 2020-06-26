@@ -40,7 +40,7 @@ Jotta reitinhaku onnistuu, tulee ruudukkoon olla lisättynä vähintään läht�
 Jos sama ongelma halutaan ratkaista käyttäen jotain toista algoritmia, vanha ratkaisu pyyhitään klikkaamalla _Erase solution_-nappia. Tämän jälkeen valitaan toinen algoritmi ja ajetaan reitinhaku uudestaan _Run_-painikkeella. Jos taas halutaan aloittaa kokonaan puhtaalta pöydältä kartan ja asetukset saa nollattua painamalla _Clear_-painiketta.
 
 ### Tulosten tarkastelu
-Reitinhaun ajamisen jälkeen kohtiin _Distance, _Nodes_ ja _Time_ ilmestyy tietoja reitinhaun tuloksista. _Nodes_ kertoo algoritmin läpikäymien solmujen määrän, _Distance_ löydetyn lyhimmän reitin pituuden lähtösolmun ja maalisolmun välillä ja _Time_ hakuun kuluneen ajan millisekunteina. Kunkin algoritmin reitinhaun tiedot ilmoitetaan sovelluksen oikeassa yläreunassa.
+Reitinhaun ajamisen jälkeen kohtiin _Distance_, _Nodes_ ja _Time_ ilmestyy tietoja reitinhaun tuloksista. _Nodes_ kertoo algoritmin läpikäymien solmujen määrän, _Distance_ löydetyn lyhimmän reitin pituuden lähtösolmun ja maalisolmun välillä ja _Time_ hakuun kuluneen ajan millisekunteina. Kunkin algoritmin reitinhaun tiedot ilmoitetaan sovelluksen oikeassa yläreunassa käytetyn algoritmin nimen alla.
 
 ### Omien karttojen tallentaminen
 Jos piirrettyn kartat haluaa säilyttää uudelleenkäyttöä varten, sen voi tallentaa kirjoittamalla kartalle nimi _Save map_-kenttään ja klikkaamalla _Save Map_-nappia. Karttaa ei voi tallentaa ilman nimeä.
