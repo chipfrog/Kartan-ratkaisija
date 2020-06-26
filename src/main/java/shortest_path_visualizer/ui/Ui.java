@@ -117,6 +117,9 @@ public class Ui extends Application {
     this.fileChooserOwnMaps = new FileChooser();
     fileChooserOwnMaps.setInitialDirectory(new File("src/main/resources/ownMaps"));
 
+    this.benchmarkFile = new File("src/main/resources/BenchmarkScenarios/Berlin_0_256.scen.txt");
+    this.benchmarkMapFile = new File("src/main/resources/BenchmarkMaps/Berlin_0_256.txt");
+
     this.mapReader = new MapReader(new MapReaderIO());
     this.lines = new ArrayList<>();
 
@@ -654,12 +657,6 @@ public class Ui extends Application {
       this.benchmarkMapFile = new File("src/main/resources/BenchmarkMaps/Moscow_1_256.map.txt");
     });
 
-    RadioButton newYork = new RadioButton("New York");
-    newYork.setToggleGroup(benchmarks);
-    newYork.setOnAction(e -> {
-
-    });
-
     ComboBox <String> comboBox = new ComboBox();
     comboBox.getItems().addAll("Dijkstra", "A*", "JPS");
 
@@ -793,6 +790,7 @@ public class Ui extends Application {
 
     Button runTest = new Button("Benchmark");
     runTest.setOnAction(e -> {
+      System.out.println("Benchmark started!");
       try {
         BenchmarkFileReader b = new BenchmarkFileReader(new MapReaderIO());
         Node[][] startAndGoal = b.getScenarioCoordinates(benchmarkFile);
@@ -851,9 +849,13 @@ public class Ui extends Application {
 
     allResults.getChildren().addAll(resultsD, resultsA, resultsJ);
 
+    VBox benchmarkResults = new VBox();
+    benchmarkResults.getChildren().addAll(avgD, avgA, avgJ);
+    benchmarkResults.setSpacing(10);
+
     VBox controls = new VBox();
     controls.setSpacing(40);
-    controls.getChildren().addAll(drawChoice, configurations, otherOptions, mapSaving, runTest, benchmarkChoice, avgD, avgA, avgJ);
+    controls.getChildren().addAll(drawChoice, configurations, otherOptions, mapSaving, runTest, benchmarkChoice, benchmarkResults);
 
     VBox layout = new VBox();
     layout.setSpacing(20);
