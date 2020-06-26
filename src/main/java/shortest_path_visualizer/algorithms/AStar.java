@@ -1,6 +1,5 @@
 package shortest_path_visualizer.algorithms;
 
-import shortest_path_visualizer.IO.IO;
 import shortest_path_visualizer.dataStructures.DynamicArray;
 import shortest_path_visualizer.dataStructures.Keko;
 import shortest_path_visualizer.utils.MathFunctions;

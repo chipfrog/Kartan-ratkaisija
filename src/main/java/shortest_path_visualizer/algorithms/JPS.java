@@ -1,6 +1,5 @@
 package shortest_path_visualizer.algorithms;
 
-import java.util.ArrayList;
 import shortest_path_visualizer.dataStructures.DynamicArray;
 import shortest_path_visualizer.dataStructures.Keko;
 import shortest_path_visualizer.utils.MathFunctions;
@@ -115,20 +114,6 @@ public class JPS {
     warpPoints.add(startingNode);
     return warpPoints;
   }
-
-  /*public ArrayList<Node> getReitti() {
-    ArrayList<Node> warpPoints = new ArrayList<>();
-    Node takaisin = goalNode.getParent();
-    warpPoints.add(goalNode);
-    warpPoints.add(takaisin);
-    while (!takaisin.isStart()) {
-      kartta[takaisin.getY()][takaisin.getX()] = 'X';
-      warpPoints.add(takaisin);
-      takaisin = takaisin.getParent();
-    }
-    warpPoints.add(startingNode);
-    return warpPoints;
-  }*/
 
   public Node getGoalNode() {
     return this.goalNode;
