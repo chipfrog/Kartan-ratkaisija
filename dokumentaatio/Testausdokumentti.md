@@ -73,16 +73,16 @@ Huom! Koordinaatit muodossa (y, x)
 ### Kuvia reitinhauista erilaisissa tilanteissa
 
 ![](https://github.com/chipfrog/Shortest-path-visualizer/blob/master/dokumentaatio/dijkstra_ei_esteita.png)
-_Dijkstra ilman suurta määrää esteitä lähtö- ja maalisolmun välillä_
+_Kuva 1: Dijkstra ilman suurta määrää esteitä lähtö- ja maalisolmun välillä_
 
 ![](https://github.com/chipfrog/Shortest-path-visualizer/blob/master/dokumentaatio/aStar_ei_esteita.png)
-_A* ilman suurta määrää esteitä_
+_Kuva 2: A* ilman suurta määrää esteitä_
 
 ![](https://github.com/chipfrog/Shortest-path-visualizer/blob/master/dokumentaatio/dijkstra_este.png)
-_Dijkstra esteiden kanssa_
+_Kuva 3: Dijkstra esteiden kanssa_
 
 ![](https://github.com/chipfrog/Shortest-path-visualizer/blob/master/dokumentaatio/aStar_este.png)
-_A* esteiden kanssa_
+_Kuva 4: A* esteiden kanssa_
 
 ![](https://github.com/chipfrog/Shortest-path-visualizer/blob/master/dokumentaatio/jps_ei_esteita.png)
-_JPS ilman esteitä_
+_Kuva 5: JPS ilman esteitä_
