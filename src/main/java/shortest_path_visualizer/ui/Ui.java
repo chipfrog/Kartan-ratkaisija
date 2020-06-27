@@ -93,7 +93,8 @@ public class Ui extends Application {
   private File benchmarkFile;
   private File benchmarkMapFile;
 
-  private int testNumber;
+  private Label startCoordinates;
+  private Label goalCoordinates;
 
   private MapReaderIO io;
 
@@ -143,8 +144,8 @@ public class Ui extends Application {
     this.timeJ = new Label("Time: ");
     this.distJ = new Label("Distance: ");
 
-    this.testNumber = 0;
-
+    this.startCoordinates = new Label("Start: ");
+    this.goalCoordinates = new Label("Goal: ");
   }
 
   /**
@@ -162,6 +163,12 @@ public class Ui extends Application {
         } else {
           xPikselit += sivu;
         }
+        int startX = x;
+        int startY = y;
+
+        int goalX = x;
+        int goalY = y;
+
         rectangle.setOnMouseClicked(new EventHandler<MouseEvent>() {
           @Override
           public void handle(MouseEvent event) {
@@ -170,15 +177,19 @@ public class Ui extends Application {
                 rectangle.setFill(Color.BLACK);
               } else if (type == DrawType.START && !startDrawn && rectangle.getFill() != Color.RED) {
                 rectangle.setFill(Color.GREEN);
+                startCoordinates.setText("Start: y: " + startY + ", x: " + startX);
                 startDrawn = true;
               } else if (type == DrawType.GOAL && !goalDrawn && rectangle.getFill() != Color.GREEN) {
                 rectangle.setFill(Color.RED);
+                goalCoordinates.setText("Goal: y: " + goalY + ", x: " + goalX);
                 goalDrawn = true;
               }
             } else if (event.getButton().equals(MouseButton.SECONDARY)) {
               if (rectangle.getFill() == Color.GREEN) {
+                startCoordinates.setText("Start: ");
                 startDrawn = false;
               } else if (rectangle.getFill() == Color.RED) {
+                goalCoordinates.setText("Goal: ");
                 goalDrawn = false;
               }
               rectangle.setFill(Color.WHITE);
@@ -202,8 +213,10 @@ public class Ui extends Application {
               }
             } else if (event.getButton().equals(MouseButton.SECONDARY)) {
               if (rectangle.getFill() == Color.GREEN) {
+                startCoordinates.setText("Start: ");
                 startDrawn = false;
               } else if (rectangle.getFill() == Color.RED) {
+                goalCoordinates.setText("Goal: ");
                 goalDrawn = false;
               }
               rectangle.setFill(Color.WHITE);
@@ -227,6 +240,13 @@ public class Ui extends Application {
     for (int y = 0; y < kartta.length; y++) {
       for (int x = 0; x < kartta[0].length; x++) {
         Rectangle rectangle = new Rectangle(sivu, sivu, Color.WHITE);
+
+        int finalX = x;
+        int finalY = y;
+
+        int goalX = x;
+        int goalY = y;
+
         rectangle.setOnMouseClicked(new EventHandler<MouseEvent>() {
           @Override
           public void handle(MouseEvent event) {
@@ -234,16 +254,20 @@ public class Ui extends Application {
               if (type == DrawType.OBSTACLE && rectangle.getFill() != Color.GREEN) {
                 rectangle.setFill(Color.BLACK);
               } else if (type == DrawType.START && !startDrawn && rectangle.getFill() != Color.RED) {
+                startCoordinates.setText("Start: y: " + finalY + ", x: " + finalX);
                 rectangle.setFill(Color.GREEN);
                 startDrawn = true;
               } else if (type == DrawType.GOAL && !goalDrawn && rectangle.getFill() != Color.GREEN) {
+                goalCoordinates.setText("Goal: y: " + goalY + ", x: " + goalX);
                 rectangle.setFill(Color.RED);
                 goalDrawn = true;
               }
             } else if (event.getButton().equals(MouseButton.SECONDARY)) {
               if (rectangle.getFill() == Color.GREEN) {
+                startCoordinates.setText("Start: ");
                 startDrawn = false;
               } else if (rectangle.getFill() == Color.RED) {
+                goalCoordinates.setText("Goal: ");
                 goalDrawn = false;
               }
               rectangle.setFill(Color.WHITE);
@@ -253,6 +277,10 @@ public class Ui extends Application {
 
         if (kartta[y][x] == '@') {
           rectangle.setFill(Color.BLACK);
+        } else if (kartta[y][x] == 'S') {
+          rectangle.setFill(Color.GREEN);
+        } else if (kartta[y][x] == 'G') {
+          rectangle.setFill(Color.RED);
         }
         if (x == 0) {
           xPikselit = 0;
@@ -275,8 +303,10 @@ public class Ui extends Application {
           rectChar[i][j].setFill(Color.BLACK);
         }
         else if (kartta[i][j] == 'S') {
+          startCoordinates.setText("Start: y: " + i + ", x: " + j);
           rectChar[i][j].setFill(Color.GREEN);
         } else if (kartta[i][j] == 'G') {
+          goalCoordinates.setText("Goal: y: " + i + ", x: " + j);
           rectChar[i][j].setFill(Color.RED);
         } else {
           rectChar[i][j].setFill(Color.WHITE);
@@ -326,17 +356,19 @@ public class Ui extends Application {
    *
    * @return char-matriisi / kartta
    */
-  public char[][] generateCharArray() {
-    for (int i = 0; i < rectChar.length; i++) {
-      for (int j = 0; j < rectChar[0].length; j++) {
-        Rectangle rect = rectChar[i][j];
+  public char[][] generateCharArray(Rectangle[][] rectangleChar) {
+    for (int i = 0; i < rectangleChar.length; i++) {
+      for (int j = 0; j < rectangleChar[0].length; j++) {
+        Rectangle rect = rectangleChar[i][j];
         if (rect.getFill() == Color.WHITE) {
           mapArray[i][j] = '.';
         } else if (rect.getFill() == Color.BLACK) {
           mapArray[i][j] = '@';
         } else if (rect.getFill() == Color.GREEN) {
+          startCoordinates.setText("Start: y: " + i + ", x: " + j);
           mapArray[i][j] = 'S';
         } else if (rect.getFill() == Color.RED) {
+          goalCoordinates.setText("Goal: " + "y: " + i + ", x: " + j);
           mapArray[i][j] = 'G';
         }
       }
@@ -373,7 +405,7 @@ public class Ui extends Application {
    * Käyttää dijkstran algoritmia ja suorittaa ruudukon värittämismetodit.
    */
   public void solveMapUsingDijkstra() {
-    generateCharArray();
+    generateCharArray(rectChar);
     if (mapHasStartAndGoal()) {
       this.dijkstra = new Dijkstra();
       for (int i = 0; i < runtimes.length;  i++) {
@@ -404,7 +436,7 @@ public class Ui extends Application {
   }
 
   public void solveMapUsingJPS() {
-    generateCharArray();
+    generateCharArray(rectChar);
     if (mapHasStartAndGoal()) {
       this.jps = new JPS();
 
@@ -437,7 +469,7 @@ public class Ui extends Application {
   }
 
   public void solveMapUsingAStar() {
-    generateCharArray();
+    generateCharArray(rectChar);
     if (mapHasStartAndGoal()) {
       this.aStar = new AStar();
 
@@ -469,7 +501,6 @@ public class Ui extends Application {
       runClicked = false;
     }
   }
-
   /**
    * Dijkstran algoritmin animaatio. Värittää uuden vieraillun solmun/ruudun tasaisin aikavälein. Värittää lopuksi lyhimmän reitin maalisolmusta aloitussolmuun.
    *
@@ -484,7 +515,6 @@ public class Ui extends Application {
           if (node != null) {
             paintSquare(visitedNodes.get(nodeToPaint));
             nodeToPaint++;
-            nodesA.setText("Nodes: " + nodeToPaint);
             nodesA.setText("Nodes: " + nodeToPaint);
           }
         }
@@ -614,9 +644,6 @@ public class Ui extends Application {
     nodeToPaint = 0;
   }
 
-  private void runBenchmark() throws FileNotFoundException {
-  }
-
   private void chooseMap(Stage primaryStage) throws FileNotFoundException {
     File selectedFile = fileChooser.showOpenDialog(primaryStage);
     mapReader.createMatrix(selectedFile);
@@ -689,10 +716,12 @@ public class Ui extends Application {
 
       }
     });
-
+    
     Button tryAgain = new Button("Erase solution");
     tryAgain.setOnAction(e -> {
       errorMessage.setText("");
+      startCoordinates.setText("");
+      goalCoordinates.setText("");
       resetSolution();
       runClicked = false;
     });
@@ -701,6 +730,8 @@ public class Ui extends Application {
     clear.setOnAction(e -> {
       errorMessage.setText("");
       try {
+        startCoordinates.setText("Start: ");
+        goalCoordinates.setText("Goal: ");
         runClicked = false;
         erasePreMadeMap();
         resetMap(primaryStage);
@@ -709,28 +740,29 @@ public class Ui extends Application {
       }
     });
 
-
-
     Label saveMap = new Label("Save map");
     TextField nameField = new TextField();
 
+    Button save = new Button("Save Map");
+    save.setOnAction(e -> {
+      generateCharArray(rectChar);
+      mapFileCreator.WriteMapToFile(mapArray, nameField.getText());
+      nameField.setText("");
+    });
+
     Button selectMap = new Button("Select map");
     selectMap.setOnAction(e -> {
+      startCoordinates.setText("Start: ");
+      goalCoordinates.setText("Goal: ");
       try {
         chooseMap(primaryStage);
         rectChar = new Rectangle[mapArray.length][mapArray.length];
         startDrawn = false;
         goalDrawn = false;
         preMadeMap(mapArray, 4);
+        save.setDisable(true);
       } catch (FileNotFoundException exception) {
       }
-    });
-
-    Button save = new Button("Save Map");
-    save.setOnAction(e -> {
-      generateCharArray();
-      mapFileCreator.WriteMapToFile(mapArray, nameField.getText());
-      nameField.setText("");
     });
 
     Button openUserMadeMap = new Button("Select saved map");
@@ -743,12 +775,11 @@ public class Ui extends Application {
         generatePreviouslyMadeMap(mapArray);
       } catch (Exception exception) {
       }
-
     });
 
-    VBox mapSaving = new VBox();
-    mapSaving.getChildren().addAll(saveMap, nameField, save, selectMap, openUserMadeMap);
-    mapSaving.setSpacing(10);
+    VBox mapChoosingOptions = new VBox();
+    mapChoosingOptions.getChildren().addAll(saveMap, nameField, save, openUserMadeMap, selectMap);
+    mapChoosingOptions.setSpacing(10);
 
     Label speedSlider = new Label("Animation delay: ");
 
@@ -787,13 +818,9 @@ public class Ui extends Application {
     configurations.getChildren().addAll(algo, comboBox, speedSlider, slider, noAnimation);
     configurations.setSpacing(10);
 
-    VBox otherOptions = new VBox();
-    otherOptions.getChildren().addAll(run, tryAgain, clear);
-    otherOptions.setSpacing(10);
-
-    Label avgD = new Label();
-    Label avgA = new Label();
-    Label avgJ = new Label();
+    VBox basicCommands = new VBox();
+    basicCommands.getChildren().addAll(run, tryAgain, clear);
+    basicCommands.setSpacing(10);
 
     Button runTest = new Button("Benchmark");
     runTest.setOnAction(e -> {
@@ -820,14 +847,13 @@ public class Ui extends Application {
           System.out.println("Scenario " + i);
         }
 
-        avgD.setText("Dijkstra: " + totalTimeD + " ms");
-        avgA.setText("A*: " + totalTimeA + " ms");
-        avgJ.setText("JPS: " + totalTimeJ + " ms");
+        timeD.setText("Time: " + totalTimeD + " ms");
+        timeA.setText("Time: " + totalTimeA + " ms");
+        timeJ.setText("Time: " + totalTimeJ + " ms");
 
       } catch (Exception exception) {
       }
     });
-
 
     VBox allResults = new VBox();
     allResults.setSpacing(20);
@@ -845,15 +871,15 @@ public class Ui extends Application {
     resultsJ.getChildren().addAll(labelJ, distJ, nodesJ, timeJ);
     resultsJ.setSpacing(10);
 
-    allResults.getChildren().addAll(resultsD, resultsA, resultsJ);
+    VBox benchmarkOptions = new VBox();
+    benchmarkOptions.getChildren().addAll(runTest, benchmarkChoice);
+    benchmarkOptions.setSpacing(10);
 
-    VBox benchmarkResults = new VBox();
-    benchmarkResults.getChildren().addAll(avgD, avgA, avgJ);
-    benchmarkResults.setSpacing(10);
+    allResults.getChildren().addAll(resultsD, resultsA, resultsJ, startCoordinates, goalCoordinates);
 
     VBox controls = new VBox();
     controls.setSpacing(40);
-    controls.getChildren().addAll(drawChoice, configurations, otherOptions, mapSaving, runTest, benchmarkChoice, benchmarkResults);
+    controls.getChildren().addAll(drawChoice, configurations, basicCommands, mapChoosingOptions, benchmarkOptions);
 
     VBox layout = new VBox();
     layout.setSpacing(20);
@@ -863,7 +889,7 @@ public class Ui extends Application {
     hB.getChildren().addAll(controls, pane, allResults);
     hB.setSpacing(30);
     hB.setPadding(new Insets(20));
-    primaryStage.setHeight(1000);
+    primaryStage.setHeight(1080);
     primaryStage.setWidth(1600);
 
     errorMessage.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
