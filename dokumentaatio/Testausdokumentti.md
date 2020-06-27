@@ -1,7 +1,7 @@
 # Testaus
 
 ## Yleisesti
-Projektin luokkien ja metodien testit toteutettiin JUnit-yksikkötesteillä. Automaattisten testien ulkopuolelle jätettiin käyttöliittymän testaus, eli kansion _ui_ -sisältö. Käyttöliittymän toimintaa on kuitenkin testattu manuaalisesti ja pyritty löytämään mahdolliset virhetilanteita aiheuttavat skenaariot. Testikattavuutta voi tarkastella [codecovissa](https://codecov.io/gh/chipfrog/Shortest-path-visualizer) tai generoimalla jacocon testikattavuusraportin [käyttöohjeissa](https://github.com/chipfrog/Shortest-path-visualizer/blob/master/dokumentaatio/manual.md) kuvatulla tavalla. Algoritmien suorituskykyä mittaava PerformanceTest-luokka ei myöskään kuulu testikattavuuteen ja on erillinen JUnit-testeistä.
+Projektin luokkien ja metodien testit toteutettiin JUnit-yksikkötesteillä. Automaattisten testien ulkopuolelle jätettiin käyttöliittymän testaus, eli kansion _ui_ -sisältö. Käyttöliittymän toimintaa on kuitenkin testattu manuaalisesti ja pyritty löytämään mahdolliset virhetilanteita aiheuttavat skenaariot. Testikattavuutta voi tarkastella [codecovissa](https://codecov.io/gh/chipfrog/Shortest-path-visualizer) tai generoimalla jacocon testikattavuusraportin [käyttöohjeissa](https://github.com/chipfrog/Shortest-path-visualizer/blob/master/dokumentaatio/manual.md) kuvatulla tavalla. Algoritmien suorituskykyä mittaava PerformanceTest-luokka ei myöskään kuulu testikattavuuteen ja on erillinen JUnit-testeistä. Suorituskykyteisteistä ja niiden tuloksista dokumentin lopussa.
 
 ## Yksikkötestaus
 JUnit-yksikkötesteillä pyrittiin varmistamaan yksittäisten luokkien ja metodien oikeanlainen toiminta. Testeissä on pyritty testaamaan, että luokat toimivat oikein ainakin ns. "normaalitilanteissa" ja yleisimmissä rajatapaustilanteissa. 
@@ -16,7 +16,7 @@ Minimikeon toteuttavaa Keko-luokkaa on testattu varmistamalla, että keko on alu
 Algoritmien perustoiminta testattiin keskenään lähes identtisellä tavalla, joten en erittele tähän jokaisen algoritmin JUnit-testejä. Algoritmeille annettiin eri tilanteita kuvaavia char[][]-muotoisia testikarttoja ja varmistettiin algoritmien toimivuus näissä tilanteissa. Karttoihin oli sijoitettuna valmiiksi lähtö- ja maalisolmu. Etäisyys pisteiden välillä laskettiin selkeissä tilanteissa (esim. 5 ruutua suoraan eteenpäin x-akselilla) manuaalisesti ja katsottiin, että algoritmi saa saman tuloksen. Vastaavasti solmut, jotka algoritmin tulisi avata, laskettiin manuaalisesti ja katsottiin, että algoritmi ilmoittaa saman solmujen lukumäärän. Testejä toki rajoitti se, ettei kovin monumtkaisia tilanteita voinut testata, sillä reitin kasvaessa manuaalisesti laskettavien solmujen määrästä tulee suuri. Osa kartoista oli erikoistapauksia, kuten tilanne, jossa maalisolmua ympäröi esteet joka puolella, ja algoritmin tuli tällöin ilmoittaa ettei maaliin pääsee sen sijaan, että ohjelma kaatuisi. Hieman monmimutkaisemmassa reitissä  A*:n ja JPS:n testikartassa saamaa etäisyyttä verrattiin Dijkstran saamaan etäisyyteen, sillä Dijkstran toiminta on todettu luotettavaksi [Berlin_0_256.map](https://www.movingai.com/benchmarks/street/index.html) -kartan skenaarioissa (Dijkstra sai mallivastauksen jokaisessa skenaarion testissä). Ohjelmani ei kuitenkaan enää noudata samanlaisia liikkumissääntöjä, joten en ole käyttänyt itse skenaarioita varsinaisessa optimaalisen reitin testauksessa enää muiden algoritmien kohdalla.
 
 ## Suorituskykytestit
-Algoritmien tehokkuutta voi testata kevyesti jo ohjelman tavallisen käytön aikana. Kun käyttäjä esimerkiksi piirtää kartan ruudukkoon tai valitsee jonkun valmista kartoista ja ajaa halutun algoritmin, ohjelma suorittaa reitinhaun 100 kertaa ja tallentaa kuhunkin ajoon kuluneen ajan System.nanoTime():n avulla seuraavasti:
+Algoritmien tehokkuutta voi testata jo ohjelman tavallisen käytön aikana. Kun käyttäjä esimerkiksi piirtää kartan ruudukkoon tai valitsee jonkun valmista kartoista ja ajaa halutun algoritmin, ohjelma suorittaa reitinhaun 100 kertaa ja tallentaa kuhunkin ajoon kuluneen ajan System.nanoTime():n avulla seuraavasti:
 
 ```
 aStar.setMap(mapArray);
@@ -24,7 +24,7 @@ long t1 = System.nanoTime();
 aStar.runAStar();
 long t2 = System.nanoTime();
  ```
-Algoritmin muuttujien, taulukoiden yms. alustustoimenpiteet on jätetty ajanoton ulkopuolelle (tässä tapauksessa metodiin `aStar.setMap(mapArray))` ja ainoastaan reitinhakuun kuluva aika mitataan. Mitatut ajat tallennetaan taulukkoon, ensimmäinen aika jätetään huomioimatta ja muista lasketaan keskiarvo. Aika muutetaan millisekuneiksi ja ilmoitetaan käyttöliittymässä käyttäjälle. Tavallinen ajo ilmoittaa myös löydetyn reitin pituuden ja avattujen solmujen määrän. Pyyhkimällä vastauksen _Reset solution_-napilla ja ajamalla reitinhaun jollain toisella algoritmilla, voi verrata saatuja tuloksia. Algoritmien tulokset tulevat sovelluksen oikeaan yläkulmaan näkyviin. Lisäksi ohjelma näyttää lähtö- ja maalisolmujen koordinaatit.
+Algoritmin muuttujien, taulukoiden yms. alustustoimenpiteet on jätetty ajanoton ulkopuolelle (tässä tapauksessa metodiin `aStar.setMap(mapArray))` ja ainoastaan reitinhakuun kuluva aika mitataan. Mitatut ajat tallennetaan taulukkoon, ensimmäinen aika jätetään huomioimatta ja muista lasketaan keskiarvo. Aika muutetaan millisekuneiksi ja ilmoitetaan käyttöliittymässä käyttäjälle. Tavallinen ajo ilmoittaa myös löydetyn reitin pituuden ja avattujen solmujen määrän. Pyyhkimällä vastauksen _Reset solution_-napilla ja ajamalla reitinhaun jollain toisella algoritmilla, voi verrata saatuja tuloksia. Algoritmien tulokset tulevat sovelluksen oikeaan yläkulmaan näkyviin. Lisäksi ohjelma näyttää lähtö- ja maalisolmujen koordinaatit. Olen testannut algoritmeja erilaisten karttojen, itse piirrettyjen ja valmiiden kanssa, sekä käyttänyt erilaisia sijainteja lähtö- ja maalisolmulle. 
 
 Alla taulukossa kuvatut testit ovat täysin toistettavissa, kun valitaan samat maali -ja lähtöpisteet testeissäni käyttämille kartoille ja ajetaan reitinhaku kullakin algoritmilla. Kuitenkin koska pisteet valitaan kartasta klikkaamalla, on tismalleen samoja pisteitä hankala valita suurissa kartoissa ruutujen pienten koon ja koordinaattien hankaluuden takia. Tästä syystä olen lisännyt käyttämiini testikarttoihin lähtö- ja maalipisteen valmiiksi. Riittää siis, että avaa kunkin testikartan _Select test_-napin kautta avautuvasta kansiosta ja ajaa reitinhaun kaikilla algoritmeilla. Näin voi verrata ohjelman antamia tuloksia taulukkoon (dokumentin alaosassa) kirjattuihin tuloksiin.
 
@@ -62,7 +62,27 @@ Huom! Koordinaatit muodossa (y, x)
 | Dijkstra | 10.990 ms | 33329 | 186.49747 | 62, 70 | 103, 204 | Berlin_1_256.txt |
 | A* | 5.071 ms | 8505 | 186.49747 | 62, 70 | 103, 204 | Berlin_1_256.txt |
 | JPS | 1.177 ms | 174 | 186.49747 | 62, 70 | 103, 204 | Berlin_1_256.txt |
+| Dijkstra | 10.637 ms | 31162 | 202.28427 | 176, 16 | 148, 202| London_0_256.txt |
+| A* | 4.301 ms | 5656 | 202.28427 | 176, 16 | 148, 202| London_0_256.txt |
+| JPS | 0.310 ms | 26 | 202.28427|  176, 16 | 148, 202| London_0_256.txt |
+| Dijkstra | 15.500 ms | 44482 | 352.014285 | 186, 32 | 40, 144 | London_0_256.txt |
+| A* | 18.919 ms | 35410 | 352.014285 | 186, 32 | 40, 144 | London_0_256.txt |
+| JPS | 3.976 ms | 531 | 352.014285 | 186, 32 | 40, 144 | London_0_256.txt |
 
 
+### Kuvia reitinhauista erilaisissa tilanteissa
 
+![](https://github.com/chipfrog/Shortest-path-visualizer/blob/master/dokumentaatio/dijkstra_ei_esteita.png)
+_Dijkstra ilman suurta määrää esteitä lähtö- ja maalisolmun välillä_
 
+![](https://github.com/chipfrog/Shortest-path-visualizer/blob/master/dokumentaatio/aStar_ei_esteita.png)
+_A* ilman suurta määrää esteitä_
+
+![](https://github.com/chipfrog/Shortest-path-visualizer/blob/master/dokumentaatio/dijkstra_este.png)
+_Dijkstra esteiden kanssa_
+
+![](https://github.com/chipfrog/Shortest-path-visualizer/blob/master/dokumentaatio/aStar_este.png)
+_A* esteiden kanssa_
+
+![](https://github.com/chipfrog/Shortest-path-visualizer/blob/master/dokumentaatio/jps_ei_esteita.png)
+_JPS ilman esteitä_
