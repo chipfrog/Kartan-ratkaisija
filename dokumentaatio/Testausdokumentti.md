@@ -36,11 +36,11 @@ Raskaampi suorituskykytesti voidaan tehdä aiemmin mainitulle 256x256 kokoiselle
 
 ![](https://github.com/chipfrog/Shortest-path-visualizer/blob/master/dokumentaatio/berlin.png)
 
-_Kaikkien skenaarioiden läpikäymiseen kulunut kokonaisaika millisekunteina Berlin_0_256 -kartassa_
+_Kuvaaja 1: Kaikkien skenaarioiden läpikäymiseen kulunut kokonaisaika millisekunteina Berlin_0_256 -kartassa_
 
 ![](https://github.com/chipfrog/Shortest-path-visualizer/blob/master/dokumentaatio/moscow.png)
 
-_Kaikkien skenaarioiden läpikäymiseen kulunut kokonaisaika millisekunteina Moscow_1_256 -kartassa_
+_Kuvaaja 2: Kaikkien skenaarioiden läpikäymiseen kulunut kokonaisaika millisekunteina Moscow_1_256 -kartassa_
 
 Kuten kuvaajista nähdään JPS suoriutuu reitinhakutehtävistä selkeästi nopeiten ja A*:kin selkeästi Dijkstraa nopeammin. Skenaariot sisältävät monia erilaisia tilanteita; pisteiden välillä on esteitä vaihtelevia määriä ja pisteiden etäisyys toisiinsa vaihtelee merkittävästi. Tietynlaisissa spesifeissä tilanteissa erot algoritmien välillä voivatkin olla huomattavasti suuremmat tai vastaavasti kaventua hyvin pieniksi. Yllä kuvatut skenaariot voidaan ajaa ohjelmalla valitsemalla _Berlin_ tai _Moscow_ ja painamalla _Benchmark_ -nappia. Tulokset ilmaantuvat sovelluksen oikeaan yläreunaan, kun ajo on valmis.
 
