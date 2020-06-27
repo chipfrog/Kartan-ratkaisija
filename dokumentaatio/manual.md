@@ -1,5 +1,5 @@
 # Käyttöohjeet
-Sovellus vaatii toimiakseen Java 11. Suoritettavan jar-tiedoston luominen ei onnistunut JavaFX kanssa tulleiden teknisten ongelmien vuoksi, joten repositorio on ladattava koneelle ja seurattava alla olevia ohjeita ohjelman suorittamiseksi.
+Sovellus vaatii toimiakseen Java 11. Suoritettavan jar-tiedoston luominen ei onnistunut JavaFX ja Gradlen kanssa tulleiden teknisten ongelmien vuoksi, joten repositorio on ladattava koneelle ja seurattava alla olevia ohjeita ohjelman suorittamiseksi.
 
 ## Sovelluksen käynnistäminen
 Lataa zip-tiedosto GitHubista ja pura se haluamaasi sijaintiin. Siirry konsolin kautta tähän sijaintiin ja siellä kansioon _Shortest-path-visualizer-master_.
@@ -22,6 +22,9 @@ Konsolissa:
 `./gradlew checkstyleMain`
 
 Raportti löytyy sijainnista: _/build/reports/checkstyle_
+
+## JavaDocin tarkastelu
+Gradle-ongelmien vuoksi en saanut myöskään javadocin generointia toimimaan ajoissa, joten javadociin pääsee käsiksi siirtymällä kansioon dokumentaatio ja siellä kansioon javadoc ja avaamalla tiedoston index.html selaimessa.
 
 ## Sovelluksen käyttäminen
 Sovellusta käytetään visuaalisella käyttöliittymällä: 
