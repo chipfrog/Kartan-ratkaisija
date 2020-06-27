@@ -91,9 +91,8 @@ func JPS()
     else if current.direction_y is not 0 and current.direction_x is 0
       verticalScan(current)
       
-  
   func horizontalScan(parent)
-  while true
+    while true
     x_step += parent.diretion_x
     
     if map[parent.y][x_step] = OBSTACLE
