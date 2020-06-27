@@ -33,6 +33,4 @@ public class MathFunctions {
     }
     return num2;
   }
-
-
 }
