@@ -1,7 +1,8 @@
 package shortest_path_visualizer.dataStructures;
 
 /**
- * Luokka solmioliolle. Olio sisältää tiedon mm. sijainnista (x- ja y-koordinaatit), siitä onko solmussa vierailtu ja algoritmista riippuen erilaisia etäisyyksiä. Esim
+ * Luokka solmioliolle. Olio sisältää tiedon mm. sijainnista (x- ja y-koordinaatit),
+ * siitä onko solmussa vierailtu ja algoritmista riippuen erilaisia etäisyyksiä. Esim
  * etäisyys lähtösolmusta ja f-arvo.
  */
 public class Node {
@@ -10,7 +11,8 @@ public class Node {
    */
   private int tunnus;
   /**
-   * Dijkstran algoritmissa etäisyys maalisolmusta. A*:n ja JPS:n tapauksessa f-matka, eli g-matka (etäisyys lähtösolmusta) + h-matka (heuristinen etäisyys maalisolmuun).
+   * Dijkstran algoritmissa etäisyys maalisolmusta. A*:n ja JPS:n tapauksessa f-matka,
+   * eli g-matka (etäisyys lähtösolmusta) + h-matka (heuristinen etäisyys maalisolmuun).
    */
   private double etaisyys;
   private boolean vierailtu;
@@ -20,22 +22,24 @@ public class Node {
   private int y;
   private Node parent;
   /**
-   * Etäisyys lähtösolmusta kyseiseen solmuun
+   * Etäisyys lähtösolmusta kyseiseen solmuun.
    */
   private double g_Matka;
   /**
-   * Solmusta käsin tutkittava suunta x-akselilla JPS-algoritmissa. 0, 1, tai -1
+   * Solmusta käsin tutkittava suunta x-akselilla JPS-algoritmissa. 0, 1, tai -1.
    */
   private int dirH;
   /**
-   * Solmusta käsin tutkittava suunta y-akselilla JPS-algoritmissa. 0, 1, tai -1
+   * Solmusta käsin tutkittava suunta y-akselilla JPS-algoritmissa. 0, 1, tai -1.
    */
   private int dirV;
 
-  /** Solmuolion ensimmäinen konstruktori
+  /**
+   * Solmuolion ensimmäinen konstruktori.
+   *
    * @param tunnus solmun uniikki tunnus
-   * @param xCoor solmun x-koordinaatti
-   * @param yCoor solmun y-koordinaatti
+   * @param xCoor  solmun x-koordinaatti
+   * @param yCoor  solmun y-koordinaatti
    */
   public Node(int tunnus, int xCoor, int yCoor) {
     this.tunnus = tunnus;
@@ -46,11 +50,13 @@ public class Node {
     this.y = yCoor;
   }
 
-  /** Solmuolion toinen konstruktori, käytetään JPS-algoritmin kanssa
-   * @param x solmun x-koordinaatti
-   * @param y solmun y-koordinaatti
-   * @param dirH solmusta käsin tutkittava suunta x-akselilla, arvona 0, 1 tai -1
-   * @param dirV solmusta käsin tutkittava suunta y-akselilla, arvona 0, 1, tai -1
+  /**
+   * Solmuolion toinen konstruktori, käytetään JPS-algoritmin kanssa.
+   *
+   * @param x        solmun x-koordinaatti
+   * @param y        solmun y-koordinaatti
+   * @param dirH     solmusta käsin tutkittava suunta x-akselilla, arvona 0, 1 tai -1
+   * @param dirV     solmusta käsin tutkittava suunta y-akselilla, arvona 0, 1, tai -1
    * @param distance etäisyys lähtösolmusta kyseiseen solmuun
    */
   public Node(int x, int y, int dirH, int dirV, double distance) {

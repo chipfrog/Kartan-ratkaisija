@@ -21,7 +21,7 @@ public class MapReader {
    * Metodi saa konstruktorissa karttatiedoston ja muuntaa sen matriisiksi.
    *
    * @param file matriisiksi muunnettava kartta
-   * @throws FileNotFoundException
+   * @throws FileNotFoundException exception
    */
 
   public void createMatrix(File file) throws FileNotFoundException {
@@ -43,7 +43,7 @@ public class MapReader {
    * rivit ja sarakkeet ja alustaa näiden avulla matriisin.
    *
    * @param file .txt -muotoinen karttatiedosto
-   * @throws FileNotFoundException
+   * @throws FileNotFoundException exception
    */
 
   private void initArray(File file) throws FileNotFoundException {

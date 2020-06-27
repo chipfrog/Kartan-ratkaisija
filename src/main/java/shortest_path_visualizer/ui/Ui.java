@@ -38,13 +38,13 @@ import javafx.util.Duration;
 import shortest_path_visualizer.IO.BenchmarkFileReader;
 import shortest_path_visualizer.IO.MapFileCreator;
 import shortest_path_visualizer.IO.MapReader;
+import shortest_path_visualizer.IO.MapReaderIO;
 import shortest_path_visualizer.algorithms.AStar;
 import shortest_path_visualizer.algorithms.Dijkstra;
-import shortest_path_visualizer.IO.MapReaderIO;
 import shortest_path_visualizer.algorithms.JPS;
 import shortest_path_visualizer.dataStructures.DynamicArray;
-import shortest_path_visualizer.performanceTesting.PerformanceTest;
 import shortest_path_visualizer.dataStructures.Node;
+import shortest_path_visualizer.performanceTesting.PerformanceTest;
 
 /**
  * JavaFX-toteutus karttojen luomiseen.
@@ -144,7 +144,8 @@ public class Ui extends Application {
   }
 
   /**
-   * Luo ruudukon, jonka ruudut voi värittää. Musta = este, vihreä = aloitussolmu, punainen = maalisolmu, valkoinen = tavallinen solmu.
+   * Luo ruudukon, jonka ruudut voi värittää. Musta = este, vihreä = aloitussolmu,
+   * punainen = maalisolmu, valkoinen = tavallinen solmu.
    */
   public void createGrid(int sivu) {
     double xPikselit = 0;
@@ -170,11 +171,13 @@ public class Ui extends Application {
             if (event.getButton().equals(MouseButton.PRIMARY)) {
               if (type == DrawType.OBSTACLE && rectangle.getFill() != Color.GREEN) {
                 rectangle.setFill(Color.BLACK);
-              } else if (type == DrawType.START && !startDrawn && rectangle.getFill() != Color.RED) {
+              } else if (type == DrawType.START && !startDrawn
+                  && rectangle.getFill() != Color.RED) {
                 rectangle.setFill(Color.GREEN);
                 startCoordinates.setText("Start: y: " + startY + ", x: " + startX);
                 startDrawn = true;
-              } else if (type == DrawType.GOAL && !goalDrawn && rectangle.getFill() != Color.GREEN) {
+              } else if (type == DrawType.GOAL && !goalDrawn
+                  && rectangle.getFill() != Color.GREEN) {
                 rectangle.setFill(Color.RED);
                 goalCoordinates.setText("Goal: y: " + goalY + ", x: " + goalX);
                 goalDrawn = true;
@@ -248,11 +251,13 @@ public class Ui extends Application {
             if (event.getButton().equals(MouseButton.PRIMARY)) {
               if (type == DrawType.OBSTACLE && rectangle.getFill() != Color.GREEN) {
                 rectangle.setFill(Color.BLACK);
-              } else if (type == DrawType.START && !startDrawn && rectangle.getFill() != Color.RED) {
+              } else if (type == DrawType.START && !startDrawn
+                  && rectangle.getFill() != Color.RED) {
                 startCoordinates.setText("Start: y: " + finalY + ", x: " + finalX);
                 rectangle.setFill(Color.GREEN);
                 startDrawn = true;
-              } else if (type == DrawType.GOAL && !goalDrawn && rectangle.getFill() != Color.GREEN) {
+              } else if (type == DrawType.GOAL && !goalDrawn
+                  && rectangle.getFill() != Color.GREEN) {
                 goalCoordinates.setText("Goal: y: " + goalY + ", x: " + goalX);
                 rectangle.setFill(Color.RED);
                 goalDrawn = true;
@@ -292,12 +297,11 @@ public class Ui extends Application {
   }
 
   public void generatePreviouslyMadeMap(char[][] kartta) {
-    for (int i = 0; i < rectChar.length; i ++) {
-      for (int j = 0; j < rectChar[0].length; j ++) {
+    for (int i = 0; i < rectChar.length; i++) {
+      for (int j = 0; j < rectChar[0].length; j++) {
         if (kartta[i][j] == '@') {
           rectChar[i][j].setFill(Color.BLACK);
-        }
-        else if (kartta[i][j] == 'S') {
+        } else if (kartta[i][j] == 'S') {
           startCoordinates.setText("Start: y: " + i + ", x: " + j);
           rectChar[i][j].setFill(Color.GREEN);
         } else if (kartta[i][j] == 'G') {
@@ -321,7 +325,7 @@ public class Ui extends Application {
 
 
   /**
-   * Pyyhkii ruudukon tyhjäksi
+   * Pyyhkii ruudukon tyhjäksi.
    *
    * @param stage
    * @throws Exception
@@ -389,11 +393,11 @@ public class Ui extends Application {
   public double averageRunTime() {
     long totalTime = 0;
     int divider = 0;
-    for (int i = 1; i < runtimes.length; i ++) {
+    for (int i = 1; i < runtimes.length; i++) {
       totalTime += runtimes[i];
-      divider ++;
+      divider++;
     }
-    return totalTime/1000000.0/divider;
+    return totalTime / 1000000.0 / divider;
   }
 
   /**
@@ -403,7 +407,7 @@ public class Ui extends Application {
     generateCharArray(rectChar);
     if (mapHasStartAndGoal()) {
       this.dijkstra = new Dijkstra();
-      for (int i = 0; i < runtimes.length;  i++) {
+      for (int i = 0; i < runtimes.length; i++) {
         dijkstra.setMap(mapArray);
         long t1 = System.nanoTime();
         dijkstra.runDijkstra();
@@ -435,7 +439,7 @@ public class Ui extends Application {
     if (mapHasStartAndGoal()) {
       this.jps = new JPS();
 
-      for (int i = 0; i < runtimes.length; i ++) {
+      for (int i = 0; i < runtimes.length; i++) {
         jps.setMap(mapArray);
         long t1 = System.nanoTime();
         jps.runJPS();
@@ -468,7 +472,7 @@ public class Ui extends Application {
     if (mapHasStartAndGoal()) {
       this.aStar = new AStar();
 
-      for (int i = 0; i < runtimes.length; i ++) {
+      for (int i = 0; i < runtimes.length; i++) {
         aStar.setMap(mapArray);
         long t1 = System.nanoTime();
         aStar.runAStar();
@@ -496,8 +500,10 @@ public class Ui extends Application {
       runClicked = false;
     }
   }
+
   /**
-   * Dijkstran algoritmin animaatio. Värittää uuden vieraillun solmun/ruudun tasaisin aikavälein. Värittää lopuksi lyhimmän reitin maalisolmusta aloitussolmuun.
+   * Dijkstran algoritmin animaatio. Värittää uuden vieraillun solmun/ruudun tasaisin aikavälein.
+   * Värittää lopuksi lyhimmän reitin maalisolmusta aloitussolmuun.
    *
    * @param visitedNodes Vieraillut solmut.
    */
@@ -594,7 +600,7 @@ public class Ui extends Application {
   }
 
   public void drawJPSPath(DynamicArray jumpPoints) {
-    for (int i = 0; i < jumpPoints.size() - 1; i ++) {
+    for (int i = 0; i < jumpPoints.size() - 1; i++) {
       Node n1 = jumpPoints.get(i);
       Node n2 = jumpPoints.get(i + 1);
 
@@ -608,26 +614,28 @@ public class Ui extends Application {
         rectChar[n2.getY()][n2.getX()].setFill(Color.YELLOW);
       }
 
-      Line line = new Line(r1.getLayoutX() + r1.getWidth()/2, r1.getLayoutY() + r1.getHeight()/2, r2.getLayoutX() + r2.getWidth()/2, r2.getLayoutY() + r2.getHeight()/2);
+      Line line =
+          new Line(r1.getLayoutX() + r1.getWidth() / 2, r1.getLayoutY() + r1.getHeight() / 2,
+              r2.getLayoutX() + r2.getWidth() / 2, r2.getLayoutY() + r2.getHeight() / 2);
       lines.add(line);
       pane.getChildren().add(line);
     }
   }
 
   public void drawVisitedNodes(DynamicArray visitedNodes, Label label) {
-    for (int i = 0; i < visitedNodes.size(); i ++) {
+    for (int i = 0; i < visitedNodes.size(); i++) {
       Node node = visitedNodes.get(i);
       if (node != null) {
         paintSquare(node);
-        nodeToPaint ++;
+        nodeToPaint++;
       }
     }
     label.setText("Nodes: " + nodeToPaint);
   }
 
   private void resetSolution() {
-    for (int i = 0; i < rectChar.length; i ++) {
-      for (int j = 0; j < rectChar[0].length; j ++) {
+    for (int i = 0; i < rectChar.length; i++) {
+      for (int j = 0; j < rectChar[0].length; j++) {
         if (rectChar[i][j].getFill() == Color.AQUA || rectChar[i][j].getFill() == Color.YELLOW) {
           rectChar[i][j].setFill(Color.WHITE);
         }
@@ -691,11 +699,12 @@ public class Ui extends Application {
     RadioButton moscow = new RadioButton("Moscow");
     moscow.setToggleGroup(benchmarks);
     moscow.setOnAction(e -> {
-      this.benchmarkFile = new File("src/main/resources/BenchmarkScenarios/Moscow_1_256.map.scen.txt");
+      this.benchmarkFile =
+          new File("src/main/resources/BenchmarkScenarios/Moscow_1_256.map.scen.txt");
       this.benchmarkMapFile = new File("src/main/resources/BenchmarkMaps/Moscow_1_256.map.txt");
     });
 
-    ComboBox <String> comboBox = new ComboBox();
+    ComboBox<String> comboBox = new ComboBox();
     comboBox.getItems().addAll("Dijkstra", "A*", "JPS");
 
     Button run = new Button("Run");
@@ -704,23 +713,20 @@ public class Ui extends Application {
       if (!runClicked) {
         if (comboBox.getValue() == null) {
           errorMessage.setText("Valitse algoritmi!");
-        }
-        else if (comboBox.getValue().equals("Dijkstra")) {
+        } else if (comboBox.getValue().equals("Dijkstra")) {
           runClicked = true;
           solveMapUsingDijkstra();
-        }
-        else if (comboBox.getValue().equals("A*")) {
+        } else if (comboBox.getValue().equals("A*")) {
           runClicked = true;
           solveMapUsingAStar();
-        }
-        else if (comboBox.getValue().equals("JPS")) {
+        } else if (comboBox.getValue().equals("JPS")) {
           runClicked = true;
           solveMapUsingJPS();
         }
 
       }
     });
-    
+
     Button tryAgain = new Button("Erase solution");
     tryAgain.setOnAction(e -> {
       errorMessage.setText("");
@@ -795,7 +801,8 @@ public class Ui extends Application {
     });
 
     VBox mapChoosingOptions = new VBox();
-    mapChoosingOptions.getChildren().addAll(saveMap, nameField, save, openUserMadeMap, openPreMadeMap, openTestMap);
+    mapChoosingOptions.getChildren()
+        .addAll(saveMap, nameField, save, openUserMadeMap, openPreMadeMap, openTestMap);
     mapChoosingOptions.setSpacing(10);
 
     Label speedSlider = new Label("Animation delay: ");
@@ -892,11 +899,13 @@ public class Ui extends Application {
     benchmarkOptions.getChildren().addAll(runTest, benchmarkChoice);
     benchmarkOptions.setSpacing(10);
 
-    allResults.getChildren().addAll(resultsD, resultsA, resultsJ, startCoordinates, goalCoordinates);
+    allResults.getChildren()
+        .addAll(resultsD, resultsA, resultsJ, startCoordinates, goalCoordinates);
 
     VBox controls = new VBox();
     controls.setSpacing(40);
-    controls.getChildren().addAll(drawChoice, configurations, basicCommands, mapChoosingOptions, benchmarkOptions);
+    controls.getChildren()
+        .addAll(drawChoice, configurations, basicCommands, mapChoosingOptions, benchmarkOptions);
 
     VBox layout = new VBox();
     layout.setSpacing(20);

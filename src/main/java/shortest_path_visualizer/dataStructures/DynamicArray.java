@@ -6,7 +6,8 @@ package shortest_path_visualizer.dataStructures;
 public class DynamicArray {
   private Node[] array;
   /**
-   * Taulukon indeksi. Kertoo missä kohtaa taulukkoa ollaan menossa. Aluksi -1. Kasvaa jokaisen lisäyksen myötä.
+   * Taulukon indeksi. Kertoo missä kohtaa taulukkoa ollaan menossa.
+   * Aluksi -1. Kasvaa jokaisen lisäyksen myötä.
    * Käytetään myös katsomaan milloin taulukko tulee täyteen vertaamalla size-muuttujaan.
    */
   private int index;
@@ -18,12 +19,14 @@ public class DynamicArray {
     this.size = 10;
   }
 
-  /** Lisää uuden Noden taulukkoon ja tuplaa taulukon koon, jos lisäyksen jälkeen taulukko on täysi.
+  /**
+   * Lisää uuden Noden taulukkoon ja tuplaa taulukon koon, jos lisäyksen jälkeen taulukko on täysi.
    * Kasvattaa indeksin arvoa yhdellä.
+   *
    * @param node Taulukkoon lisättävä Node
    */
   public void add(Node node) {
-    index ++;
+    index++;
     if (index == size) {
       increaseSize();
     }
@@ -36,7 +39,9 @@ public class DynamicArray {
     }
   }
 
-  /** Palauttaa taulukon nykyisen koon. Koko = viimeksi lisätyn Noden indeksi + 1
+  /**
+   * Palauttaa taulukon nykyisen koon. Koko = viimeksi lisätyn Noden indeksi + 1
+   *
    * @return taulukon koko
    */
   public int size() {
@@ -46,7 +51,9 @@ public class DynamicArray {
     return index + 1;
   }
 
-  /** Hakee taulukosta Noden parametrina annetulla indeksillä.
+  /**
+   * Hakee taulukosta Noden parametrina annetulla indeksillä.
+   *
    * @param i Haettavan Noden indeksi
    * @return taulukossa indeksillä i oleva Node tai null
    */
@@ -63,7 +70,7 @@ public class DynamicArray {
   public void increaseSize() {
     Node[] temp = null;
     temp = new Node[size * 2];
-    for (int i = 0; i < size; i ++) {
+    for (int i = 0; i < size; i++) {
       temp[i] = array[i];
     }
     array = temp;

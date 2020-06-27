@@ -10,7 +10,7 @@ public class MathFunctions {
 
   }
 
-  /** Antaa parametrina annetulle luvulle itseisarvon
+  /** Antaa parametrina annetulle luvulle itseisarvon.
    * @param num Luku, jonka itseisarvo halutaan.
    * @return Luvun itseisarvo
    */

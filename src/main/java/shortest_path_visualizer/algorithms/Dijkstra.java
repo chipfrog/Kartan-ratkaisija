@@ -1,10 +1,9 @@
 package shortest_path_visualizer.algorithms;
 
-import shortest_path_visualizer.IO.IO;
 import shortest_path_visualizer.dataStructures.DynamicArray;
 import shortest_path_visualizer.dataStructures.Keko;
-import shortest_path_visualizer.utils.NeighbourFinder;
 import shortest_path_visualizer.dataStructures.Node;
+import shortest_path_visualizer.utils.NeighbourFinder;
 
 /**
  * Luokka, jossa toteutetaan Dijkstran algoritmi.
@@ -16,8 +15,9 @@ public class Dijkstra {
    */
   private char[][] karttamatriisi;
   /**
-   * Sama kartta, mutta koostuu Node-olioista. Tarvitaan NeighbourFinderia varten. Kun solmumatriisin avulla
-   * haetaan naapurisolmuja, päästään käsiksi juuri haluttuun Node-olioon yksilöllisen tunnuksen avulla.
+   * Sama kartta, mutta koostuu Node-olioista.
+   * Tarvitaan NeighbourFinderia varten. Kun solmumatriisin avulla haetaan naapurisolmuja,
+   * päästään käsiksi juuri haluttuun Node-olioon yksilöllisen tunnuksen avulla.
    */
   private Node[][] solmuMatriisi;
   /**
@@ -34,10 +34,12 @@ public class Dijkstra {
   private NeighbourFinder finder;
   private DynamicArray visitedNodes;
 
-  public Dijkstra () {
+  public Dijkstra() {
   }
 
-  /** Alustaa Dijkstran tarvitsemat rakenteet, kuten keon ja muuttujat. Käytetään myös kartan vaihtamiseen.
+  /**
+   * Alustaa Dijkstran tarvitsemat rakenteet, kuten keon ja muuttujat.
+   * Käytetään myös kartan vaihtamiseen.
    * @param kartta algoritmille selvitettäväksi annettava kartta
    */
   public void setMap(char[][] kartta) {
@@ -54,15 +56,17 @@ public class Dijkstra {
   }
 
   /**
-   * Suorittaa Dijkstran algoritmin. Aloitussolmusta lähtien alkaa tutkia solmujen naapurisolmuja. Naapurisolmut lisätään
-   * aina kekoon, jos etäisyys naapurisolmuun nykyisen solmun (current) kautta on lyhyempi kuin aiempi etäisyys. Keosta nostetaan
-   * aina uusi solmu, jonka etäisyys (g-matka) lähtösolmusta pienin ja tämän naapurisolmut käydään läpi. Jos solmussa on jo vierailtu,
+   * Suorittaa Dijkstran algoritmin. Aloitussolmusta lähtien alkaa tutkia solmujen naapurisolmuja.
+   * Naapurisolmut lisätään aina kekoon, jos etäisyys naapurisolmuun
+   * nykyisen solmun (current) kautta on lyhyempi kuin aiempi etäisyys.
+   * Keosta nostetaan aina uusi solmu, jonka etäisyys (g-matka) lähtösolmusta pienin
+   * ja tämän naapurisolmut käydään läpi. Jos solmussa on jo vierailtu,
    * sitä ei käsitellä uudestaan. Metodi jatkuu kunnes keko on tyhjä tai maali on löytynyt.
    */
   public void runDijkstra() {
     keko.addNode(startingNode);
 
-    while(!keko.isEmpty()) {
+    while (!keko.isEmpty()) {
       Node node = keko.pollNode();
       if (node.onVierailtu()) {
         continue;
@@ -90,8 +94,10 @@ public class Dijkstra {
     }
   }
 
-  /** Kertoo etäisyyden kahden vierekkäisen solmun välillä. Jos solmut samalla x- tai samalla y-akselilla,
-   * etäisyys 1, muuten sqrt(2).
+  /**
+   * Kertoo etäisyyden kahden vierekkäisen solmun välillä.
+   * Jos solmut samalla x- tai samalla y-akselilla, etäisyys 1, muuten sqrt(2).
+   *
    * @param n1 Ensimmäinen solmu
    * @param n2 Toinen solmu
    * @return Etäisyys solmujen n1 ja n2 välillä
@@ -113,8 +119,11 @@ public class Dijkstra {
 
 
   /**
-   * Piirtää karttamatriisiin lyhimmän reitin maalisolmusta aloitussolmuun, kun solmujen etäisyydet on ensin selvitetty Dijkstran algoritmilla.
-   * Lyhimmän reitin varrella karttamatriisissa korvataan siis pisteet '.' 'X'-kirjaimella. Ui:ssa X:ien perusteella piirretään visuaalinen reitti.
+   * Piirtää karttamatriisiin lyhimmän reitin maalisolmusta aloitussolmuun,
+   * kun solmujen etäisyydet on ensin selvitetty Dijkstran algoritmilla.
+   * Lyhimmän reitin varrella karttamatriisissa korvataan siis
+   * pisteet '.' 'X'-kirjaimella. Ui:ssa X:ien perusteella piirretään visuaalinen reitti.
+   *
    * @return Maalisolmu, jos reitti alotussolmuun löytyy. Null, jos ei löydy.
    */
   public Node haeReitti() {
@@ -134,7 +143,8 @@ public class Dijkstra {
   }
 
   /**
-   * Hakee parametrina annetulle solmulle naapurisolmun, jonka etäisyys aloitussolmuun on pienin.
+   * Hakee parametrina annetulle solmulle naapurisolmun,
+   * jonka etäisyys aloitussolmuun on pienin.
    *
    * @param node Solmu, jolle etäisyydeltään pienin naapurisolmu haetaan.
    * @return Solmu, jonka etäisyys aloitussolmuun pienin.
@@ -144,7 +154,7 @@ public class Dijkstra {
     Node smallestDistNode = null;
     Node[] naapurit = haeNaapurisolmut(node.getX(), node.getY());
 
-    for (int i = 0; i < naapurit.length; i ++) {
+    for (int i = 0; i < naapurit.length; i++) {
       if (naapurit[i] != null) {
         if (naapurit[i].isStart()) {
           smallestDistNode = naapurit[i];
@@ -158,7 +168,9 @@ public class Dijkstra {
   }
 
   /**
-   * Palauttaa ratkaistun kartan, jossa näkyvät vieraillut solmut ja eräs lyhin reitti aloitussolmusta maalisolmuun. Dijkstran algoritmi tulee ajaan ensin.
+   * Palauttaa ratkaistun kartan, jossa näkyvät vieraillut solmut
+   * ja eräs lyhin reitti aloitussolmusta maalisolmuun.
+   * Dijkstran algoritmi tulee ajaan ensin.
    *
    * @return Karttamatriisi, johon merkattu käydyt solmut ja lyhin reitti.
    */
@@ -168,7 +180,8 @@ public class Dijkstra {
   }
 
   /**
-   * Käy karttamatriisin läpi ja luo jokaiselle koordinaatiston pisteelle oman uniikin Node-olion solmumatriisiin.
+   * Käy karttamatriisin läpi ja luo jokaiselle koordinaatiston pisteelle
+   * oman uniikin Node-olion solmumatriisiin.
    * Tallentaa samalla muistiin start- ja goal-nodet.
    */
 
@@ -179,8 +192,7 @@ public class Dijkstra {
         Node node = new Node(solmutunnus, j, i);
         if (karttamatriisi[i][j] == '@') {
           node = null;
-        }
-        else {
+        } else {
           node.setEtaisyys(Integer.MAX_VALUE);
 
           if (karttamatriisi[i][j] == 'G') {

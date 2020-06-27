@@ -22,7 +22,9 @@ public class PerformanceTest {
   private double vastausJ;
   private int kierroksia;
 
-  /** Luokka algoritmien tehokkuustestaukseen
+  /**
+   * Luokka algoritmien tehokkuustestaukseen.
+   *
    * @param kierroksia montako kierrosta kukin skenaario suoritetaan
    */
   public PerformanceTest(int kierroksia) {
@@ -32,10 +34,13 @@ public class PerformanceTest {
     this.times = new long[kierroksia];
   }
 
-  /** Testaa dijkstran algoritmia. Suoritta saman reitinhaun muuttujassa "kierroksia" annetun lukumäärän ja tallentaa kunkin ajon keston taulukkoon.
-   * @param file Karttatiedosto
+  /**
+   * Testaa dijkstran algoritmia. Suoritta saman reitinhaun muuttujassa "kierroksia"
+   * annetun lukumäärän ja tallentaa kunkin ajon keston taulukkoon.
+   *
+   * @param file  Karttatiedosto
    * @param start aloitussolmu
-   * @param goal maalisolmu
+   * @param goal  maalisolmu
    * @throws FileNotFoundException exception
    */
   public void testDijkstra(File file, Node start, Node goal) throws FileNotFoundException {
@@ -48,7 +53,7 @@ public class PerformanceTest {
     dijkstra.runDijkstra();
     this.vastausD = dijkstra.getEtaisyysMaaliin();
 
-    for (int i = 0; i < kierroksia; i ++) {
+    for (int i = 0; i < kierroksia; i++) {
       dijkstra.setMap(map);
       // Mittaa varsinaiseen reitinhakuun kuluvan ajan
       long t1 = System.nanoTime();
@@ -58,11 +63,14 @@ public class PerformanceTest {
     }
   }
 
-  /** Testaa A*- algoritmia. Suoritta saman reitinhaun muuttujassa "kierroksia" annetun lukumäärän ja tallentaa kunkin ajon keston taulukkoon.
-   * @param file karttatiedosto
+  /**
+   * Testaa A*- algoritmia. Suoritta saman reitinhaun muuttujassa "kierroksia"
+   * annetun lukumäärän ja tallentaa kunkin ajon keston taulukkoon.
+   *
+   * @param file  karttatiedosto
    * @param start lähtösolmu
-   * @param goal maalisolmu
-   * @throws FileNotFoundException
+   * @param goal  maalisolmu
+   * @throws FileNotFoundException exception
    */
   public void testAStar(File file, Node start, Node goal) throws FileNotFoundException {
     mapReader.createMatrix(file);
@@ -74,7 +82,7 @@ public class PerformanceTest {
     aStar.runAStar();
     this.vastausA = aStar.getEtaisyysMaaliin();
 
-    for (int i = 0; i < kierroksia; i ++) {
+    for (int i = 0; i < kierroksia; i++) {
       aStar.setMap(map);
       // Mittaa varsinaiseen reitinhakuun kuluvan ajan
       long t1 = System.nanoTime();
@@ -84,11 +92,14 @@ public class PerformanceTest {
     }
   }
 
-  /** Testaa JPS-algoritmia. Suoritta saman reitinhaun muuttujassa "kierroksia" annetun lukumäärän ja tallentaa kunkin ajon keston taulukkoon.
-   * @param file karttatiedosto
+  /**
+   * Testaa JPS-algoritmia. Suoritta saman reitinhaun muuttujassa "kierroksia" annetun
+   * lukumäärän ja tallentaa kunkin ajon keston taulukkoon.
+   *
+   * @param file  karttatiedosto
    * @param start aloitussolmu
-   * @param goal maalisolmu
-   * @throws FileNotFoundException
+   * @param goal  maalisolmu
+   * @throws FileNotFoundException exception
    */
   public void testJPS(File file, Node start, Node goal) throws FileNotFoundException {
     mapReader.createMatrix(file);
@@ -100,7 +111,7 @@ public class PerformanceTest {
     jps.runJPS();
     this.vastausJ = jps.getGoalNode().getG_Matka();
 
-    for (int i = 0; i < kierroksia; i ++) {
+    for (int i = 0; i < kierroksia; i++) {
       JPS jps = new JPS();
       jps.setMap(map);
       // Mittaa varsinaiseen reitinhakuun kuluvan ajan
@@ -112,35 +123,44 @@ public class PerformanceTest {
 
   }
 
-  /** Laskee suoritettujen ajojen keston keskiarvon ja muuntaa sen millisekuneiksi. Indeksi i alkaa numerosta 1, sillä indeksissä 0 oleva aika jätetään huomiotta, koska ensimmäinen
-   * ajo usein vääristää hitautensa vuoksi tulosta
+  /**
+   * Laskee suoritettujen ajojen keston keskiarvon ja muuntaa sen millisekuneiksi.
+   * Indeksi i alkaa numerosta 1, sillä indeksissä 0 oleva aika jätetään huomiotta,
+   * koska ensimmäinen ajo usein vääristää hitautensa vuoksi tulosta
+   *
    * @return Yhden reitinhakuskenaarion ajojen keskiarvo
    */
   public double getAverage() {
     long totalTime = 0;
     long divider = 0;
-    for (int i = 1; i < times.length; i ++) {
+    for (int i = 1; i < times.length; i++) {
       totalTime += times[i];
-      divider ++;
+      divider++;
     }
-    return totalTime/1000000.0/divider;
+    return totalTime / 1000000.0 / divider;
   }
 
-  /** Lyhimmän reitin pituus A*:n mukaan
+  /**
+   * Lyhimmän reitin pituus A*:n mukaan.
+   *
    * @return reitin pituus
    */
   public double getVastausA() {
     return this.vastausA;
   }
 
-  /** Lyhimmän reitin pituus Dijkstran algoritmin mukaan
+  /**
+   * Lyhimmän reitin pituus Dijkstran algoritmin mukaan.
+   *
    * @return reitin pituus
    */
   public double getVastausD() {
     return this.vastausD;
   }
 
-  /** Lyhimmän reitin pituus JPS:n mukaan
+  /**
+   * Lyhimmän reitin pituus JPS:n mukaan.
+   *
    * @return reitin pituus
    */
   public double getVastausJ() {
