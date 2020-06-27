@@ -71,7 +71,6 @@ public class Ui extends Application {
   private long[] runtimes;
   private CheckBox noAnimation;
   private FileChooser fileChooser;
-  private FileChooser fileChooserOwnMaps;
   private MapReader mapReader;
   private ArrayList<Line> lines;
 
@@ -118,10 +117,6 @@ public class Ui extends Application {
     this.runtimes = new long[101];
     this.noAnimation = new CheckBox();
     this.fileChooser = new FileChooser();
-    fileChooser.setInitialDirectory(new File("src/main/resources/maps"));
-
-    this.fileChooserOwnMaps = new FileChooser();
-    fileChooserOwnMaps.setInitialDirectory(new File("src/main/resources/ownMaps"));
 
     this.benchmarkFile = new File("src/main/resources/BenchmarkScenarios/Berlin_0_256.scen.txt");
     this.benchmarkMapFile = new File("src/main/resources/BenchmarkMaps/Berlin_0_256.txt");
@@ -645,13 +640,22 @@ public class Ui extends Application {
   }
 
   private void chooseMap(Stage primaryStage) throws FileNotFoundException {
+    fileChooser.setInitialDirectory(new File("src/main/resources/maps"));
     File selectedFile = fileChooser.showOpenDialog(primaryStage);
     mapReader.createMatrix(selectedFile);
     mapArray = mapReader.getMapArray();
   }
 
   private void chooseOwnMap(Stage primaryStage) throws FileNotFoundException {
-    File selectedFile = fileChooserOwnMaps.showOpenDialog(primaryStage);
+    fileChooser.setInitialDirectory(new File("src/main/resources/ownMaps"));
+    File selectedFile = fileChooser.showOpenDialog(primaryStage);
+    mapReader.createMatrix(selectedFile);
+    mapArray = mapReader.getMapArray();
+  }
+
+  private void chooseTestMap(Stage primaryStage) throws FileNotFoundException {
+    fileChooser.setInitialDirectory(new File("src/main/resources/testMaps"));
+    File selectedFile = fileChooser.showOpenDialog(primaryStage);
     mapReader.createMatrix(selectedFile);
     mapArray = mapReader.getMapArray();
   }
@@ -750,8 +754,8 @@ public class Ui extends Application {
       nameField.setText("");
     });
 
-    Button selectMap = new Button("Select map");
-    selectMap.setOnAction(e -> {
+    Button openPreMadeMap = new Button("Select map");
+    openPreMadeMap.setOnAction(e -> {
       startCoordinates.setText("Start: ");
       goalCoordinates.setText("Goal: ");
       try {
@@ -762,6 +766,19 @@ public class Ui extends Application {
         preMadeMap(mapArray, 4);
         save.setDisable(true);
       } catch (FileNotFoundException exception) {
+      }
+    });
+
+    Button openTestMap = new Button("Select test map");
+    openTestMap.setOnAction(e -> {
+      try {
+        chooseTestMap(primaryStage);
+        rectChar = new Rectangle[mapArray.length][mapArray.length];
+        startDrawn = true;
+        goalDrawn = true;
+        preMadeMap(mapArray, 4);
+        save.setDisable(true);
+      } catch (Exception exception) {
       }
     });
 
@@ -778,7 +795,7 @@ public class Ui extends Application {
     });
 
     VBox mapChoosingOptions = new VBox();
-    mapChoosingOptions.getChildren().addAll(saveMap, nameField, save, openUserMadeMap, selectMap);
+    mapChoosingOptions.getChildren().addAll(saveMap, nameField, save, openUserMadeMap, openPreMadeMap, openTestMap);
     mapChoosingOptions.setSpacing(10);
 
     Label speedSlider = new Label("Animation delay: ");
