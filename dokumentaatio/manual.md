@@ -1,5 +1,5 @@
 # Käyttöohjeet
-Sovellus vaatii toimiakseen Java 11. Suoritettavan jar-tiedoston luominen ei onnistunut teknisistä syistä, joten repositorio on ladattava koneelle ja seurattava alla olevia ohjeita ohjelman suorittamiseksi.
+Sovellus vaatii toimiakseen Java 11. Suoritettavan jar-tiedoston luominen ei onnistunut JavaFX kanssa tulleiden teknisten ongelmien vuoksi, joten repositorio on ladattava koneelle ja seurattava alla olevia ohjeita ohjelman suorittamiseksi.
 
 ## Sovelluksen käynnistäminen
 Lataa zip-tiedosto GitHubista ja pura se haluamaasi sijaintiin. Siirry konsolin kautta tähän sijaintiin ja siellä kansioon _Shortest-path-visualizer-master_.
