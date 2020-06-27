@@ -2,9 +2,9 @@
 
 Ohjelmaa käytetään visuaalisella käyttöliittymällä, jonka toiminta on erotettu sovelluksen varinaisesta toimintalogiikasta.
 Kullekin algoritmille ja karttojen käsittelylle on omat luokkansa, ja joitakin algoritmien yhteisiä toimintoja, kuten naapurisolmujen
-hakeminen (NeighbourFinder) ja jotkin matemaattiset funktiot (MathFunctions) on eriytetty omiksi luokikseen. Konsoliin tulostamiselle ja tiedostojen lukemiselle on oma rajapintansa IO, jota kuten MapReaderIO toteuttaaa. Vain MapReaderIO:lla on pääsy javan Scanner-olioon ja MapReaderIO injektoidaan kaikille sitä tarvitseville luokille, kuten BenchmarkFileReaderille. Lopullisessa sovelluksessa konsoliin tulostamista ei enää juuri käytetä ja sen funktioksi jää lähinnä sovelluksen testaaminen kehityksen aikana. MapReaderIO:n mukana injektoituvaa Scanneria kuitenkin tarvitaan esimerkiksi .txt-muotoisten karttatiedostojen ja karttaskenaariotiedostojen (scen) lukemiseen. Omina tietorakenteina on toteutettu dynaamisesti kokoaan kasvattava taulukko (DynamicArray) ja minimikeko (Keko). 
+hakeminen (NeighbourFinder) ja jotkin matemaattiset funktiot (MathFunctions) on eriytetty omiksi luokikseen. Konsoliin tulostamiselle ja tiedostojen lukemiselle on oma rajapintansa IO, jota MapReaderIO toteuttaaa. Vain MapReaderIO:lla on pääsy javan Scanner-olioon ja MapReaderIO injektoidaan kaikille sitä tarvitseville luokille, kuten BenchmarkFileReaderille. Lopullisessa sovelluksessa konsoliin tulostamista ei enää juuri käytetä ja sen funktioksi jää lähinnä sovelluksen testaaminen kehityksen aikana. MapReaderIO:n mukana injektoituvaa Scanneria kuitenkin tarvitaan esimerkiksi .txt-muotoisten karttatiedostojen ja karttaskenaariotiedostojen (scen) lukemiseen. Omina tietorakenteina on toteutettu dynaamisesti kokoaan kasvattava taulukko (DynamicArray) ja minimikeko (Keko). 
 
-## Pseudokoodit
+## Pseudokoodit toteutetuille algoritmeille
 
 ### Dijkstra
 ```
@@ -166,6 +166,10 @@ func diagonalScan(paren)
         node.distance = distance_travelled
         add node to minHeap       
 ```
+
+## Suorituskykyvertailua
+Toteutetut algoritmit näyttävät asettuvan tehokkuudessa odotettuun järjestykseen, eli Dijkstra hitain, JPS selvästi nopein ja A* näiden välissä. Tämä käy järkeen, sillä Dijkstra hakee maalisolmua sokeasti ilman tietoa maalisolmun suunnasta. Se käyttää uusien tarkasteltavien solmujen valitsemisperusteena ainoastaan etäisyyttä lähtösolmusta ja valitsee tarkasteluun aina solmun, joka on lähtösolmua lähimpänä ja hakee lyhimmät reitit tätä kautta. A* taas saa tiedon maalisolmun sijainnista ja laskee uusille solmuille myös heuristisen etäisyyden eli arvion etäisyydestä tarkasteltavan solmun ja maalisolmun välillä. Sovelluksessa käytettiin diagonaalista heuristiikkaa. A* laskee kullekin tarkasteltavalle solmulle ns. f-arvon; Dijkstran tapaan se laskee etäisyyden lähtösolmusta, mutta lisää tähän vielä heuristisen etäisyyden. Keosta nostetaan aina solmu, jonka f-arvo on pienin. Tämä ohjaa algoritmia karkeasti maalisolmun suuntaan. A*:n tehokkuusero Dijkstraan verrattuna oli suurimmillaan, silloin kun välissä ei ollut juurikaan esteitä. Jos taas esteitä oli paljon, haku muuttui Dijsktran kaltaiseksi ja hakuaika saattoi joissain tapauksissa olla jopa hieman huonompi kuin Dijkstrassa (testausdokumentin kuvat 1-4). Keskimäärin A* toimi kuitenkin selvästi Dijkstraa nopeammin, kuten nähdään kuvaajista 1 ja 2. Jump point search, JPS, toimi kaikissa tilanteissa nopeiten. JPS kerää kekoon ainoastaan ns. Jump point-solmut ja jättää muut solmut huomioimatta. Tämä vähentää algoritmin työmäärää merkittävästi ja tuo sitä kautta huomattavasti nopeamman suoritusajan
+
 
 ## Puutteet
 Sovellus ei ole toiminnaltaan aivan niin viimeistelty kuin voisi toivoa. Reitinhaun animaatiota ei voi esimerkiksi keskeytää, vaan sen on pakko antaa mennä loppuun tai käynnistää sovellus uudestaan, ennen kuin muita toimintoja voi käyttää. Algoritmit eivät myöskään aina anna täysin samoja tuloksia reitinhaussa. Erityisesti A* antaa joissakin spesifeissä tilanteissa hieman Dijkstraa ja JPS:ää suurempia tuloksia. Erot ovat kuitenkin olleet minimaalisia, pahimmillaan muutaman desimaalin luokkaa. Koodi sisältää myös jonkin verran toisteisuutta algoritmien osalta. Näille voisi olla jokin yhteinen yläluokka, joka sisältäisi yhteisiä metodeja, kuten esimerkiksi heuristisen etäisyyden laskeminen, maalisolmun hakeminen ja kartan alustaminen.
