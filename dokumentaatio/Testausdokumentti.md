@@ -46,6 +46,8 @@ Kuten kuvaajista nähdään JPS suoriutuu reitinhakutehtävistä selkeästi nope
 
 ### Tavallisia reitinhakuja
 
+Huom! Koordinaatit muodossa (y, x)
+
 | Algoritmi | Aika | Avatut solmut | Matka | Aloituspiste | Maalipiste | Kartta |
 | --------- | ---- | ------------- | ----- | ------------ | ---------- | ------ |
 | Dijkstra  | 11.008 ms | 27498 | 156.06601 | 64, 87 | 164, 169 | NewYork_1_256.map.txt |
